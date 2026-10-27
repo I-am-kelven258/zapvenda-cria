@@ -27,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/")({
 
 function Dashboard() {
   const { user } = Route.useRouteContext();
-  const nome = (user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "").split(" ")[0];
+  const nome = (user.user_metadata?.["full_name"] || user.user_metadata?.["name"] || user.email?.split("@")[0] || "").split(" ")[0];
   return (
     <AppShell>
       <h1 className="font-display text-2xl font-bold">Olá, {nome} 👋</h1>
@@ -36,8 +36,8 @@ function Dashboard() {
         {CARDS.map(({ tipo, label, icon: Icon }) => (
           <Link
             key={tipo}
-            to={tipo === "app" ? "/criar/app" : "/criar/$tipo"}
-            params={tipo === "app" ? undefined : { tipo }}
+            to="/criar/$tipo"
+            params={{ tipo }}
             className="group flex min-h-36 flex-col justify-between rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary"
           >
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent">

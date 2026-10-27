@@ -36,12 +36,12 @@ function Wizard() {
   const [salvo, setSalvo] = useState(false);
   const [salvando, setSalvando] = useState(false);
 
-  const p = PERGUNTAS[step];
+  const p = PERGUNTAS[step]!;
   const valor = r[p.key];
 
   function proximo() {
-    if (!valor.trim()) return toast.error("Responda a pergunta para continuar");
-    if (step < 5) return setStep(step + 1);
+    if (!valor.trim()) { toast.error("Responda a pergunta para continuar"); return; }
+    if (step < 5) { setStep(step + 1); return; }
     setGerando(true);
     setTimeout(() => { setScript(gerarScript(r)); setGerando(false); }, 1800);
   }
@@ -55,7 +55,7 @@ function Wizard() {
       nome_app: r.nome_app, o_que_faz: r.o_que_faz, publico: r.publico, monetizacao: r.monetizacao, objetivo: r.objetivo, estilo: r.estilo,
     });
     setSalvando(false);
-    if (error) return toast.error("Não foi possível salvar");
+    if (error) { toast.error("Não foi possível salvar"); return; }
     setSalvo(true);
     toast.success("Script salvo no seu histórico!");
   }

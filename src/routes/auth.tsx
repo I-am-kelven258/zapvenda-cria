@@ -31,7 +31,7 @@ function AuthPage() {
     if (modo === "entrar") {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
       setLoading(false);
-      if (error) return toast.error("Email ou senha inválidos");
+      if (error) { toast.error("Email ou senha inválidos"); return; }
       navigate({ to: "/" });
     } else {
       const { error } = await supabase.auth.signUp({
@@ -40,7 +40,7 @@ function AuthPage() {
         options: { emailRedirectTo: window.location.origin, data: { full_name: nome } },
       });
       setLoading(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       toast.success("Conta criada! Confirme pelo link enviado ao seu email.");
       setModo("entrar");
     }
@@ -48,7 +48,7 @@ function AuthPage() {
 
   async function google() {
     const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (r.error) return toast.error("Não foi possível entrar com Google");
+    if (r.error) { toast.error("Não foi possível entrar com Google"); return; }
     if (r.redirected) return;
     navigate({ to: "/" });
   }

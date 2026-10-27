@@ -29,7 +29,7 @@ function Perfil() {
       return data;
     },
   });
-  const nome = user.user_metadata?.full_name || user.user_metadata?.name || "Usuário";
+  const nome = user.user_metadata?.["full_name"] || user.user_metadata?.["name"] || "Usuário";
 
   return (
     <AppShell back>
