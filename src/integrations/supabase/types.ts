@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      scripts: {
+        Row: {
+          conteudo: string
+          created_at: string
+          estilo: string | null
+          id: string
+          monetizacao: string | null
+          nome_app: string | null
+          o_que_faz: string | null
+          objetivo: string | null
+          publico: string | null
+          script_completo: string | null
+          tipo: string
+          titulo: string
+          user_id: string
+        }
+        Insert: {
+          conteudo?: string
+          created_at?: string
+          estilo?: string | null
+          id?: string
+          monetizacao?: string | null
+          nome_app?: string | null
+          o_que_faz?: string | null
+          objetivo?: string | null
+          publico?: string | null
+          script_completo?: string | null
+          tipo?: string
+          titulo?: string
+          user_id?: string
+        }
+        Update: {
+          conteudo?: string
+          created_at?: string
+          estilo?: string | null
+          id?: string
+          monetizacao?: string | null
+          nome_app?: string | null
+          o_que_faz?: string | null
+          objetivo?: string | null
+          publico?: string | null
+          script_completo?: string | null
+          tipo?: string
+          titulo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
