@@ -15,6 +15,8 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedCriarTipoRouteImport } from './routes/_authenticated/criar.$tipo'
 import { Route as AuthenticatedCriarAppRouteImport } from './routes/_authenticated/criar.app'
+import { Route as AuthenticatedCriarPaginaVendasRouteImport } from './routes/_authenticated/criar.pagina-vendas'
+import { Route as AuthenticatedCriarVideoRouteImport } from './routes/_authenticated/criar.video'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -45,6 +47,17 @@ const AuthenticatedCriarAppRoute = AuthenticatedCriarAppRouteImport.update({
   path: '/criar/app',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCriarPaginaVendasRoute =
+  AuthenticatedCriarPaginaVendasRouteImport.update({
+    id: '/criar/pagina-vendas',
+    path: '/criar/pagina-vendas',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCriarVideoRoute = AuthenticatedCriarVideoRouteImport.update({
+  id: '/criar/video',
+  path: '/criar/video',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -52,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/perfil': typeof AuthenticatedPerfilRoute
   '/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/criar/app': typeof AuthenticatedCriarAppRoute
+  '/criar/pagina-vendas': typeof AuthenticatedCriarPaginaVendasRoute
+  '/criar/video': typeof AuthenticatedCriarVideoRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -59,6 +74,8 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/criar/app': typeof AuthenticatedCriarAppRoute
+  '/criar/pagina-vendas': typeof AuthenticatedCriarPaginaVendasRoute
+  '/criar/video': typeof AuthenticatedCriarVideoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +85,28 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/_authenticated/criar/app': typeof AuthenticatedCriarAppRoute
+  '/_authenticated/criar/pagina-vendas': typeof AuthenticatedCriarPaginaVendasRoute
+  '/_authenticated/criar/video': typeof AuthenticatedCriarVideoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/perfil' | '/criar/$tipo' | '/criar/app'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/perfil'
+    | '/criar/$tipo'
+    | '/criar/app'
+    | '/criar/pagina-vendas'
+    | '/criar/video'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/perfil' | '/' | '/criar/$tipo' | '/criar/app'
+  to:
+    | '/auth'
+    | '/perfil'
+    | '/'
+    | '/criar/$tipo'
+    | '/criar/app'
+    | '/criar/pagina-vendas'
+    | '/criar/video'
   id:
     | '__root__'
     | '/_authenticated'
@@ -82,6 +115,8 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/criar/$tipo'
     | '/_authenticated/criar/app'
+    | '/_authenticated/criar/pagina-vendas'
+    | '/_authenticated/criar/video'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -133,6 +168,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCriarAppRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/criar/pagina-vendas': {
+      id: '/_authenticated/criar/pagina-vendas'
+      path: '/criar/pagina-vendas'
+      fullPath: '/criar/pagina-vendas'
+      preLoaderRoute: typeof AuthenticatedCriarPaginaVendasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/criar/video': {
+      id: '/_authenticated/criar/video'
+      path: '/criar/video'
+      fullPath: '/criar/video'
+      preLoaderRoute: typeof AuthenticatedCriarVideoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -141,6 +190,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCriarTipoRoute: typeof AuthenticatedCriarTipoRoute
   AuthenticatedCriarAppRoute: typeof AuthenticatedCriarAppRoute
+  AuthenticatedCriarPaginaVendasRoute: typeof AuthenticatedCriarPaginaVendasRoute
+  AuthenticatedCriarVideoRoute: typeof AuthenticatedCriarVideoRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -148,6 +199,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCriarTipoRoute: AuthenticatedCriarTipoRoute,
   AuthenticatedCriarAppRoute: AuthenticatedCriarAppRoute,
+  AuthenticatedCriarPaginaVendasRoute: AuthenticatedCriarPaginaVendasRoute,
+  AuthenticatedCriarVideoRoute: AuthenticatedCriarVideoRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
