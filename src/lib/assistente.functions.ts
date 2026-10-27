@@ -21,7 +21,7 @@ export const perguntarAssistente = createServerFn({ method: "POST" })
     return { messages: d.messages.slice(-12).map((m) => ({ role: m.role === "assistant" ? "assistant" : "user", content: String(m.content).slice(0, 2000) }) as Msg) };
   })
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
+    const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) return { ok: false as const, error: "Assistente indisponível." };
     const { createOpenAI } = await import("@ai-sdk/openai");
     const { streamText } = await import("ai");
