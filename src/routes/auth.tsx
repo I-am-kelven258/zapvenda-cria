@@ -34,15 +34,16 @@ function AuthPage() {
       if (error) { toast.error("Email ou senha inválidos"); return; }
       navigate({ to: "/" });
     } else {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password: senha,
         options: { emailRedirectTo: window.location.origin, data: { full_name: nome } },
       });
       setLoading(false);
       if (error) { toast.error(error.message); return; }
-      toast.success("Conta criada! Confirme pelo link enviado ao seu email.");
-      setModo("entrar");
+      toast.success("Conta criada!");
+      if (data.session) navigate({ to: "/" });
+      else setModo("entrar");
     }
   }
 
