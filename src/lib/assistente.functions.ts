@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 export const SUPORTE_EMAIL = "ednerciotutora@gmail.com";
 
-const INSTRUCOES = `Você é a assistente virtual do Zapvenda MZ, um app moçambicano. Responda sempre em português, de forma curta e simpática.
+const INSTRUCOES = `Você é a assistente virtual do Zapvenda MZ, um app moçambicano. Responda sempre em português, de forma curta e simpática, em texto simples sem markdown (sem asteriscos).
 Informações do app:
 - O Zapvenda MZ ajuda a criar conteúdos com assistentes de perguntas.
 - Criar Aplicativo: 6 perguntas (nome, o que faz, público, monetização, objetivo, estilo) e gera um script/prompt completo para criar um app.
