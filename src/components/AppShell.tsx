@@ -1,25 +1,12 @@
 import { useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Menu, Headset, Home, User, LogOut, ArrowLeft } from "lucide-react";
+import { Menu, Home, User, LogOut, ArrowLeft, Mail } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
-
-export const WHATSAPP_URL = `https://wa.me/258858941859?text=${encodeURIComponent("Olá, preciso de suporte no Zapvenda MZ")}`;
-
-export function WhatsAppButton() {
-  return (
-    <a
-      href={WHATSAPP_URL}
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Suporte no WhatsApp"
-      className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_8px_30px_-6px_var(--primary)] transition-transform hover:scale-105"
-    >
-      <Headset className="h-6 w-6" />
-    </a>
-  );
-}
+import { CARDS } from "@/lib/cards";
+import { AssistenteIA, AjudaEmail } from "@/components/AssistenteIA";
+import { SUPORTE_EMAIL } from "@/lib/assistente.functions";
 
 export function AppShell({ children, back }: { children: ReactNode; back?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -33,8 +20,10 @@ export function AppShell({ children, back }: { children: ReactNode; back?: boole
     navigate({ to: "/auth", replace: true });
   }
 
+  const item = "flex items-center gap-3 rounded-lg p-3 hover:bg-secondary";
+
   return (
-    <div className="min-h-screen bg-background pb-24 text-foreground">
+    <div className="flex min-h-screen flex-col bg-background pb-24 text-foreground">
       <header className="sticky top-0 z-40 grid grid-cols-[40px_1fr_40px] items-center border-b border-border bg-background/90 px-4 py-4 backdrop-blur">
         {back ? (
           <button onClick={() => window.history.back()} aria-label="Voltar" className="text-muted-foreground">
@@ -51,17 +40,24 @@ export function AppShell({ children, back }: { children: ReactNode; back?: boole
         </button>
       </header>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className="border-border bg-card">
+        <SheetContent side="right" className="overflow-y-auto border-border bg-card">
           <SheetTitle className="font-display text-foreground">Menu</SheetTitle>
-          <nav className="mt-6 flex flex-col gap-2">
-            <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg p-3 hover:bg-secondary"><Home className="h-5 w-5 text-primary" /> Início</Link>
-            <Link to="/perfil" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg p-3 hover:bg-secondary"><User className="h-5 w-5 text-primary" /> Perfil e histórico</Link>
-            <button onClick={sair} className="flex items-center gap-3 rounded-lg p-3 text-left hover:bg-secondary"><LogOut className="h-5 w-5 text-primary" /> Sair</button>
+          <nav className="mt-6 flex flex-col gap-1">
+            <Link to="/" onClick={() => setOpen(false)} className={item}><Home className="h-5 w-5 text-primary" /> Início</Link>
+            {CARDS.map(({ tipo, label, icon: Icon }) => (
+              <Link key={tipo} to="/criar/$tipo" params={{ tipo }} onClick={() => setOpen(false)} className={item}>
+                <Icon className="h-5 w-5 text-primary" /> {label}
+              </Link>
+            ))}
+            <Link to="/perfil" onClick={() => setOpen(false)} className={item}><User className="h-5 w-5 text-primary" /> Perfil e histórico</Link>
+            <a href={`mailto:${SUPORTE_EMAIL}`} className={item}><Mail className="h-5 w-5 text-primary" /> Ajuda</a>
+            <button onClick={sair} className={`${item} text-left`}><LogOut className="h-5 w-5 text-primary" /> Sair</button>
           </nav>
         </SheetContent>
       </Sheet>
-      <main className="mx-auto max-w-md px-4 pt-6">{children}</main>
-      <WhatsAppButton />
+      <main className="mx-auto w-full max-w-md flex-1 px-4 pt-6">{children}</main>
+      <footer className="mt-10 px-4"><AjudaEmail /></footer>
+      <AssistenteIA />
     </div>
   );
 }

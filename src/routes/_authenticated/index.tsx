@@ -1,17 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Smartphone, Video, Image, ShoppingCart, FileText, Sparkles, FileSignature, MessageCircle, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-
-export const CARDS = [
-  { tipo: "app", label: "Criar Aplicativo", icon: Smartphone },
-  { tipo: "video", label: "Criar Vídeo", icon: Video },
-  { tipo: "imagem", label: "Criar Imagem", icon: Image },
-  { tipo: "pagina-vendas", label: "Criar Página de Vendas", icon: ShoppingCart },
-  { tipo: "pagina-documentos", label: "Criar Página de Documentos", icon: FileText },
-  { tipo: "prompt", label: "Criar Prompt", icon: Sparkles },
-  { tipo: "contratos", label: "Criar Contratos", icon: FileSignature },
-  { tipo: "funil-whatsapp", label: "Funil de Vendas no WhatsApp", icon: MessageCircle },
-] as const;
+import { CARDS } from "@/lib/cards";
+export { CARDS };
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({

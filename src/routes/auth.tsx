@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { WhatsAppButton } from "@/components/AppShell";
+import { AssistenteIA, AjudaEmail } from "@/components/AssistenteIA";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -78,7 +78,8 @@ function AuthPage() {
           <span className="font-semibold text-primary">{modo === "entrar" ? "Cadastre-se" : "Entrar"}</span>
         </button>
       </div>
-      <WhatsAppButton />
+      <div className="mt-8"><AjudaEmail /></div>
+      <AssistenteIA />
     </div>
   );
 }
