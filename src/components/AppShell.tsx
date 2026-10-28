@@ -25,22 +25,22 @@ export function AppShell({ children, back }: { children: ReactNode; back?: boole
   return (
     <div className="flex min-h-screen flex-col bg-background pb-24 text-foreground">
       <header className="sticky top-0 z-40 grid grid-cols-[40px_1fr_40px] items-center border-b border-border bg-background/90 px-4 py-4 backdrop-blur">
+        <button onClick={() => setOpen(true)} aria-label="Menu" className="text-foreground">
+          <Menu className="h-6 w-6" />
+        </button>
+        <Link to="/" className="text-center font-display text-xl font-bold tracking-tight text-foreground">
+          zapvenda<span className="text-primary">mz</span>
+        </Link>
         {back ? (
-          <button onClick={() => window.history.back()} aria-label="Voltar" className="text-muted-foreground">
+          <button onClick={() => window.history.back()} aria-label="Voltar" className="justify-self-end text-muted-foreground">
             <ArrowLeft className="h-6 w-6" />
           </button>
         ) : (
           <span />
         )}
-        <Link to="/" className="text-center font-display text-xl font-bold tracking-tight text-foreground">
-          zapvenda<span className="text-primary">mz</span>
-        </Link>
-        <button onClick={() => setOpen(true)} aria-label="Menu" className="justify-self-end text-foreground">
-          <Menu className="h-6 w-6" />
-        </button>
       </header>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="overflow-y-auto border-border bg-card">
+        <SheetContent side="left" className="overflow-y-auto border-border bg-card">
           <SheetTitle className="font-display text-foreground">Menu</SheetTitle>
           <nav className="mt-6 flex flex-col gap-1">
             <Link to="/" onClick={() => setOpen(false)} className={item}><Home className="h-5 w-5 text-primary" /> Início</Link>
