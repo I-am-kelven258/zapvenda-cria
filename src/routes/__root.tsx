@@ -86,13 +86,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Crie aplicativos, páginas de vendas e funis de WhatsApp com IA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      // A imagem de partilha tem de estar aqui: as rotas internas têm ssr:false,
+      // por isso o head() delas nunca chega ao HTML que as redes sociais lêem.
+      { property: "og:image", content: "https://zapvenda-cria.lovable.app/og-image.png" },
+      { name: "twitter:image", content: "https://zapvenda-cria.lovable.app/og-image.png" },
       { name: "theme-color", content: "#000000" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" },
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
   }),
   shellComponent: RootShell,
