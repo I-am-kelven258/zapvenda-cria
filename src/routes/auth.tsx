@@ -39,13 +39,6 @@ function AuthPage() {
     }
   }
 
-  async function google() {
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (r.error) { toast.error("Não foi possível entrar com Google"); return; }
-    if (r.redirected) return;
-    navigate({ to: "/" });
-  }
-
   const input = "w-full rounded-xl border border-border bg-card px-4 py-3.5 text-foreground placeholder:text-muted-foreground outline-none focus:border-primary";
 
   return (
@@ -53,11 +46,7 @@ function AuthPage() {
       <div className="w-full max-w-sm">
         <h1 className="text-center font-display text-4xl font-bold">zapvenda<span className="text-primary">mz</span></h1>
         <p className="mt-2 text-center text-muted-foreground">Crie apps, páginas e funis em minutos.</p>
-        <Button onClick={google} className="mt-8 h-auto w-full gap-3 rounded-xl bg-foreground py-3.5 font-semibold text-background hover:bg-foreground/90">
-          <span className="font-bold">G</span> Continuar com Google
-        </Button>
-        <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground"><div className="h-px flex-1 bg-border" />ou<div className="h-px flex-1 bg-border" /></div>
-        <form onSubmit={submit} className="space-y-3">
+        <form onSubmit={submit} className="mt-8 space-y-3">
           <input className={input} type="email" aria-label="Email" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input className={input} type="password" aria-label="Senha" autoComplete="current-password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required />
           <Button type="submit" disabled={loading} className="h-auto w-full rounded-xl py-3.5 font-semibold disabled:opacity-60">
