@@ -1,17 +1,20 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { AssistenteIA, AjudaEmail } from "@/components/AssistenteIA";
+import { AjudaEmail } from "@/components/AssistenteIA";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Entrar — Zapvenda MZ" },
-      { name: "description", content: "Entre ou crie sua conta no Zapvenda MZ e gere scripts de apps, vendas e mais." },
+      { name: "description", content: "Entre no Zapvenda MZ ou compre seu acesso pelos planos mensal e trimestral Premium." },
       { property: "og:title", content: "Entrar — Zapvenda MZ" },
-      { property: "og:description", content: "Entre ou crie sua conta no Zapvenda MZ." },
+      { property: "og:description", content: "Entre no Zapvenda MZ ou escolha um plano de acesso." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AuthPage,
@@ -19,8 +22,6 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [modo, setModo] = useState<"entrar" | "criar">("entrar");
-  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,22 +29,14 @@ function AuthPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    if (modo === "entrar") {
+    try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-      setLoading(false);
       if (error) { toast.error("Email ou senha inválidos"); return; }
       navigate({ to: "/" });
-    } else {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password: senha,
-        options: { emailRedirectTo: window.location.origin, data: { full_name: nome } },
-      });
+    } catch {
+      toast.error("Não foi possível entrar. Tente novamente.");
+    } finally {
       setLoading(false);
-      if (error) { toast.error(error.message); return; }
-      toast.success("Conta criada!");
-      if (data.session) navigate({ to: "/" });
-      else setModo("entrar");
     }
   }
 
@@ -61,25 +54,22 @@ function AuthPage() {
       <div className="w-full max-w-sm">
         <h1 className="text-center font-display text-4xl font-bold">zapvenda<span className="text-primary">mz</span></h1>
         <p className="mt-2 text-center text-muted-foreground">Crie apps, páginas e funis em minutos.</p>
-        <button onClick={google} className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-foreground py-3.5 font-semibold text-background">
+        <Button onClick={google} className="mt-8 h-auto w-full gap-3 rounded-xl bg-foreground py-3.5 font-semibold text-background hover:bg-foreground/90">
           <span className="font-bold">G</span> Continuar com Google
-        </button>
+        </Button>
         <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground"><div className="h-px flex-1 bg-border" />ou<div className="h-px flex-1 bg-border" /></div>
         <form onSubmit={submit} className="space-y-3">
-          {modo === "criar" && <input className={input} placeholder="Seu nome" value={nome} onChange={(e) => setNome(e.target.value)} required />}
-          <input className={input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input className={input} type="password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required />
-          <button disabled={loading} className="w-full rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground disabled:opacity-60">
-            {loading ? "Aguarde..." : modo === "entrar" ? "Entrar" : "Criar conta"}
-          </button>
+          <input className={input} type="email" aria-label="Email" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input className={input} type="password" aria-label="Senha" autoComplete="current-password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required />
+          <Button type="submit" disabled={loading} className="h-auto w-full rounded-xl py-3.5 font-semibold disabled:opacity-60">
+            {loading ? "Aguarde..." : "Entrar"}
+          </Button>
         </form>
-        <button onClick={() => setModo(modo === "entrar" ? "criar" : "entrar")} className="mt-5 w-full text-center text-sm text-muted-foreground">
-          {modo === "entrar" ? "Não tem conta? " : "Já tem conta? "}
-          <span className="font-semibold text-primary">{modo === "entrar" ? "Cadastre-se" : "Entrar"}</span>
-        </button>
+        <Button asChild variant="link" className="mt-5 w-full font-semibold">
+          <Link to="/planos">COMPRAR ACESSO</Link>
+        </Button>
       </div>
       <div className="mt-8"><AjudaEmail /></div>
-      <AssistenteIA />
     </div>
   );
 }
