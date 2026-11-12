@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -24,6 +25,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ver, setVer] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,7 +50,7 @@ function AuthPage() {
         <p className="mt-2 text-center text-muted-foreground">Crie apps, páginas e funis em minutos.</p>
         <form onSubmit={submit} className="mt-8 space-y-3">
           <input className={input} type="email" aria-label="Email" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input className={input} type="password" aria-label="Senha" autoComplete="current-password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required />
+          <div className="relative"><input className={`${input} pr-12`} type={ver ? "text" : "password"} aria-label="Senha" autoComplete="current-password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required /><button type="button" onClick={() => setVer(!ver)} aria-label={ver ? "Esconder senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">{ver ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button></div>
           <Button type="submit" disabled={loading} className="h-auto w-full rounded-xl py-3.5 font-semibold disabled:opacity-60">
             {loading ? "Aguarde..." : "Entrar"}
           </Button>
