@@ -28,7 +28,7 @@ function Dashboard() {
             key={tipo}
             to="/criar/$tipo"
             params={{ tipo }}
-            className="group flex w-full min-w-0 min-h-36 flex-col justify-between rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary"
+            className="group flex min-h-40 w-full min-w-0 flex-col justify-between rounded-2xl border border-red-200 bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:shadow-lg active:translate-y-0 dark:border-red-900 dark:hover:border-red-600"
           >
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent">
               <Icon className="h-6 w-6 text-primary" />
