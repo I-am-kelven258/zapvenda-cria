@@ -129,7 +129,7 @@ function AuthPage() {
           <div className="mt-12 w-full border-t border-neutral-200" />
           <section className="mt-10 w-full max-w-4xl text-center">
             <h2 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">Para quem é a Trakify?</h2>
-            <p className="mx-auto mt-3 max-w-3xl text-xl font-bold uppercase tracking-wide text-red-700 sm:text-2xl">
+            <p className="mx-auto mt-3 max-w-4xl text-2xl font-bold uppercase tracking-wide text-red-700 sm:text-3xl md:text-4xl">
               Para quem quer vender mais pela internet
             </p>
             <div className="mt-7 grid grid-cols-2 gap-3 text-left sm:grid-cols-3">
