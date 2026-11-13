@@ -19,11 +19,9 @@ export const Route = createFileRoute("/_authenticated/")({
 });
 
 function Dashboard() {
-  const { user } = Route.useRouteContext();
-  const nome = (user.user_metadata?.["full_name"] || user.user_metadata?.["name"] || user.email?.split("@")[0] || "").split(" ")[0];
   return (
     <AppShell>
-      <h1 className="font-display text-2xl font-bold">Olá, {nome} 👋</h1>
+      <h1 className="font-display text-2xl font-bold">Olá 👋</h1>
       <p className="mt-1 text-muted-foreground">O que vamos criar hoje?</p>
       <div className="mt-6 grid grid-cols-2 gap-3">
         {CARDS.map(({ tipo, label, icon: Icon }) => (
