@@ -126,6 +126,27 @@ function AuthPage() {
               ))}
             </div>
           </section>
+          <div className="mt-12 w-full border-t border-neutral-200" />
+          <section className="mt-10 w-full max-w-4xl text-center">
+            <h2 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">Para quem é a Trakify?</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm font-bold uppercase tracking-wide text-red-700 sm:text-base">
+              Para quem quer vender mais pela internet
+            </p>
+            <div className="mt-7 grid grid-cols-2 gap-3 text-left sm:grid-cols-3">
+              {[
+                { title: "Empreendedores digitais", description: "Transforma ideias em projectos online." },
+                { title: "Afiliados", description: "Divulga ofertas e acompanha resultados." },
+                { title: "Pequenos negócios", description: "Apresenta produtos e conquista clientes." },
+                { title: "Criadores de conteúdo", description: "Cria conteúdos para atrair público." },
+                { title: "Quem está a começar", description: "Dá os primeiros passos nas vendas online." },
+              ].map(({ title, description }) => (
+                <div key={title} className="flex min-h-28 flex-col justify-center rounded-xl border border-red-200 bg-white p-4 transition-all duration-200 hover:-translate-y-1 hover:border-red-400 hover:shadow-md">
+                  <h3 className="text-sm font-semibold leading-tight text-black sm:text-base">{title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-neutral-600 sm:text-sm">{description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
         </section>
       </main>
     );
