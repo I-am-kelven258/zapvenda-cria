@@ -50,11 +50,11 @@ function AuthPage() {
       if (data.session?.user) {
         navigate({ to: "/" });
       } else {
-        setShowLogin(true);
+        toast.error("Nenhuma conta encontrada neste Dispositivo, por favor escolhe um plano a assinar e comece hoje.");
+        document.getElementById("planos-acesso")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     } catch {
       toast.error("Não foi possível verificar a tua sessão. Tenta novamente.");
-      setShowLogin(true);
     } finally {
       setLoading(false);
     }
@@ -154,7 +154,7 @@ function AuthPage() {
             </div>
           </section>
           <div className="mt-12 w-full border-t border-neutral-200" />
-          <section className="mt-10 w-full max-w-4xl text-center">
+          <section id="planos-acesso" className="mt-10 w-full max-w-4xl scroll-mt-6 text-center">
             <h2 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">Escolhe o teu plano</h2>
             <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-neutral-600 sm:text-lg">
               Escolhe o acesso ideal para começares a usar a Trakify.
