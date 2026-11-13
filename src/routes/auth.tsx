@@ -121,7 +121,7 @@ function AuthPage() {
               ].map((title, index) => (
                 <div key={title} className="flex min-h-36 flex-col items-start justify-between rounded-2xl border border-red-300 bg-white p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:shadow-lg sm:min-h-40 sm:p-5">
                   <span className="text-sm font-bold tracking-wider text-red-700">{String(index + 1).padStart(2, "0")}</span>
-                  <h3 className="mt-5 text-left text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
+                  <h3 className="mt-5 text-left text-lg font-semibold leading-tight text-black sm:text-xl">{title}</h3>
                 </div>
               ))}
             </div>
@@ -141,8 +141,8 @@ function AuthPage() {
                 { title: "Quem está a começar", description: "Dá os primeiros passos nas vendas online." },
               ].map(({ title, description }) => (
                 <div key={title} className="flex min-h-28 flex-col justify-center rounded-xl border border-red-200 bg-white p-4 transition-all duration-200 hover:-translate-y-1 hover:border-red-400 hover:shadow-md">
-                  <h3 className="text-sm font-semibold leading-tight text-black sm:text-base">{title}</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-neutral-600 sm:text-sm">{description}</p>
+                  <h3 className="text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-600 sm:text-base">{description}</p>
                 </div>
               ))}
             </div>
