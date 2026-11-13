@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye, EyeOff, LogIn } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -26,7 +26,38 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [ver, setVer] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      if (data.session?.user) navigate({ to: "/" });
+      else setCheckingSession(false);
+    }).catch(() => {
+      if (active) setCheckingSession(false);
+    });
+    return () => { active = false; };
+  }, [navigate]);
+
+  async function openAccount() {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) throw error;
+      if (data.session?.user) {
+        navigate({ to: "/" });
+      } else {
+        setShowLogin(true);
+      }
+    } catch {
+      toast.error("Não foi possível verificar a tua sessão. Tenta novamente.");
+      setShowLogin(true);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,6 +75,10 @@ function AuthPage() {
 
   const input = "w-full rounded-xl border border-border bg-card px-4 py-3.5 text-foreground placeholder:text-muted-foreground outline-none focus:border-primary";
 
+  if (checkingSession) {
+    return <main className="flex min-h-screen items-center justify-center bg-white"><span className="text-sm text-neutral-500">A preparar a Trakify...</span></main>;
+  }
+
   if (!showLogin) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16 text-black">
@@ -57,13 +92,24 @@ function AuthPage() {
           <p className="mt-5 max-w-3xl text-base leading-relaxed text-neutral-600 sm:text-lg">
             A Trakify coloca as ferramentas que precisas para criar e começar a vender num só lugar.
           </p>
-          <Button
-            type="button"
-            onClick={() => setShowLogin(true)}
-            className="mt-10 h-14 rounded-xl bg-black px-7 text-base font-semibold text-white hover:bg-neutral-800"
-          >
-            Começar agora <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <Button
+              type="button"
+              onClick={() => setShowLogin(true)}
+              className="h-14 rounded-xl bg-black px-7 text-base font-semibold text-white hover:bg-neutral-800"
+            >
+              Começar agora <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={openAccount}
+              className="h-14 rounded-xl border-2 border-black bg-white px-7 text-base font-semibold text-black hover:bg-neutral-100"
+            >
+              <LogIn className="mr-2 h-5 w-5" /> Entrar na minha conta
+            </Button>
+          </div>
         </section>
       </main>
     );
