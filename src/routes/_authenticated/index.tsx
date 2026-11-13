@@ -11,6 +11,8 @@ export const Route = createFileRoute("/_authenticated/")({
       { name: "description", content: "Crie aplicativos, vídeos, páginas de vendas e funis de WhatsApp com o Zapvenda MZ." },
       { property: "og:title", content: "Zapvenda MZ — Painel" },
       { property: "og:description", content: "Crie aplicativos, páginas de vendas e funis de WhatsApp." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Dashboard,

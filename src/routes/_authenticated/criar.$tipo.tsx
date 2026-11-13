@@ -9,6 +9,8 @@ export const Route = createFileRoute("/_authenticated/criar/$tipo")({
       { name: "description", content: "Esta ferramenta do Zapvenda MZ chega em breve." },
       { property: "og:title", content: "Em breve — Zapvenda MZ" },
       { property: "og:description", content: "Esta ferramenta chega em breve." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: EmBreve,

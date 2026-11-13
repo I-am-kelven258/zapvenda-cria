@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep access plans in a shared browser-safe module and expose /planos outside the authenticated layout so visitors can reach checkout without signing in.
+- Generate application scripts through an authenticated server function and a server-only OpenAI helper; validate answers in a browser-safe schema so private credentials and provider requests never enter the frontend.
