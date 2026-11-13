@@ -156,20 +156,20 @@ function AuthPage() {
             </p>
             <div className="mt-7 grid gap-4 text-left sm:grid-cols-2">
               {PLANOS.map((plano) => (
-                <article key={plano.id} className={`relative flex flex-col rounded-2xl border bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-6 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
+                <article key={plano.id} className={`relative flex min-h-[340px] flex-col rounded-2xl border bg-white p-8 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:min-h-[380px] sm:p-10 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
                   {plano.premium ? (
                     <div className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap bg-white px-3 text-red-700">
                       <Crown className="h-5 w-5" />
                       <span className="text-sm font-bold tracking-wide">PREMIUM</span>
                     </div>
                   ) : <div className="min-h-7" />}
-                  <h3 className="mt-3 text-xl font-bold text-black sm:text-2xl">{plano.nome}</h3>
+                  <h3 className="mt-5 text-2xl font-bold text-black sm:text-3xl">{plano.nome}</h3>
                   <p className="mt-5 text-black">
-                    <span className="text-4xl font-bold">{plano.preco}</span>
+                    <span className="text-5xl font-bold sm:text-6xl">{plano.preco}</span>
                     <span className="ml-2 text-sm text-neutral-600">Meticais</span>
                   </p>
                   <p className="mt-1 text-sm text-neutral-600">por {plano.periodo}</p>
-                  <a href={plano.checkout} target="_blank" rel="noreferrer" aria-label={`Aderir ao ${plano.nome.toLowerCase()}`} className="mt-7 inline-flex h-12 w-full items-center justify-center rounded-xl bg-black px-5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-800 hover:shadow-lg active:translate-y-0">
+                  <a href={plano.checkout} target="_blank" rel="noreferrer" aria-label={`Aderir ao ${plano.nome.toLowerCase()}`} className="mt-auto inline-flex h-14 w-full items-center justify-center rounded-xl bg-black px-5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-800 hover:shadow-lg active:translate-y-0">
                     Aderir acesso <ArrowUpRight className="ml-2 h-4 w-4" />
                   </a>
                 </article>
