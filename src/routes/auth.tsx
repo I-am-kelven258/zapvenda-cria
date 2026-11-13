@@ -4,7 +4,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Eye, EyeOff, LogIn } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn } from "lucide-react";
+import { PLANOS } from "@/lib/planos";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -144,6 +145,31 @@ function AuthPage() {
                   <h3 className="text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-neutral-600 sm:text-base">{description}</p>
                 </div>
+              ))}
+            </div>
+          </section>
+          <div className="mt-12 w-full border-t border-neutral-200" />
+          <section className="mt-10 w-full max-w-4xl text-center">
+            <h2 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">Escolhe o teu plano</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-neutral-600 sm:text-lg">
+              Escolhe o acesso ideal para começares a usar a Trakify.
+            </p>
+            <div className="mt-7 grid gap-4 text-left sm:grid-cols-2">
+              {PLANOS.map((plano) => (
+                <article key={plano.id} className={`flex flex-col rounded-2xl border bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-6 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
+                  <div className="flex min-h-7 items-center gap-2 text-red-700">
+                    {plano.premium && <><Crown className="h-5 w-5" /><span className="text-sm font-bold tracking-wide">PREMIUM</span></>}
+                  </div>
+                  <h3 className="mt-3 text-xl font-bold text-black sm:text-2xl">{plano.nome}</h3>
+                  <p className="mt-5 text-black">
+                    <span className="text-4xl font-bold">{plano.preco}</span>
+                    <span className="ml-2 text-sm text-neutral-600">Meticais</span>
+                  </p>
+                  <p className="mt-1 text-sm text-neutral-600">por {plano.periodo}</p>
+                  <a href={plano.checkout} target="_blank" rel="noreferrer" aria-label={`Aderir ao ${plano.nome.toLowerCase()}`} className="mt-7 inline-flex h-12 w-full items-center justify-center rounded-xl bg-black px-5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-800 hover:shadow-lg active:translate-y-0">
+                    Aderir acesso <ArrowUpRight className="ml-2 h-4 w-4" />
+                  </a>
+                </article>
               ))}
             </div>
           </section>
