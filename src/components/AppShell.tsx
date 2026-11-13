@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Menu, Home, User, LogOut, ArrowLeft, Mail } from "lucide-react";
+import { Menu, Home, User, LogOut, ArrowLeft, Mail, Sun, Moon } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
 import { CARDS } from "@/lib/cards";
@@ -48,7 +48,7 @@ export function AppShell({ children, back }: { children: ReactNode; back?: boole
 
   return (
     <div className="flex min-h-screen flex-col bg-background pb-24 text-foreground">
-      <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-border bg-background/95 px-4 py-4 backdrop-blur">
+      <header className="sticky top-0 z-40 flex items-center gap-3 border-b-2 border-red-200 bg-background/95 px-4 py-4 shadow-sm backdrop-blur dark:border-red-900">
         <button onClick={() => setOpen(true)} aria-label="Abrir menu" className="shrink-0 text-foreground">
           <Menu className="h-6 w-6" />
         </button>
@@ -66,15 +66,15 @@ export function AppShell({ children, back }: { children: ReactNode; back?: boole
             onClick={toggleTheme}
             aria-label={theme === "dark" ? "Mudar para tema claro" : "Mudar para tema escuro"}
             title={theme === "dark" ? "Tema escuro" : "Tema claro"}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-card text-xl transition-colors hover:bg-secondary"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-red-300 bg-card text-red-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-red-500 hover:bg-red-50 hover:shadow-md dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950"
           >
-            {theme === "dark" ? "🌙" : "☀️"}
+            {theme === "dark" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </button>
           {userName && <span className="truncate text-sm font-semibold text-foreground">{userName}</span>}
         </div>
       </header>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="overflow-y-auto border-border bg-card">
+        <SheetContent side="left" className="overflow-y-auto border-r-2 border-red-200 bg-card dark:border-red-900">
           <SheetTitle className="font-display text-foreground">Menu</SheetTitle>
           <nav className="mt-6 flex flex-col gap-1">
             <Link to="/" onClick={() => setOpen(false)} className={item}><Home className="h-5 w-5 text-primary" /> Início</Link>
