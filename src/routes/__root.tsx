@@ -80,9 +80,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Zapvenda MZ" },
-      { name: "description", content: "Crie aplicativos, páginas de vendas e funis de WhatsApp com IA." },
-      { property: "og:title", content: "Zapvenda MZ" },
+      { title: "Trakify" },
+      { name: "description", content: "Plataforma de criação e gestão de ferramentas digitais com inteligência artificial." },
+      { property: "og:title", content: "Trakify" },
       { property: "og:description", content: "Crie aplicativos, páginas de vendas e funis de WhatsApp com IA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
