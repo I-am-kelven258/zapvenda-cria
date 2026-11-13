@@ -10,4 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep access plans in a shared browser-safe module and expose /planos outside the authenticated layout so visitors can reach checkout without signing in.
-- Generate application scripts through an authenticated server function and a server-only OpenAI helper; validate answers in a browser-safe schema so private credentials and provider requests never enter the frontend.
+- Generate application scripts locally with the template generator in src/lib/script.ts; no external paid API, so generation never depends on provider credit.

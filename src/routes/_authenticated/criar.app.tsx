@@ -1,11 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Copy, Save, Loader2, Check } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { type Respostas } from "@/lib/script";
-import { gerarScriptComIA } from "@/lib/app-script.functions";
+import { gerarScript, type Respostas } from "@/lib/script";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -41,7 +39,6 @@ function Wizard() {
   const [salvo, setSalvo] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
-  const gerar = useServerFn(gerarScriptComIA);
   const pedidoEmCurso = useRef(false);
 
   const p = PERGUNTAS[step] ?? PERGUNTAS[0];
@@ -56,11 +53,10 @@ function Wizard() {
     setErro(null);
     setGerando(true);
     try {
-      const result = await gerar({ data: r });
-      if (result.ok) setScript(result.script);
-      else setErro(result.error);
+      await new Promise((res) => setTimeout(res, 1200));
+      setScript(gerarScript(r));
     } catch {
-      setErro("Não foi possível gerar o script. Verifique a ligação e se a sua sessão continua ativa; tente novamente.");
+      setErro("Não foi possível gerar o script. As suas respostas foram mantidas; tente novamente.");
     } finally {
       pedidoEmCurso.current = false;
       setGerando(false);
@@ -91,7 +87,7 @@ function Wizard() {
     <AppShell>
       <div className="mt-24 flex flex-col items-center text-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="mt-6 font-display text-lg font-semibold">Gerando seu script com IA...</p>
+        <p className="mt-6 font-display text-lg font-semibold">Gerando seu script ...</p>
         <p className="mt-1 text-sm text-muted-foreground">Organizando ideias, telas e funcionalidades</p>
       </div>
     </AppShell>
