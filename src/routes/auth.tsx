@@ -50,7 +50,7 @@ function AuthPage() {
       if (data.session?.user) {
         navigate({ to: "/" });
       } else {
-        toast.error("Nenhuma conta encontrada neste Dispositivo, por favor escolhe um plano a assinar e comece hoje.");
+        toast.error("Nenhuma conta encontrada neste Dispositivo, por favor escolhe um plano a assinar e comece hoje.", { duration: 9000, style: { background: "#dc2626", color: "#ffffff", border: "2px solid #991b1b", fontSize: "16px", fontWeight: 700, padding: "18px 20px", minWidth: "min(420px, calc(100vw - 32px))", boxShadow: "0 12px 32px rgba(127, 29, 29, 0.35)" } });
         document.getElementById("planos-acesso")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     } catch {
