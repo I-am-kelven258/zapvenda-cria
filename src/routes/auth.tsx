@@ -84,7 +84,7 @@ function AuthPage() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16 text-black">
         <section className="mx-auto flex w-full max-w-5xl flex-col items-start text-left">
-          <header className="mb-10 flex w-full items-center justify-between border-b border-red-200 pb-5">
+          <header className="sticky top-0 z-50 -mx-6 mb-10 flex w-[calc(100%+3rem)] items-center justify-between border-b border-red-200 bg-white px-6 py-4 shadow-sm">
             <span className="font-display text-3xl font-extrabold tracking-tight text-black sm:text-4xl">
               Trakify<span className="text-red-700">.</span>
             </span>
