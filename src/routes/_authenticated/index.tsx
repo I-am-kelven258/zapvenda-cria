@@ -21,7 +21,6 @@ export const Route = createFileRoute("/_authenticated/")({
 function Dashboard() {
   return (
     <AppShell>
-      <h1 className="font-display text-2xl font-bold">Olá 👋</h1>
       <p className="mt-1 text-muted-foreground">O que vamos criar hoje?</p>
       <div className="mt-6 grid grid-cols-2 gap-3">
         {CARDS.map(({ tipo, label, icon: Icon }) => (
