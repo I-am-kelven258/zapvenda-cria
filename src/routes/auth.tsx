@@ -82,17 +82,17 @@ function AuthPage() {
   if (!showLogin) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16 text-black">
-        <section className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+        <section className="mx-auto flex w-full max-w-5xl flex-col items-start text-left">
           <h1 className="max-w-4xl font-display text-5xl font-bold leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
             Transforme uma ideia em um negócio digital <span className="text-red-700 underline decoration-4 decoration-red-700 underline-offset-8">pronto para vender.</span>
           </h1>
           <p className="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-700 sm:text-xl md:text-2xl">
             Crie aplicativos, páginas de vendas e estruturas completas com IA, mesmo sem saber programar.
           </p>
-          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-neutral-600 sm:text-lg">
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-neutral-600 sm:text-lg">
             A Trakify coloca as ferramentas que precisas para criar e começar a vender num só lugar.
           </p>
-          <div className="mt-10 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
+          <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <Button
               type="button"
               variant="outline"
