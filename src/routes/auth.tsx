@@ -156,7 +156,7 @@ function AuthPage() {
             </p>
             <div className="mt-7 grid gap-4 text-left sm:grid-cols-2">
               {PLANOS.map((plano) => (
-                <article key={plano.id} className={`relative flex min-h-[340px] flex-col rounded-2xl border bg-white p-8 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:min-h-[380px] sm:p-10 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
+                <article key={plano.id} className={`relative flex h-full min-h-[420px] flex-col rounded-2xl border bg-white p-8 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:min-h-[460px] sm:p-10 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
                   {plano.premium ? (
                     <div className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap bg-white px-3 text-red-700">
                       <Crown className="h-5 w-5" />
