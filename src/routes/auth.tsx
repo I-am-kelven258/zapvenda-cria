@@ -98,14 +98,14 @@ function AuthPage() {
               variant="outline"
               disabled={loading}
               onClick={openAccount}
-              className="h-14 rounded-xl border-2 border-black bg-white px-7 text-base font-semibold text-black hover:bg-neutral-100"
+              className="h-14 rounded-xl border-2 border-black bg-white px-7 text-base font-semibold text-black transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-100 hover:shadow-lg active:translate-y-0"
             >
               <LogIn className="mr-2 h-5 w-5" /> Entrar na minha conta
             </Button>
             <Button
               type="button"
               onClick={() => setShowLogin(true)}
-              className="h-14 rounded-xl bg-black px-7 text-base font-semibold text-white hover:bg-neutral-800"
+              className="h-14 rounded-xl bg-black px-7 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-800 hover:shadow-lg active:translate-y-0"
             >
               Começar agora <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -119,7 +119,7 @@ function AuthPage() {
                 { title: "Criador de criativos em vídeos virais", Icon: Video },
                 { title: "Rastreamento de vendas", Icon: ChartNoAxesCombined },
               ].map(({ title, Icon }) => (
-                <div key={title} className="flex min-h-36 flex-col items-center justify-between rounded-2xl border border-red-300 bg-white p-4 text-center transition-colors hover:border-red-500 sm:min-h-40 sm:p-5">
+                <div key={title} className="flex min-h-36 flex-col items-center justify-between rounded-2xl border border-red-300 bg-white p-4 text-center transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:shadow-lg sm:min-h-40 sm:p-5">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100">
                     <Icon className="h-6 w-6 text-neutral-800" />
                   </div>
