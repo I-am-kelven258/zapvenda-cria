@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Eye, EyeOff, LogIn, Smartphone, ShoppingCart, Video, ChartNoAxesCombined } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye, EyeOff, LogIn } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -114,16 +114,14 @@ function AuthPage() {
             <h2 className="mb-5 text-center text-2xl font-bold tracking-tight text-black sm:text-3xl">O que oferece</h2>
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {[
-                { title: "Criador de app com IA", Icon: Smartphone },
-                { title: "Criador de Página de vendas", Icon: ShoppingCart },
-                { title: "Criador de criativos em vídeos virais", Icon: Video },
-                { title: "Rastreamento de vendas", Icon: ChartNoAxesCombined },
-              ].map(({ title, Icon }) => (
-                <div key={title} className="flex min-h-36 flex-col items-center justify-between rounded-2xl border border-red-300 bg-white p-4 text-center transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:shadow-lg sm:min-h-40 sm:p-5">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100">
-                    <Icon className="h-6 w-6 text-neutral-800" />
-                  </div>
-                  <h3 className="mt-5 text-center text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
+                "Criador de app com IA",
+                "Criador de Página de vendas",
+                "Criador de criativos em vídeos virais",
+                "Rastreamento de vendas",
+              ].map((title, index) => (
+                <div key={title} className="flex min-h-36 flex-col items-start justify-between rounded-2xl border border-red-300 bg-white p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:shadow-lg sm:min-h-40 sm:p-5">
+                  <span className="text-sm font-bold tracking-wider text-red-700">{String(index + 1).padStart(2, "0")}</span>
+                  <h3 className="mt-5 text-left text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
                 </div>
               ))}
             </div>
