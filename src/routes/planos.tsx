@@ -7,10 +7,10 @@ import { PLANOS } from "@/lib/planos";
 export const Route = createFileRoute("/planos")({
   head: () => ({
     meta: [
-      { title: "Planos de acesso — Zapvenda MZ" },
-      { name: "description", content: "Compre acesso ao Zapvenda MZ: plano mensal de 247 Meticais ou trimestral Premium de 597 Meticais." },
-      { property: "og:title", content: "Planos de acesso — Zapvenda MZ" },
-      { property: "og:description", content: "Escolha seu acesso mensal ou trimestral Premium ao Zapvenda MZ." },
+      { title: "Planos de acesso — Trakify" },
+      { name: "description", content: "Compre acesso ao Trakify: plano mensal de 247 Meticais ou trimestral Premium de 597 Meticais." },
+      { property: "og:title", content: "Planos de acesso — Trakify" },
+      { property: "og:description", content: "Escolha seu acesso mensal ou trimestral Premium ao Trakify." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -23,7 +23,7 @@ function PlanosPage() {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <header className="border-b border-border px-5 py-5">
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-4">
-          <Link to="/auth" className="font-display text-xl font-bold">zapvenda<span className="text-primary">mz</span></Link>
+          <Link to="/auth" className="font-display text-xl font-bold">Trakify<span className="text-primary">mz</span></Link>
           <Button asChild variant="ghost" size="sm"><Link to="/auth"><ArrowLeft />Entrar</Link></Button>
         </div>
       </header>
