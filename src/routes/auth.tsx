@@ -156,10 +156,13 @@ function AuthPage() {
             </p>
             <div className="mt-7 grid gap-4 text-left sm:grid-cols-2">
               {PLANOS.map((plano) => (
-                <article key={plano.id} className={`flex flex-col rounded-2xl border bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-6 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
-                  <div className="flex min-h-7 items-center gap-2 text-red-700">
-                    {plano.premium && <><Crown className="h-5 w-5" /><span className="text-sm font-bold tracking-wide">PREMIUM</span></>}
-                  </div>
+                <article key={plano.id} className={`relative flex flex-col rounded-2xl border bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-6 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
+                  {plano.premium ? (
+                    <div className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap bg-white px-3 text-red-700">
+                      <Crown className="h-5 w-5" />
+                      <span className="text-sm font-bold tracking-wide">PREMIUM</span>
+                    </div>
+                  ) : <div className="min-h-7" />}
                   <h3 className="mt-3 text-xl font-bold text-black sm:text-2xl">{plano.nome}</h3>
                   <p className="mt-5 text-black">
                     <span className="text-4xl font-bold">{plano.preco}</span>
