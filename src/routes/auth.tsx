@@ -158,7 +158,7 @@ function AuthPage() {
         <button
           type="button"
           onClick={() => setShowLogin(false)}
-          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          className="mb-8 inline-flex items-center gap-2 rounded-lg text-sm font-medium text-muted-foreground transition-all duration-200 hover:-translate-y-1 hover:text-foreground hover:shadow-md active:translate-y-0"
         >
           <ArrowLeft className="h-4 w-4" /> Voltar
         </button>
@@ -166,12 +166,12 @@ function AuthPage() {
         <p className="mt-2 text-center text-muted-foreground">Entre para continuar a criar e crescer.</p>
         <form onSubmit={submit} className="mt-8 space-y-3">
           <input className={input} type="email" aria-label="Email" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <div className="relative"><input className={`${input} pr-12`} type={ver ? "text" : "password"} aria-label="Senha" autoComplete="current-password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required /><button type="button" onClick={() => setVer(!ver)} aria-label={ver ? "Esconder senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">{ver ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button></div>
-          <Button type="submit" disabled={loading} className="h-auto w-full rounded-xl py-3.5 font-semibold disabled:opacity-60">
+          <div className="relative"><input className={`${input} pr-12`} type={ver ? "text" : "password"} aria-label="Senha" autoComplete="current-password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required /><button type="button" onClick={() => setVer(!ver)} aria-label={ver ? "Esconder senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md text-muted-foreground transition-all duration-200 hover:-translate-y-1 hover:text-foreground hover:shadow-md active:translate-y-0">{ver ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button></div>
+          <Button type="submit" disabled={loading} className="h-auto w-full rounded-xl py-3.5 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:translate-y-0 disabled:opacity-60">
             {loading ? "Aguarde..." : "Entrar"}
           </Button>
         </form>
-        <Button asChild variant="link" className="mt-5 w-full font-semibold">
+        <Button asChild variant="link" className="mt-5 w-full font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0">
           <Link to="/planos">COMPRAR ACESSO</Link>
         </Button>
       </div>
