@@ -16,7 +16,7 @@ export function AjudaEmail() {
 
 export function AssistenteIA() {
   const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState<Msg[]>([{ role: "assistant", content: "Olá! Sou a assistente do Zapvenda MZ. Como posso ajudar?" }]);
+  const [msgs, setMsgs] = useState<Msg[]>([{ role: "assistant", content: "Olá! Sou a assistente da Trakify. Como posso ajudar?" }]);
   const [txt, setTxt] = useState("");
   const [loading, setLoading] = useState(false);
   const perguntar = useServerFn(perguntarAssistente);
