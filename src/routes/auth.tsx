@@ -84,6 +84,11 @@ function AuthPage() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16 text-black">
         <section className="mx-auto flex w-full max-w-5xl flex-col items-start text-left">
+          <header className="mb-10 flex w-full items-center justify-between border-b border-red-200 pb-5">
+            <span className="font-display text-3xl font-extrabold tracking-tight text-black sm:text-4xl">
+              Trakify<span className="text-red-700">.</span>
+            </span>
+          </header>
           <h1 className="max-w-4xl font-display text-5xl font-bold leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
             Transforme uma ideia em um negócio digital <span className="text-red-700 underline decoration-4 decoration-red-700 underline-offset-8">pronto para vender.</span>
           </h1>
