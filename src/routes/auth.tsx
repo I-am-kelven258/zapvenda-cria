@@ -82,17 +82,17 @@ function AuthPage() {
   if (!showLogin) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16 text-black">
-        <section className="mx-auto flex w-full max-w-5xl flex-col items-start">
+        <section className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
           <h1 className="max-w-4xl font-display text-5xl font-bold leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
             Transforme uma ideia em um negócio digital <span className="text-red-700 underline decoration-4 decoration-red-700 underline-offset-8">pronto para vender.</span>
           </h1>
           <p className="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-700 sm:text-xl md:text-2xl">
             Crie aplicativos, páginas de vendas e estruturas completas com IA, mesmo sem saber programar.
           </p>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-neutral-600 sm:text-lg">
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-neutral-600 sm:text-lg">
             A Trakify coloca as ferramentas que precisas para criar e começar a vender num só lugar.
           </p>
-          <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <div className="mt-10 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
             <Button
               type="button"
               variant="outline"
@@ -110,8 +110,8 @@ function AuthPage() {
               Começar agora <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
-          <section className="mt-12 w-full max-w-4xl">
-            <h2 className="mb-5 text-2xl font-bold tracking-tight text-black sm:text-3xl">O que oferece</h2>
+          <section className="mt-12 w-full max-w-4xl text-center">
+            <h2 className="mb-5 text-center text-2xl font-bold tracking-tight text-black sm:text-3xl">O que oferece</h2>
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {[
                 { title: "Criador de app com IA", Icon: Smartphone },
@@ -119,11 +119,11 @@ function AuthPage() {
                 { title: "Criador de criativos em vídeos virais", Icon: Video },
                 { title: "Rastreamento de vendas", Icon: ChartNoAxesCombined },
               ].map(({ title, Icon }) => (
-                <div key={title} className="flex min-h-36 flex-col justify-between rounded-2xl border border-red-300 bg-white p-4 transition-colors hover:border-red-500 sm:min-h-40 sm:p-5">
+                <div key={title} className="flex min-h-36 flex-col items-center justify-between rounded-2xl border border-red-300 bg-white p-4 text-center transition-colors hover:border-red-500 sm:min-h-40 sm:p-5">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100">
                     <Icon className="h-6 w-6 text-neutral-800" />
                   </div>
-                  <h3 className="mt-5 text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
+                  <h3 className="mt-5 text-center text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
                 </div>
               ))}
             </div>
