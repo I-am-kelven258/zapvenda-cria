@@ -21,20 +21,20 @@ export const Route = createFileRoute("/_authenticated/")({
 function Dashboard() {
   return (
     <AppShell>
-      <p className="mt-1 text-muted-foreground">O que vamos criar hoje?</p>
-      <div className="mt-6 grid grid-cols-2 gap-3">
+      <p className="mt-1 text-base font-medium text-muted-foreground">O que vamos criar hoje?</p>
+      <div className="mt-6 grid grid-cols-2 gap-2">
         {CARDS.map(({ tipo, label, icon: Icon }) => (
           <Link
             key={tipo}
             to="/criar/$tipo"
             params={{ tipo }}
-            className="group flex min-h-36 flex-col justify-between rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary"
+            className="group flex w-full min-w-0 min-h-36 flex-col justify-between rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary"
           >
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent">
               <Icon className="h-6 w-6 text-primary" />
             </div>
             <div className="flex items-end justify-between gap-2">
-              <span className="text-sm font-semibold leading-tight">{label}</span>
+              <span className="text-base font-semibold leading-tight">{label}</span>
               <ChevronRight className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5" />
             </div>
           </Link>
