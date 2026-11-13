@@ -9,9 +9,9 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
     meta: [
-      { title: "Perfil e histórico — Zapvenda MZ" },
-      { name: "description", content: "Veja todos os scripts que você criou no Zapvenda MZ." },
-      { property: "og:title", content: "Perfil e histórico — Zapvenda MZ" },
+      { title: "Perfil e histórico — Trakify" },
+      { name: "description", content: "Veja todos os scripts que você criou no Trakify." },
+      { property: "og:title", content: "Perfil e histórico — Trakify" },
       { property: "og:description", content: "Todos os seus scripts em um só lugar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
