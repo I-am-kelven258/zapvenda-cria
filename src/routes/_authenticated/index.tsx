@@ -7,9 +7,9 @@ export { CARDS };
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
-      { title: "Zapvenda MZ — Painel" },
-      { name: "description", content: "Crie aplicativos, vídeos, páginas de vendas e funis de WhatsApp com o Zapvenda MZ." },
-      { property: "og:title", content: "Zapvenda MZ — Painel" },
+      { title: "Trakify — Painel" },
+      { name: "description", content: "Crie aplicativos, vídeos, páginas de vendas e funis de WhatsApp com a Trakify." },
+      { property: "og:title", content: "Trakify — Painel" },
       { property: "og:description", content: "Crie aplicativos, páginas de vendas e funis de WhatsApp." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
