@@ -29,7 +29,7 @@ export function AppShell({ children, back }: { children: ReactNode; back?: boole
           <Menu className="h-6 w-6" />
         </button>
         <Link to="/" className="text-center font-display text-xl font-bold tracking-tight text-foreground">
-          zapvenda<span className="text-primary">mz</span>
+          Trakify
         </Link>
         {back ? (
           <button onClick={() => window.history.back()} aria-label="Voltar" className="justify-self-end text-muted-foreground">
