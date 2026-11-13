@@ -95,19 +95,19 @@ function AuthPage() {
           <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <Button
               type="button"
-              onClick={() => setShowLogin(true)}
-              className="h-14 rounded-xl bg-black px-7 text-base font-semibold text-white hover:bg-neutral-800"
-            >
-              Começar agora <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button
-              type="button"
               variant="outline"
               disabled={loading}
               onClick={openAccount}
               className="h-14 rounded-xl border-2 border-black bg-white px-7 text-base font-semibold text-black hover:bg-neutral-100"
             >
               <LogIn className="mr-2 h-5 w-5" /> Entrar na minha conta
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setShowLogin(true)}
+              className="h-14 rounded-xl bg-black px-7 text-base font-semibold text-white hover:bg-neutral-800"
+            >
+              Começar agora <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </section>
