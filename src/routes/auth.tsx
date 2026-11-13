@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Eye, EyeOff, LogIn } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye, EyeOff, LogIn, Smartphone, ShoppingCart, Video, ChartNoAxesCombined } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -84,7 +84,7 @@ function AuthPage() {
       <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16 text-black">
         <section className="mx-auto flex w-full max-w-5xl flex-col items-start">
           <h1 className="max-w-4xl font-display text-5xl font-bold leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
-            Transforme uma ideia em um negócio digital <span className="underline decoration-4 underline-offset-8">pronto para vender.</span>
+            Transforme uma ideia em um negócio digital <span className="text-red-700 underline decoration-4 decoration-red-700 underline-offset-8">pronto para vender.</span>
           </h1>
           <p className="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-700 sm:text-xl md:text-2xl">
             Crie aplicativos, páginas de vendas e estruturas completas com IA, mesmo sem saber programar.
@@ -110,6 +110,24 @@ function AuthPage() {
               Começar agora <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
+          <section className="mt-12 w-full max-w-4xl">
+            <h2 className="mb-5 text-2xl font-bold tracking-tight text-black sm:text-3xl">O que oferece</h2>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {[
+                { title: "Criador de app com IA", Icon: Smartphone },
+                { title: "Criador de Página de vendas", Icon: ShoppingCart },
+                { title: "Criador de criativos em vídeos virais", Icon: Video },
+                { title: "Rastreamento de vendas", Icon: ChartNoAxesCombined },
+              ].map(({ title, Icon }) => (
+                <div key={title} className="flex min-h-36 flex-col justify-between rounded-2xl border border-red-300 bg-white p-4 transition-colors hover:border-red-500 sm:min-h-40 sm:p-5">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100">
+                    <Icon className="h-6 w-6 text-neutral-800" />
+                  </div>
+                  <h3 className="mt-5 text-base font-semibold leading-tight text-black sm:text-lg">{title}</h3>
+                </div>
+              ))}
+            </div>
+          </section>
         </section>
       </main>
     );
