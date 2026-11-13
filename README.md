@@ -1,12 +1,12 @@
-# Zapvenda Cria
+# Trakify
 
-Crie um app completo chamado Zapvenda MZ - 
+Crie um app completo chamado Trakify - 
 
 
 ESTRUTURA:
 1. Página de Login/Cadastro: login com Google, campo email/senha. Salvar usuário no Supabase.
 
-2. Dashboard Principal (/) : Header com logo zapvendamz em branco e menu hamburguer. Mostrar saudação "Olá, {nome}". Grid 2 colunas com 8 cards:
+2. Dashboard Principal (/) : Header com logo Trakify em branco e menu hamburguer. Mostrar saudação "Olá, {nome}". Grid 2 colunas com 8 cards:
 - Criar Aplicativo (ícone smartphone)
 - Criar Vídeo (ícone video)
 - Criar Imagem (ícone imagem)
@@ -28,7 +28,7 @@ Pergunta 6: Qual o estilo de design? (2 opções grandes clicáveis: [MINIMALIST
 
 DESIGN OBRIGATÓRIO:
 - Fundo #000000,
-- Header com logo "zapvendamz" em branco no centro
+- Header com logo "Trakify" em branco no centro
 - Barra de progresso no topo com 6 traços verdes, 
 - Card da pergunta com fundo #1A1A1A, borda verde #22C55E quando ativo
 - Botões: Voltar (cinza escuro) e Próximo (verde #22C55E) - exatamente igual a imagem anexada
@@ -36,7 +36,7 @@ DESIGN OBRIGATÓRIO:
 
 FUNCIONAMENTO:
 - Ao clicar em Próximo, salva resposta no state e vai para próxima pergunta.
-- Na última pergunta (6), ao clicar em Próximo, gera a página de RESULTADO FINAL com o SCRIPT COMPLETO formatado com ícones 📱🎯👥💰 etc, igual o zapvendamz gera.
+- Na última pergunta (6), ao clicar em Próximo, gera a página de RESULTADO FINAL com o SCRIPT COMPLETO formatado com ícones 📱🎯👥💰 etc, igual o Trakify gera.
 - Salvar no Supabase tabela scripts com colunas: nome_app, o_que_faz, publico, monetizacao, objetivo, estilo, script_completo, user_id
 
 Stack: Next.js, Tailwind, Supabase, Shadcn. Mobile first.
@@ -46,7 +46,7 @@ Botões Voltar e Próximo verde. No final, gerar script completo usando IA (simu
 
 4. Histórico: Salvar todos os scripts criados no Supabase tabela "scripts" (user_id, tipo, titulo, conteudo, created_at). Listar no perfil.
 
-6. Botão Flutuante WhatsApp: Botão verde fixo canto inferior direito, com ícone headset, ao clicar abre wa.me/258858941859 com mensagem "Olá, preciso de suporte no Zapvenda MZ"
+6. Botão Flutuante WhatsApp: Botão verde fixo canto inferior direito, com ícone headset, ao clicar abre wa.me/258858941859 com mensagem "Olá, preciso de suporte no Trakify"
 
 TECNOLOGIA: Next.js 14, Tailwind, Supabase Auth e Database, Lucide Icons, Shadcn/UI.
 Crie tudo funcional e com dados mockados bonitos.
@@ -58,7 +58,7 @@ Respostas às perguntas de configuração:
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://zapvenda-cria.lovable.app
+**Live app**: https://Trakify-cria.lovable.app
 
 ## Build with Lovable
 
