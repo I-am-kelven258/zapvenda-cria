@@ -197,7 +197,7 @@ function AuthPage() {
           <button
             type="button"
             onClick={() => setShowLogin(false)}
-            className="mb-10 inline-flex items-center gap-2 rounded-lg text-sm font-medium text-slate-300 transition hover:text-white"
+            className="mb-10 inline-flex items-center gap-2 rounded-lg text-sm font-medium text-slate-300 transition-all duration-200 hover:-translate-y-1 hover:text-white hover:drop-shadow-[0_6px_12px_rgba(255,255,255,0.18)] active:translate-y-0"
           >
             <ArrowLeft className="h-4 w-4" /> Voltar
           </button>
@@ -250,16 +250,16 @@ function AuthPage() {
                 <span className="text-sm font-medium text-slate-200">Palavra-passe</span>
                 <div className="relative">
                   <input className={`${input} pr-12`} type={ver ? "text" : "password"} aria-label="Senha" autoComplete="current-password" placeholder="A tua palavra-passe" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required />
-                  <button type="button" onClick={() => setVer(!ver)} aria-label={ver ? "Esconder senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 transition hover:text-white">{ver ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button>
+                  <button type="button" onClick={() => setVer(!ver)} aria-label={ver ? "Esconder senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 transition-all duration-200 hover:-translate-y-1 hover:text-white hover:drop-shadow-[0_4px_8px_rgba(255,255,255,0.25)] active:translate-y-0">{ver ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button>
                 </div>
               </label>
-              <Button type="submit" disabled={loading} className="h-14 w-full rounded-xl border border-red-400/40 bg-red-600 text-base font-bold text-white shadow-[0_8px_28px_rgba(220,38,38,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-red-500 hover:shadow-[0_12px_34px_rgba(220,38,38,0.38)] active:translate-y-0 disabled:opacity-60">
+              <Button type="submit" disabled={loading} className="h-14 w-full rounded-xl border border-red-400/40 bg-red-600 text-base font-bold text-white shadow-[0_8px_28px_rgba(220,38,38,0.28)] transition-all duration-200 hover:-translate-y-1 hover:bg-red-500 hover:shadow-[0_14px_38px_rgba(220,38,38,0.48)] active:translate-y-0 disabled:opacity-60">
                 {loading ? "Aguarde..." : "Entrar na Trakify"} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </form>
 
             <div className="my-6 flex items-center gap-3"><div className="h-px flex-1 bg-white/10" /><span className="text-xs text-slate-500">AINDA NÃO TENS ACESSO?</span><div className="h-px flex-1 bg-white/10" /></div>
-            <Button asChild variant="outline" className="h-12 w-full rounded-xl border-white/20 bg-white/[0.04] font-semibold text-white transition hover:border-red-400/50 hover:bg-red-500/10 hover:text-white">
+            <Button asChild variant="outline" className="h-12 w-full rounded-xl border-white/20 bg-white/[0.04] font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-1 hover:border-red-400/50 hover:bg-red-500/10 hover:text-white hover:shadow-[0_12px_28px_rgba(220,38,38,0.2)] active:translate-y-0">
               <Link to="/planos">Ver planos e comprar acesso <ArrowUpRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
