@@ -50,7 +50,7 @@ function Dashboard() {
             className="group relative flex min-h-44 w-full min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-500/60 hover:shadow-[0_16px_40px_rgba(220,38,38,0.10)] active:translate-y-0 md:p-6"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 transition-all duration-200 group-hover:scale-105 group-hover:bg-red-500 group-hover:text-white dark:text-red-300 dark:group-hover:text-white">
-              <Icon className="h-6 w-6 text-primary" />
+              <Icon className="h-6 w-6" />
             </div>
             <div className="flex items-end justify-between gap-2">
               <span className="text-base font-semibold leading-tight md:text-lg">{label}<span className="mt-1 block text-xs font-normal text-muted-foreground">Abrir ferramenta</span></span>
