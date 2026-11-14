@@ -132,7 +132,17 @@ export function IntegracoesVendas() {
     });
     setSaving(false);
     if (error || data?.error) {
-      toast.error(data?.error ?? "Não foi possível criar. A função do servidor pode ainda não estar publicada.");
+      let diagnostic = error?.message ?? "Falha ao comunicar com o servidor.";
+      const errorContext = (error as { context?: Response } | null)?.context;
+      if (errorContext) {
+        try {
+          const responseBody = await errorContext.clone().json();
+          if (typeof responseBody?.error === "string") diagnostic = responseBody.error;
+        } catch {
+          if (errorContext.status) diagnostic = `Erro HTTP ${errorContext.status}: ${diagnostic}`;
+        }
+      }
+      toast.error(typeof data?.error === "string" ? data.error : diagnostic);
       return;
     }
     toast.success("Integração configurada.");
