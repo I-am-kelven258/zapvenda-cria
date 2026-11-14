@@ -32,6 +32,13 @@ function AuthPage() {
   const [ver, setVer] = useState(false);
 
   useEffect(() => {
+    if (window.location.search.includes("acesso=expirado")) {
+      toast.error("O teu período de acesso à Trakify terminou. Contacta o administrador para renovar.");
+      window.history.replaceState({}, "", "/auth");
+    }
+  }, []);
+
+  useEffect(() => {
     let active = true;
     getValidatedUser(supabase).then((user) => {
       if (!active) return;
