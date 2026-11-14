@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Activity, ArrowUpRight, CheckCircle2, Clock3, Link2, Loader2, Plus, ShieldCheck, Trash2, WalletCards } from "lucide-react";
+import { Activity, Clock3, Link2, Loader2, Plus, ShieldCheck, Trash2, WalletCards } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
