@@ -20,32 +20,50 @@ export const Route = createFileRoute("/planos")({
 
 function PlanosPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="border-b border-border px-5 py-5">
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-4">
-          <Link to="/auth" className="font-display text-xl font-bold">Trakify<span className="text-primary">mz</span></Link>
-          <Button asChild variant="ghost" size="sm"><Link to="/auth"><ArrowLeft />Entrar</Link></Button>
+    <div className="flex min-h-screen flex-col bg-white text-black">
+      <header className="sticky top-0 z-50 border-b border-red-200 bg-white px-5 py-4 shadow-sm">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
+          <Link to="/auth" className="font-display text-3xl font-extrabold tracking-tight text-black">Trakify<span className="text-red-700">.</span></Link>
+          <Button asChild variant="outline" size="sm" className="border-2 border-black bg-white font-semibold text-black transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-100 hover:shadow-md">
+            <Link to="/auth"><ArrowLeft className="mr-1 h-4 w-4" />Entrar</Link>
+          </Button>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-10 sm:py-16">
-        <h1 className="font-display text-3xl font-bold">Planos de acesso</h1>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
-          {PLANOS.map((plano) => (
-            <article key={plano.id} className={`flex flex-col rounded-lg border bg-card p-6 ${plano.premium ? "border-primary" : "border-border"}`}>
-              <div className="flex min-h-7 items-center gap-2 text-primary">
-                {plano.premium && <><Crown className="h-5 w-5" /><span className="text-sm font-semibold">PREMIUM</span></>}
-              </div>
-              <h2 className="mt-3 font-display text-xl font-semibold">{plano.nome}</h2>
-              <p className="mt-6"><span className="font-display text-4xl font-bold">{plano.preco}</span><span className="ml-2 text-sm text-muted-foreground">Meticais</span></p>
-              <p className="mt-1 text-sm text-muted-foreground">por {plano.periodo}</p>
-              <Button asChild variant={plano.premium ? "default" : "secondary"} className="mt-8 h-12 w-full">
-                <a href={plano.checkout} aria-label={`Aderir ao ${plano.nome.toLowerCase()}`}>Aderir acesso<ArrowUpRight /></a>
-              </Button>
-            </article>
-          ))}
-        </div>
+
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-start px-5 py-12 text-left sm:px-6 sm:py-16">
+        <section className="w-full">
+          <h1 className="text-center text-3xl font-bold tracking-tight text-black sm:text-4xl">Escolhe o teu plano</h1>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-base leading-relaxed text-neutral-600 sm:text-lg">
+            Escolhe o acesso ideal para começares a usar a Trakify.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {PLANOS.map((plano) => (
+              <article key={plano.id} className={`relative flex h-full min-h-[420px] flex-col rounded-2xl border bg-white p-8 text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:min-h-[460px] sm:p-10 ${plano.premium ? "border-red-500" : "border-red-300"}`}>
+                {plano.premium ? (
+                  <div className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap bg-white px-3 text-red-700">
+                    <Crown className="h-5 w-5" />
+                    <span className="text-sm font-bold tracking-wide">PREMIUM</span>
+                  </div>
+                ) : <div className="min-h-7" />}
+                <h2 className="mt-5 text-2xl font-bold text-black sm:text-3xl">{plano.nome}</h2>
+                <p className="mt-5 text-black">
+                  <span className="text-5xl font-bold sm:text-6xl">{plano.preco}</span>
+                  <span className="ml-2 text-sm text-neutral-600">Meticais</span>
+                </p>
+                <p className="mt-1 text-sm text-neutral-600">por {plano.periodo}</p>
+                <a href={plano.checkout} target="_blank" rel="noreferrer" aria-label={`Aderir ao ${plano.nome.toLowerCase()}`} className="mt-auto inline-flex h-14 w-full items-center justify-center rounded-xl bg-black px-5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-800 hover:shadow-lg active:translate-y-0">
+                  Aderir acesso <ArrowUpRight className="ml-2 h-4 w-4" />
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
       </main>
-      <footer className="px-5 pb-8"><AjudaEmail /></footer>
+
+      <footer className="border-t border-neutral-200 px-5 py-8">
+        <div className="mx-auto max-w-4xl"><AjudaEmail /></div>
+      </footer>
     </div>
   );
 }
