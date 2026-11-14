@@ -106,13 +106,13 @@ function Wizard() {
         <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4"><span className="font-display font-bold">Conteúdo completo</span><span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-600 dark:text-rose-400">EDITÁVEL</span></div>
         <pre className="whitespace-pre-wrap break-words p-5 font-sans text-sm leading-7 sm:p-7">{script}</pre>
       </section>
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <Button variant="secondary" onClick={async () => { try { await navigator.clipboard.writeText(script); toast.success("Script copiado!"); } catch { toast.error("Não foi possível copiar o script."); } }} className="h-auto whitespace-normal rounded-xl py-3.5 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"><Copy className="h-5 w-5" /> Copiar Script</Button>
-        <Button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="h-auto whitespace-normal rounded-xl bg-rose-600 py-3.5 font-semibold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-rose-700 hover:shadow-xl">
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+        <Button variant="secondary" onClick={async () => { try { await navigator.clipboard.writeText(script); toast.success("Script copiado!"); } catch { toast.error("Não foi possível copiar o script."); } }} className="h-auto min-h-12 flex-1 whitespace-normal rounded-xl py-3.5 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"><Copy className="h-5 w-5" /> Copiar Script</Button>
+        <Button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="h-auto min-h-12 flex-1 whitespace-normal rounded-xl bg-rose-600 py-3.5 font-semibold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-rose-700 hover:shadow-xl">
           {salvo ? <><Check className="h-5 w-5" /> Ver histórico</> : <><Save className="h-5 w-5" /> {salvando ? "Salvando..." : "Salvar"}</>}
         </Button>
+        <AcaoCriarComIA tipo="app" />
       </div>
-      <AcaoCriarComIA tipo="app" />
     </AppShell>
   );
 
