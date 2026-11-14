@@ -47,7 +47,7 @@ Deno.serve(async (request) => {
     .select("id,user_id,provider,currency,amount_format,fixed_fee_minor,status,endpoint_token_hash")
     .eq("endpoint_token_hash", await sha256(endpointToken))
     .maybeSingle();
-  if (lookupError || !integration || integration.status !== "setup_pending") return json({ error: "Integration not found or inactive" }, 404);
+  if (lookupError || !integration || !["setup_pending", "active"].includes(integration.status)) return json({ error: "Integration not found or inactive" }, 404);
 
   const { data: secretRow } = await admin.from("sales_integration_secrets")
     .select("provider_secret").eq("integration_id", integration.id).maybeSingle();
