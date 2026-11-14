@@ -185,6 +185,9 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
             <Link to="/perfil" className="flex items-center gap-3 rounded-xl px-3.5 py-3.5 text-base font-medium text-foreground transition hover:bg-secondary hover:text-foreground">
               <User className="h-[22px] w-[22px] text-red-500" /> Perfil e histórico
             </Link>
+            <Link to="/sobre" className="flex items-center gap-3 rounded-xl px-3.5 py-3.5 text-base font-medium text-foreground transition hover:bg-secondary hover:text-foreground">
+              <BookOpen className="h-[22px] w-[22px] text-red-500" /> Sobre a Trakify
+            </Link>
             <a href={`mailto:${SUPORTE_EMAIL}`} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground">
               <Mail className="h-[22px] w-[22px] text-red-500" /> Ajuda e suporte
             </a>
@@ -270,6 +273,10 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
               <Link to="/perfil" onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl border border-transparent px-3 py-3 text-sm font-medium text-foreground transition-all hover:border-red-500/20 hover:bg-red-500/[0.06]">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-red-600 dark:text-red-300"><User className="h-5 w-5" /></span>
                 <span className="flex-1">Perfil e histórico</span><ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+              <Link to="/sobre" onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl border border-transparent px-3 py-3 text-sm font-medium text-foreground transition-all hover:border-red-500/20 hover:bg-red-500/[0.06]">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-red-600 dark:text-red-300"><BookOpen className="h-5 w-5" /></span>
+                <span className="flex-1">Sobre a Trakify</span><ChevronRight className="h-4 w-4 text-muted-foreground" />
               </Link>
               <a href={`mailto:${SUPORTE_EMAIL}`} onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl border border-transparent px-3 py-3 text-sm font-medium text-foreground transition-all hover:border-red-500/20 hover:bg-red-500/[0.06]">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-red-600 dark:text-red-300"><Mail className="h-5 w-5" /></span>
