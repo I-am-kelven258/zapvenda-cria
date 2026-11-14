@@ -114,7 +114,7 @@ function Wizard() {
         {PERGUNTAS.map((_, i) => <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-secondary"}`} />)}
       </div>
       <p className="mt-4 text-sm text-muted-foreground">Pergunta {step + 1} de 6</p>
-      <div className="mt-3 rounded-2xl border-2 border-primary bg-card p-5">
+      <div className="mt-3 rounded-3xl border border-primary/25 bg-card p-5 shadow-xl shadow-primary/5 sm:p-7">
         <h2 className="font-display text-xl font-bold">{p.q}</h2>
         {p.key === "estilo" ? (
           <div className="mt-5 space-y-3">
@@ -127,12 +127,12 @@ function Wizard() {
           </div>
         ) : (
           <textarea autoFocus aria-label={p.q} maxLength={4000} rows={4} value={valor} placeholder={p.ph} onChange={(e) => setR({ ...r, [p.key]: e.target.value })}
-            className="mt-4 w-full resize-none rounded-xl border border-border bg-background p-4 text-foreground outline-none placeholder:text-muted-foreground focus:border-primary" />
+            className="mt-5 min-h-36 w-full resize-y rounded-2xl border border-primary/25 bg-background/80 px-4 py-4 text-base leading-relaxed text-foreground shadow-sm shadow-primary/5 outline-none transition-all duration-200 placeholder:text-muted-foreground/75 hover:border-primary/50 hover:shadow-md hover:shadow-primary/10 focus:border-primary focus:ring-4 focus:ring-primary/15" />
         )}
       </div>
       {erro && <p role="alert" className="mt-4 text-sm text-destructive">{erro}</p>}
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <Button variant="secondary" onClick={() => { setErro(null); if (step === 0) navigate({ to: "/" }); else setStep(step - 1); }} className="h-auto py-3.5 font-semibold">Voltar</Button>
+        <Button variant="secondary" onClick={() => { setErro(null); if (step === 0) navigate({ to: "/" }); else setStep(step - 1); }} className="h-auto py-3.5 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">Voltar</Button>
         <Button onClick={proximo} disabled={gerando} className="h-auto py-3.5 font-semibold">{step === 5 ? "Gerar Script" : "Próximo"}</Button>
       </div>
     </AppShell>
