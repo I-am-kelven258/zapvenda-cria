@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Menu, Home, User, LogOut, ArrowLeft, Mail, Sun, Moon, Search, X, ArrowUpRight } from "lucide-react";
+import { EllipsisVertical, Home, User, LogOut, ArrowLeft, Mail, Sun, Moon, Search, X, ArrowUpRight, ChevronRight, Sparkles } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
 import { CARDS } from "@/lib/cards";
@@ -77,7 +77,7 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
     <div className="flex min-h-screen flex-col bg-background pb-6 text-foreground">
       <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-background/95 px-4 shadow-sm backdrop-blur md:px-6">
         <button onClick={() => setOpen(true)} aria-label="Abrir menu" className="shrink-0 rounded-lg p-2 text-foreground transition hover:bg-secondary md:hidden">
-          <Menu className="h-5 w-5" />
+          <EllipsisVertical className="h-6 w-6" />
         </button>
         {back && (
           <button onClick={() => window.history.back()} aria-label="Voltar" className="shrink-0 rounded-lg p-2 text-muted-foreground transition hover:bg-secondary">
@@ -204,19 +204,93 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
         </div>
       </div>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="overflow-y-auto border-r border-border bg-card">
-          <SheetTitle className="font-display text-foreground">Menu</SheetTitle>
-          <nav className="mt-6 flex flex-col gap-1">
-            <Link to="/" onClick={() => setOpen(false)} className={item}><Home className="h-5 w-5 text-primary" /> Início</Link>
-            {CARDS.map(({ tipo, label, icon: Icon }) => (
-              <Link key={tipo} to="/criar/$tipo" params={{ tipo }} onClick={() => setOpen(false)} className={item}>
-                <Icon className="h-5 w-5 text-primary" /> {label}
+        <SheetContent side="left" className="w-[88vw] max-w-[370px] overflow-y-auto border-r border-red-500/20 bg-background p-0">
+          <div className="flex min-h-full flex-col">
+            <div className="relative overflow-hidden border-b border-border bg-gradient-to-br from-red-600 via-red-600 to-rose-700 px-5 pb-6 pt-7 text-white">
+              <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full border border-white/10" />
+              <div className="pointer-events-none absolute -right-2 top-0 h-28 w-28 rounded-full bg-white/10 blur-2xl" />
+              <div className="relative flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-white/15 shadow-inner">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <SheetTitle className="font-display text-xl font-extrabold tracking-tight text-white">Trakify</SheetTitle>
+                  <p className="mt-0.5 text-xs font-medium text-white/75">O teu espaço de criação</p>
+                </div>
+              </div>
+              <div className="relative mt-5 flex items-center gap-3 rounded-2xl border border-white/15 bg-black/10 p-3 backdrop-blur-sm">
+                {userAvatar ? (
+                  <img src={userAvatar} alt="" className="h-11 w-11 shrink-0 rounded-full border-2 border-white/70 object-cover" />
+                ) : (
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-white/50 bg-white/15 text-base font-bold">{userName ? userName.charAt(0).toUpperCase() : <User className="h-5 w-5" />}</span>
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold">{userName || "A tua conta"}</p>
+                  <p className="mt-0.5 text-xs text-white/75">Perfil Trakify</p>
+                </div>
+                <Link to="/perfil" onClick={() => setOpen(false)} aria-label="Abrir perfil" className="rounded-xl p-2 transition hover:bg-white/15">
+                  <ChevronRight className="h-5 w-5" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="px-4 pt-5">
+              <button
+                type="button"
+                onClick={() => { setOpen(false); setSearchQuery(""); setSearchOpen(true); }}
+                className="flex h-12 w-full items-center gap-3 rounded-2xl border border-border bg-card px-4 text-left text-sm text-muted-foreground shadow-sm transition hover:border-red-500/50 hover:bg-red-500/[0.04]"
+              >
+                <Search className="h-4 w-4 text-red-500" />
+                <span className="flex-1">Pesquisar ferramentas...</span>
+                <kbd className="rounded-md border border-border px-1.5 py-0.5 text-[10px]">⌕</kbd>
+              </button>
+            </div>
+
+            <nav className="flex-1 px-4 pb-5 pt-6">
+              <p className="mb-2 px-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground">Navegação</p>
+              <Link to="/" onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl border border-transparent px-3 py-3.5 text-sm font-semibold text-foreground transition-all hover:border-red-500/20 hover:bg-red-500/[0.06]">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/10 text-red-600 transition group-hover:bg-red-600 group-hover:text-white"><Home className="h-5 w-5" /></span>
+                <span className="flex-1">Visão geral</span><ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-red-500" />
               </Link>
-            ))}
-            <Link to="/perfil" onClick={() => setOpen(false)} className={item}><User className="h-5 w-5 text-primary" /> Perfil e histórico</Link>
-            <a href={`mailto:${SUPORTE_EMAIL}`} className={item}><Mail className="h-5 w-5 text-primary" /> Ajuda</a>
-            <button onClick={sair} className={`${item} text-left`}><LogOut className="h-5 w-5 text-primary" /> Sair</button>
-          </nav>
+
+              <div className="mb-2 mt-7 flex items-center justify-between px-2">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground">Ferramentas</p>
+                <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-300">{CARDS.length}</span>
+              </div>
+              <div className="space-y-1">
+                {CARDS.map(({ tipo, label, icon: Icon }) => (
+                  <Link key={tipo} to="/criar/$tipo" params={{ tipo }} onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl border border-transparent px-3 py-3 text-sm font-medium text-foreground transition-all hover:border-red-500/20 hover:bg-red-500/[0.06]">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-red-600 transition group-hover:bg-red-600 group-hover:text-white dark:text-red-300"><Icon className="h-5 w-5" /></span>
+                    <span className="min-w-0 flex-1">{label}</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-red-500" />
+                  </Link>
+                ))}
+              </div>
+
+              <p className="mb-2 mt-7 px-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground">A tua conta</p>
+              <Link to="/perfil" onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl border border-transparent px-3 py-3 text-sm font-medium text-foreground transition-all hover:border-red-500/20 hover:bg-red-500/[0.06]">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-red-600 dark:text-red-300"><User className="h-5 w-5" /></span>
+                <span className="flex-1">Perfil e histórico</span><ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+              <a href={`mailto:${SUPORTE_EMAIL}`} onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl border border-transparent px-3 py-3 text-sm font-medium text-foreground transition-all hover:border-red-500/20 hover:bg-red-500/[0.06]">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-red-600 dark:text-red-300"><Mail className="h-5 w-5" /></span>
+                <span className="flex-1">Ajuda e suporte</span><ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+              </a>
+            </nav>
+
+            <div className="border-t border-border bg-card/70 p-4">
+              <div className="flex gap-2">
+                <button type="button" onClick={toggleTheme} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-background text-xs font-semibold text-foreground transition hover:border-red-500/40 hover:bg-red-500/[0.05]">
+                  {theme === "dark" ? <Moon className="h-4 w-4 text-red-500" /> : <Sun className="h-4 w-4 text-red-500" />}
+                  {theme === "dark" ? "Tema escuro" : "Tema claro"}
+                </button>
+                <button onClick={sair} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/[0.06] text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white dark:text-red-300">
+                  <LogOut className="h-4 w-4" /> Terminar sessão
+                </button>
+              </div>
+              <p className="mt-3 text-center text-[10px] font-medium tracking-wide text-muted-foreground">TRAKIFY · WORKSPACE</p>
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
       <AssistenteIA />
