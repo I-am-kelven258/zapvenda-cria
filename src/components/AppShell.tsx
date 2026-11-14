@@ -158,7 +158,7 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
         <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-64 shrink-0 flex-col border-r border-border bg-card/70 px-4 py-6 md:flex">
           <p className="px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Workspace</p>
           <nav className="mt-3 flex flex-col gap-1">
-            <Link to="/" className="flex items-center gap-3 rounded-xl bg-red-500/10 px-3 py-3 text-sm font-semibold text-red-600 dark:text-red-300">
+            <Link to="/" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground">
               <Home className="h-5 w-5" /> Visão geral
             </Link>
             <p className="mb-1 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Ferramentas</p>
@@ -174,6 +174,9 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
             <a href={`mailto:${SUPORTE_EMAIL}`} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground">
               <Mail className="h-5 w-5 text-red-500" /> Ajuda e suporte
             </a>
+            <button onClick={sair} className="flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+              <LogOut className="h-5 w-5 text-red-500" /> Sair
+            </button>
           </nav>
           <div className="mt-auto rounded-2xl border border-red-500/15 bg-gradient-to-br from-red-500/10 to-transparent p-4">
             <p className="text-sm font-semibold">Trakify</p>
