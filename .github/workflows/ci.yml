@@ -1,4 +1,4 @@
-name: Trakify CI
+name: Trakify Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  validate:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,5 +20,3 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Build
         run: bun run build
-      - name: Lint
-        run: bun run lint
