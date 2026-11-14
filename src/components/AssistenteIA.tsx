@@ -63,7 +63,7 @@ export function AssistenteIA() {
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label="Assistente IA"
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_8px_30px_-6px_var(--primary)] transition-transform hover:scale-105"
+        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_8px_30px_-6px_var(--primary)] transition-transform hover:scale-110 motion-safe:animate-[trakify-assistant-float_3.2s_ease-in-out_infinite] motion-reduce:animate-none"
       >
         {open ? <X className="h-6 w-6" /> : <Headset className="h-6 w-6" />}
       </button>
