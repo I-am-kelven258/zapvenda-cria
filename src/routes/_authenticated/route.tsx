@@ -3,10 +3,18 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) throw redirect({ to: "/auth" });
-    return { user: data.user };
+  beforeLoad: async ({ context }) => {
+    const user = await context.queryClient.ensureQueryData({
+      queryKey: ["auth", "user"],
+      queryFn: async () => {
+        const { data, error } = await supabase.auth.getUser();
+        if (error) throw error;
+        return data.user;
+      },
+      staleTime: 60_000,
+    });
+    if (!user) throw redirect({ to: "/auth" });
+    return { user };
   },
   component: () => <Outlet />,
 });
