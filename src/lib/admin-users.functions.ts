@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import { env } from "node:process";
 
 const ADMIN_EMAIL = "ednercioazariasbonhane2@gmail.com";
 
@@ -32,9 +33,9 @@ function validateInput(value: unknown): CreateUserInput {
 export const criarUtilizadorAdmin = createServerFn({ method: "POST" })
   .inputValidator(validateInput)
   .handler(async ({ data }) => {
-    const url = process.env["SUPABASE_URL"];
-    const publishableKey = process.env["SUPABASE_PUBLISHABLE_KEY"];
-    const serviceRoleKey = process.env["SUPABASE_SERVICE_ROLE_KEY"];
+    const url = env["SUPABASE_URL"];
+    const publishableKey = env["SUPABASE_PUBLISHABLE_KEY"];
+    const serviceRoleKey = env["SUPABASE_SERVICE_ROLE_KEY"];
     if (!url || !publishableKey || !serviceRoleKey) {
       throw new Error("A configuração segura do servidor está incompleta.");
     }
