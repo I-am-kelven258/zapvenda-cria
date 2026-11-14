@@ -96,12 +96,18 @@ function Wizard() {
 
   if (script) return (
     <AppShell>
-      <h1 className="font-display text-2xl font-bold">Script pronto ✨</h1>
-      <p className="mt-1 text-muted-foreground">{r.nome_app}</p>
-      <pre className="mt-5 whitespace-pre-wrap break-words rounded-2xl border border-primary bg-card p-5 font-sans text-sm leading-relaxed">{script}</pre>
+      <section className="relative mb-5 overflow-hidden rounded-[2rem] border border-rose-500/20 bg-gradient-to-br from-rose-500/10 via-card to-card p-5 shadow-xl shadow-rose-950/5 sm:p-8">
+        <div className="text-xs font-bold uppercase tracking-[0.2em] text-rose-600 dark:text-rose-400">Resultado preparado pela Trakify</div>
+        <h1 className="mt-3 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Plano do aplicativo pronto ✨</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{r.nome_app} · Estrutura detalhada e prompt para desenvolvimento</p>
+      </section>
+      <section className="overflow-hidden rounded-[2rem] border border-rose-500/20 bg-card shadow-2xl shadow-rose-950/5">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4"><span className="font-display font-bold">Conteúdo completo</span><span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-600 dark:text-rose-400">EDITÁVEL</span></div>
+        <pre className="whitespace-pre-wrap break-words p-5 font-sans text-sm leading-7 sm:p-7">{script}</pre>
+      </section>
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <Button variant="secondary" onClick={async () => { try { await navigator.clipboard.writeText(script); toast.success("Script copiado!"); } catch { toast.error("Não foi possível copiar o script."); } }} className="h-auto whitespace-normal py-3.5 font-semibold"><Copy className="h-5 w-5" /> Copiar Script</Button>
-        <Button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="h-auto whitespace-normal py-3.5 font-semibold">
+        <Button variant="secondary" onClick={async () => { try { await navigator.clipboard.writeText(script); toast.success("Script copiado!"); } catch { toast.error("Não foi possível copiar o script."); } }} className="h-auto whitespace-normal rounded-xl py-3.5 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"><Copy className="h-5 w-5" /> Copiar Script</Button>
+        <Button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="h-auto whitespace-normal rounded-xl bg-rose-600 py-3.5 font-semibold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-rose-700 hover:shadow-xl">
           {salvo ? <><Check className="h-5 w-5" /> Ver histórico</> : <><Save className="h-5 w-5" /> {salvando ? "Salvando..." : "Salvar"}</>}
         </Button>
       </div>
