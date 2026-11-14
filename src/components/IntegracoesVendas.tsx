@@ -82,6 +82,11 @@ export function IntegracoesVendas() {
     return Array.from(totals.entries()).map(([currency, value]) => ({ currency, ...value }));
   }, [visibleSales]);
   const availableCurrencies = useMemo(() => Array.from(new Set(sales.map((sale) => sale.currency))), [sales]);
+  useEffect(() => {
+    if (availableCurrencies.length > 0 && !availableCurrencies.includes(chartCurrency)) {
+      setChartCurrency(availableCurrencies[0]);
+    }
+  }, [availableCurrencies, chartCurrency]);
   const dailySales = useMemo(() => {
     const days = Math.min(range === "all" ? 30 : Number(range), 30);
     const map = new Map<string, number>();
