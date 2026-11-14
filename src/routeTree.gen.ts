@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
+import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedCriarTipoRouteImport } from './routes/_authenticated/criar.$tipo'
 import { Route as AuthenticatedCriarAppRouteImport } from './routes/_authenticated/criar.app'
 import { Route as AuthenticatedCriarPaginaVendasRouteImport } from './routes/_authenticated/criar.pagina-vendas'
@@ -36,6 +37,11 @@ const PlanosRoute = PlanosRouteImport.update({
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/planos': typeof PlanosRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/criar/app': typeof AuthenticatedCriarAppRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/planos': typeof PlanosRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
   '/': typeof AuthenticatedIndexRoute
   '/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/criar/app': typeof AuthenticatedCriarAppRoute
@@ -113,6 +121,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/planos'
     | '/perfil'
+    | '/usuarios'
     | '/'
     | '/criar/$tipo'
     | '/criar/app'
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/planos'
     | '/_authenticated/perfil'
+    | '/_authenticated/usuarios'
     | '/_authenticated/'
     | '/_authenticated/criar/$tipo'
     | '/_authenticated/criar/app'
@@ -167,6 +177,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/usuarios': {
+      id: '/_authenticated/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/perfil': {
       id: '/_authenticated/perfil'
       path: '/perfil'
@@ -207,6 +224,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
+  AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCriarTipoRoute: typeof AuthenticatedCriarTipoRoute
   AuthenticatedCriarAppRoute: typeof AuthenticatedCriarAppRoute
@@ -216,6 +234,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
+  AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCriarTipoRoute: AuthenticatedCriarTipoRoute,
   AuthenticatedCriarAppRoute: AuthenticatedCriarAppRoute,
