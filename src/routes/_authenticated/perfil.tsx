@@ -67,7 +67,8 @@ function Perfil() {
       toast.success("Foto de perfil atualizada!");
     } catch (error) {
       console.error("Erro ao atualizar foto de perfil:", error);
-      toast.error("Não foi possível guardar a foto. Tenta novamente.");
+      const detail = error instanceof Error ? error.message : String(error);
+      toast.error(`Falha ao guardar foto: ${detail}`);
     } finally {
       setUploadingAvatar(false);
     }
