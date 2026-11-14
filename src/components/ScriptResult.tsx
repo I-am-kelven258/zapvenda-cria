@@ -59,10 +59,10 @@ export function Chips({ opcoes, valor, onChange }: { opcoes: readonly string[]; 
   return (
     <div className="flex flex-wrap gap-2">
       {opcoes.map((o) => (
-        <button key={o} type="button" onClick={() => onChange(o)} className={`rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-colors ${valor === o ? "border-primary bg-accent text-primary" : "border-border bg-background"}`}>{o}</button>
+        <button key={o} type="button" onClick={() => onChange(o)} className={`rounded-xl border px-4 py-3 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${valor === o ? "border-primary bg-primary/10 text-primary shadow-md shadow-primary/10 ring-2 ring-primary/10" : "border-primary/20 bg-background/80 hover:border-primary/50 hover:bg-accent/50"}`}>{o}</button>
       ))}
     </div>
   );
 }
 
-export const campo = "w-full rounded-xl border border-border bg-background p-4 text-foreground outline-none placeholder:text-muted-foreground focus:border-primary";
+export const campo = "w-full min-h-12 rounded-xl border border-primary/25 bg-background/80 px-4 py-3 text-base leading-relaxed text-foreground shadow-sm shadow-primary/5 outline-none transition-all duration-200 placeholder:text-muted-foreground/75 hover:border-primary/50 hover:shadow-md hover:shadow-primary/10 focus:border-primary focus:ring-4 focus:ring-primary/15";
