@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Copy, Save, Check, Loader2 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
+import { getValidatedUser } from "@/lib/auth-session";
 
 export function Gerando({ texto }: { texto: string }) {
   return (
@@ -23,14 +24,20 @@ export function ScriptResult({ titulo, subtitulo, script, tipo }: { titulo: stri
 
   async function salvar() {
     setSalvando(true);
-    const { data: u } = await supabase.auth.getUser();
+    try {
+    const user = await getValidatedUser(supabase);
+    if (!user) { toast.error("Entre novamente para salvar o script."); return; }
     const { error } = await supabase.from("scripts").insert({
-      user_id: u.user!.id, tipo, titulo: subtitulo, conteudo: script, script_completo: script,
+      user_id: user.id, tipo, titulo: subtitulo, conteudo: script, script_completo: script,
     });
-    setSalvando(false);
     if (error) { toast.error("Não foi possível salvar"); return; }
     setSalvo(true);
     toast.success("Salvo no seu histórico!");
+    } catch {
+      toast.error("Não foi possível salvar. Tente novamente.");
+    } finally {
+      setSalvando(false);
+    }
   }
 
   return (

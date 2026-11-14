@@ -120,13 +120,26 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
+    let active = true;
     const { data } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
-      queryClient.removeQueries({ queryKey: ["auth", "user"] });
-      router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      // Auth callbacks run under the auth lock; wait before a guard reads it again.
+      setTimeout(() => {
+        if (!active) return;
+        if (event === "SIGNED_OUT") {
+          void queryClient.cancelQueries().then(() => {
+            if (!active) return;
+            queryClient.clear();
+            void router.invalidate();
+          });
+        } else {
+          queryClient.removeQueries({ queryKey: ["auth", "user"] });
+          void router.invalidate();
+          void queryClient.invalidateQueries();
+        }
+      }, 0);
     });
-    return () => data.subscription.unsubscribe();
+    return () => { active = false; data.subscription.unsubscribe(); };
   }, [router, queryClient]);
 
   return (

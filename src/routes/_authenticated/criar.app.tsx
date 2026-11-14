@@ -6,6 +6,7 @@ import { AppShell } from "@/components/AppShell";
 import { gerarScript, type Respostas } from "@/lib/script";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { getValidatedUser } from "@/lib/auth-session";
 
 export const Route = createFileRoute("/_authenticated/criar/app")({
   head: () => ({
@@ -67,10 +68,10 @@ function Wizard() {
     if (!script) return;
     setSalvando(true);
     try {
-    const { data: u } = await supabase.auth.getUser();
-    if (!u.user) { toast.error("Entre novamente para salvar o script."); return; }
+    const user = await getValidatedUser(supabase);
+    if (!user) { toast.error("Entre novamente para salvar o script."); return; }
     const { error } = await supabase.from("scripts").insert({
-      user_id: u.user.id, tipo: "app", titulo: r.nome_app, conteudo: script, script_completo: script,
+      user_id: user.id, tipo: "app", titulo: r.nome_app, conteudo: script, script_completo: script,
       nome_app: r.nome_app, o_que_faz: r.o_que_faz, publico: r.publico, monetizacao: r.monetizacao, objetivo: r.objetivo, estilo: r.estilo,
     });
     if (error) { toast.error("Não foi possível salvar"); return; }

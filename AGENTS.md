@@ -11,3 +11,4 @@
 
 - Keep access plans in a shared browser-safe module and expose /planos outside the authenticated layout so visitors can reach checkout without signing in.
 - Generate application scripts locally with the template generator in src/lib/script.ts; no external paid API, so generation never depends on provider credit.
+- Use the shared browser session validator for route access, login redirects and script saves; missing/invalid credentials resolve to signed-out, expired tokens get one refresh, and transient network failures remain errors.

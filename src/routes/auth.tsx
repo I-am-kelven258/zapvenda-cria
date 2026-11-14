@@ -6,6 +6,7 @@ import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn, LockKeyhole, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { PLANOS } from "@/lib/planos";
+import { getValidatedUser } from "@/lib/auth-session";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -32,9 +33,9 @@ function AuthPage() {
 
   useEffect(() => {
     let active = true;
-    supabase.auth.getSession().then(({ data }) => {
+    getValidatedUser(supabase).then((user) => {
       if (!active) return;
-      if (data.session?.user) navigate({ to: "/" });
+      if (user) navigate({ to: "/" });
       else setCheckingSession(false);
     }).catch(() => {
       if (active) setCheckingSession(false);
@@ -45,9 +46,8 @@ function AuthPage() {
   async function openAccount() {
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) throw error;
-      if (data.session?.user) {
+      const user = await getValidatedUser(supabase);
+      if (user) {
         navigate({ to: "/" });
       } else {
         toast.error("Nenhuma conta encontrada neste Dispositivo, por favor escolhe um plano a assinar e comece hoje.", { duration: 9000, style: { background: "#dc2626", color: "#ffffff", border: "2px solid #991b1b", fontSize: "16px", fontWeight: 700, padding: "18px 20px", minWidth: "min(420px, calc(100vw - 32px))", boxShadow: "0 12px 32px rgba(127, 29, 29, 0.35)" } });
