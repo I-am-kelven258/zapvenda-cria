@@ -12,6 +12,19 @@ export const Route = createFileRoute("/_authenticated")({
       retry: false,
     });
     if (!user) throw redirect({ to: "/auth" });
+
+    const { data: access, error: accessError } = await supabase
+      .from("user_access")
+      .select("valid_until, revoked_at")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (accessError) throw accessError;
+
+    const expired = !access || access.revoked_at !== null || (access.valid_until !== null && new Date(access.valid_until).getTime() <= Date.now());
+    if (expired) {
+      await supabase.auth.signOut({ scope: "local" });
+      throw redirect({ href: "/auth?acesso=expirado" });
+    }
     return { user };
   },
   component: () => <Outlet />,
