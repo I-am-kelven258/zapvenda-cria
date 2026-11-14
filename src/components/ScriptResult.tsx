@@ -29,7 +29,7 @@ const DESTINOS_IA: Record<string, { nome: string; titulo: string; descricao: str
     titulo: "Dá vida a este roteiro com IA",
     descricao: "Abre o Runway. Usa o roteiro acima como referência para criar as cenas e o vídeo.",
     botao: "Criar vídeo no Runway",
-    url: "https://runwayml.com",
+    url: "https://app.runwayml.com/",
     Icone: Video,
   },
 };
