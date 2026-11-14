@@ -59,9 +59,9 @@ function Dashboard() {
             key={tipo}
             to="/criar/$tipo"
             params={{ tipo }}
-            className="group relative flex min-h-44 w-full min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-500/60 hover:shadow-[0_16px_40px_rgba(220,38,38,0.10)] active:translate-y-0 md:p-6"
+            className="group relative flex min-h-44 w-full min-w-0 flex-col justify-between overflow-hidden rounded-[1.5rem] border border-rose-500/20 bg-gradient-to-br from-rose-500/[0.04] via-card to-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-rose-500/60 hover:shadow-[0_18px_42px_rgba(220,38,38,0.12)] active:translate-y-0 md:p-6"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 transition-all duration-200 group-hover:scale-105 group-hover:bg-red-500 group-hover:text-white dark:text-red-300 dark:group-hover:text-white">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-600 transition-all duration-300 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white dark:text-rose-300 dark:group-hover:text-white">
               <Icon className="h-6 w-6" />
             </div>
             <div className="flex items-end justify-between gap-2">
