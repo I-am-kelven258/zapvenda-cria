@@ -85,7 +85,7 @@ function VideoWizard() {
         <div className="relative flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-rose-600 dark:text-rose-400"><span className="h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.7)]" />Estúdio de vídeo Trakify</div>
         <h1 className="relative mt-3 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Dá vida à tua ideia.</h1>
         <p className="relative mt-2 max-w-xl text-sm leading-6 text-muted-foreground">Define os detalhes do vídeo, etapa por etapa, e prepara um roteiro completo.</p>
-        <div className="relative mt-6 flex items-center justify-between gap-3"><span className="rounded-full border border-rose-500/20 bg-background/80 px-3 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400">ETAPA {step + 1} / TOTAL</span><span className="text-xs font-medium text-muted-foreground">{Math.round(((step + 1) / TOTAL) * 100)}% concluído</span></div>
+        <div className="relative mt-6 flex items-center justify-between gap-3"><span className="rounded-full border border-rose-500/20 bg-background/80 px-3 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400">ETAPA {step + 1} / {TOTAL}</span><span className="text-xs font-medium text-muted-foreground">{Math.round(((step + 1) / TOTAL) * 100)}% concluído</span></div>
         <div className="relative mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-gradient-to-r from-rose-600 to-red-400 transition-all duration-500" style={{ width: ((step + 1) / TOTAL * 100) + "%" }} /></div>
       </section>
       <div className="relative overflow-hidden rounded-[2rem] border border-rose-500/20 bg-card p-5 shadow-2xl shadow-rose-950/5 sm:p-8">
