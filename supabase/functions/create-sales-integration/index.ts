@@ -101,3 +101,5 @@ Deno.serve(async (request) => {
       : "A configuração foi guardada. A ativação do recebimento aguarda confirmação da documentação de autenticação e do formato dos eventos desta plataforma.",
   });
 });
+
+// Deployment trigger: publish the current sales integration Edge Functions via GitHub Actions.
