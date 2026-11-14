@@ -70,3 +70,28 @@ create policy "Users can view own sales transactions"
 revoke all on public.sales_transactions from anon, authenticated;
 grant select on public.sales_transactions to authenticated;
 grant all on public.sales_transactions to service_role;
+
+
+-- Server-only webhook credentials. Never grant access to browser roles.
+alter table public.sales_integrations
+  add column if not exists endpoint_token_hash text unique;
+
+alter table public.sales_integrations
+  drop constraint if exists sales_integrations_status_check;
+alter table public.sales_integrations
+  add constraint sales_integrations_status_check
+  check (status in ('setup_pending', 'active', 'paused', 'error', 'provider_docs_pending'));
+
+create table if not exists public.sales_integration_secrets (
+  integration_id uuid primary key references public.sales_integrations(id) on delete cascade,
+  provider_secret text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.sales_integration_secrets enable row level security;
+revoke all on public.sales_integration_secrets from anon, authenticated;
+grant all on public.sales_integration_secrets to service_role;
+
+create unique index if not exists sales_transactions_order_unique
+  on public.sales_transactions (integration_id, provider_order_id)
+  where provider_order_id is not null;
