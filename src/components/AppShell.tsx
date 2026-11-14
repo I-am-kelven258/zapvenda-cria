@@ -28,7 +28,7 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
     supabase.auth.getSession().then(({ data }) => {
       const user = data.session?.user;
       const name = user?.user_metadata?.["full_name"] || user?.user_metadata?.["name"] || user?.email?.split("@")[0] || "";
-      setUserName(String(name).split(" ")[0]);
+      setUserName(String(name).split(" ")[0] ?? "");
     });
   }, []);
 
