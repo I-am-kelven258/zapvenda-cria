@@ -41,7 +41,7 @@ export function AcaoCriarComIA({ tipo }: { tipo: string }) {
 
   return (
     <a href={destino.url} target="_blank" rel="noopener noreferrer" aria-label={destino.botao} title={destino.descricao}
-      className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-gradient-to-r from-rose-600 to-red-500 px-3 py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:from-rose-700 hover:to-red-600 hover:shadow-xl">
+      className="flex min-h-12 min-w-0 items-center justify-center gap-1 rounded-xl border border-rose-500/30 bg-gradient-to-r from-rose-600 to-red-500 px-1.5 py-3 text-center text-[11px] font-bold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:from-rose-700 hover:to-red-600 hover:shadow-xl sm:gap-2 sm:px-3 sm:py-3.5 sm:text-sm">
       <Icone className="h-5 w-5 shrink-0" />
       <span>Criar com IA</span>
       <ExternalLink className="h-4 w-4 shrink-0" />
@@ -94,9 +94,9 @@ export function ScriptResult({ titulo, subtitulo, script, tipo }: { titulo: stri
         <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4"><span className="font-display font-bold">Conteúdo completo</span><span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-600 dark:text-rose-400">EDITÁVEL</span></div>
         <pre className="whitespace-pre-wrap break-words p-5 font-sans text-sm leading-7 sm:p-7">{script}</pre>
       </section>
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-        <button onClick={() => { navigator.clipboard.writeText(script); toast.success("Copiado!"); }} className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-secondary py-3.5 font-semibold text-secondary-foreground"><Copy className="h-5 w-5" /> Copiar</button>
-        <button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground disabled:opacity-60">
+      <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
+        <button onClick={() => { navigator.clipboard.writeText(script); toast.success("Copiado!"); }} className="flex min-h-12 min-w-0 items-center justify-center gap-1 rounded-xl bg-secondary px-1.5 py-3 text-xs font-semibold text-secondary-foreground sm:gap-2 sm:px-3 sm:py-3.5 sm:text-sm"><Copy className="h-5 w-5" /> Copiar</button>
+        <button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="flex min-h-12 min-w-0 items-center justify-center gap-1 rounded-xl bg-primary px-1.5 py-3 text-xs font-semibold text-primary-foreground disabled:opacity-60 sm:gap-2 sm:px-3 sm:py-3.5 sm:text-sm">
           {salvo ? <><Check className="h-5 w-5" /> Ver histórico</> : <><Save className="h-5 w-5" /> {salvando ? "Salvando..." : "Salvar"}</>}
         </button>
         <AcaoCriarComIA tipo={tipo} />
