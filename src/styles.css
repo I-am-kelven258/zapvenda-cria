@@ -162,3 +162,14 @@ div[style*="Edit with Lovable"],
   z-index: -9999 !important;
 }
 
+
+
+/* Movimento discreto do botão flutuante do assistente */
+@keyframes trakify-assistant-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-float, [class*='trakify-assistant-float'] { animation: none !important; }
+}
