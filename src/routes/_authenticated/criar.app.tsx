@@ -7,6 +7,7 @@ import { gerarScript, type Respostas } from "@/lib/script";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getValidatedUser } from "@/lib/auth-session";
+import { AcaoCriarComIA } from "@/components/ScriptResult";
 
 export const Route = createFileRoute("/_authenticated/criar/app")({
   head: () => ({
@@ -111,6 +112,7 @@ function Wizard() {
           {salvo ? <><Check className="h-5 w-5" /> Ver histórico</> : <><Save className="h-5 w-5" /> {salvando ? "Salvando..." : "Salvar"}</>}
         </Button>
       </div>
+      <AcaoCriarComIA tipo="app" />
     </AppShell>
   );
 
