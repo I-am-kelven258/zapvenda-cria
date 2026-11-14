@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn, LockKeyhole, ShieldCheck, Sparkles, Zap } from "lucide-react";
-import { PLANOS } from "@/lib/planos";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn, LockKeyhole, MessageCircle, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { PLANOS, WHATSAPP_SUPPORT_DISPLAY, WHATSAPP_SUPPORT_URL } from "@/lib/planos";
 import { getValidatedUser } from "@/lib/auth-session";
 
 export const Route = createFileRoute("/auth")({
@@ -183,6 +183,9 @@ function AuthPage() {
                   <p className="mt-1 text-sm text-neutral-600">por {plano.periodo}</p>
                   <a href={plano.checkout} target="_blank" rel="noreferrer" aria-label={`Aderir ao ${plano.nome.toLowerCase()}`} className="mt-auto inline-flex h-14 w-full items-center justify-center rounded-xl bg-black px-5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-800 hover:shadow-lg active:translate-y-0">
                     Aderir acesso <ArrowUpRight className="ml-2 h-4 w-4" />
+                  </a>
+                  <a href={WHATSAPP_SUPPORT_URL} target="_blank" rel="noreferrer" aria-label={`Falar com o suporte da Trakify pelo WhatsApp: ${WHATSAPP_SUPPORT_DISPLAY}`} className="mt-3 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-green-600 bg-white px-4 py-3 text-sm font-semibold text-green-700 transition-all duration-200 hover:-translate-y-1 hover:bg-green-50 hover:shadow-md active:translate-y-0">
+                    <MessageCircle className="h-5 w-5" /> Suporte WhatsApp · {WHATSAPP_SUPPORT_DISPLAY}
                   </a>
                 </article>
               ))}
