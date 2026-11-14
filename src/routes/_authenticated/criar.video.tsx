@@ -82,13 +82,13 @@ function VideoWizard() {
     <AppShell>
       <div className="flex gap-1.5">{telas.map((_, i) => <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-secondary"}`} />)}</div>
       <p className="mt-4 text-sm text-muted-foreground">Pergunta {step + 1} de {TOTAL}</p>
-      <div className="mt-3 rounded-2xl border-2 border-primary bg-card p-5">
+      <div className="mt-3 rounded-3xl border border-primary/25 bg-card p-5 shadow-xl shadow-primary/5 sm:p-7">
         <h2 className="font-display text-xl font-bold">{t.q}</h2>
         {t.body}
       </div>
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <button onClick={() => (step === 0 ? navigate({ to: "/" }) : setStep(step - 1))} className="rounded-xl bg-secondary py-3.5 font-semibold text-secondary-foreground">Voltar</button>
-        <button onClick={proximo} className="rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground">{step === TOTAL - 1 ? "Gerar Roteiro" : "Próximo"}</button>
+        <button onClick={() => (step === 0 ? navigate({ to: "/" }) : setStep(step - 1))} className="rounded-xl bg-secondary py-3.5 font-semibold text-secondary-foreground transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">Voltar</button>
+        <button onClick={proximo} className="rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground shadow-md shadow-primary/15 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">{step === TOTAL - 1 ? "Gerar Roteiro" : "Próximo"}</button>
       </div>
     </AppShell>
   );
