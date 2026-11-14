@@ -63,15 +63,12 @@ export type Database = {
         Relationships: []
       }
     }
-    Tables: {
       user_access: {
         Row: { created_at: string; revoked_at: string | null; user_id: string; valid_until: string | null }
         Insert: { created_at?: string; revoked_at?: string | null; user_id: string; valid_until?: string | null }
         Update: { created_at?: string; revoked_at?: string | null; user_id?: string; valid_until?: string | null }
         Relationships: []
       }
-    } & {
-      scripts: Database["public"]["Tables"]["scripts"]
     }
     Views: {
       [_ in never]: never
