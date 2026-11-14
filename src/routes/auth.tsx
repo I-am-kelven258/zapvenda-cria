@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn, LockKeyhole, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { PLANOS } from "@/lib/planos";
 
 export const Route = createFileRoute("/auth")({
@@ -74,7 +74,7 @@ function AuthPage() {
     }
   }
 
-  const input = "w-full rounded-xl border border-border bg-card px-4 py-3.5 text-foreground placeholder:text-muted-foreground outline-none focus:border-primary";
+  const input = "w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3.5 text-white placeholder:text-slate-400 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-500/20";
 
   if (checkingSession) {
     return <main className="flex min-h-screen items-center justify-center bg-white"><span className="text-sm text-neutral-500">A preparar a Trakify...</span></main>;
@@ -187,29 +187,86 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-5 text-foreground">
-      <div className="w-full max-w-sm">
-        <button
-          type="button"
-          onClick={() => setShowLogin(false)}
-          className="mb-8 inline-flex items-center gap-2 rounded-lg text-sm font-medium text-muted-foreground transition-all duration-200 hover:-translate-y-1 hover:text-foreground hover:shadow-md active:translate-y-0"
-        >
-          <ArrowLeft className="h-4 w-4" /> Voltar
-        </button>
-        <h1 className="text-center font-display text-4xl font-bold">Trakify</h1>
-        <p className="mt-2 text-center text-muted-foreground">Entre para continuar a criar e crescer.</p>
-        <form onSubmit={submit} className="mt-8 space-y-3">
-          <input className={input} type="email" aria-label="Email" autoComplete="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <div className="relative"><input className={`${input} pr-12`} type={ver ? "text" : "password"} aria-label="Senha" autoComplete="current-password" placeholder="Senha" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required /><button type="button" onClick={() => setVer(!ver)} aria-label={ver ? "Esconder senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md text-muted-foreground transition-all duration-200 hover:-translate-y-1 hover:text-foreground hover:shadow-md active:translate-y-0">{ver ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button></div>
-          <Button type="submit" disabled={loading} className="h-auto w-full rounded-xl py-3.5 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:translate-y-0 disabled:opacity-60">
-            {loading ? "Aguarde..." : "Entrar"}
-          </Button>
-        </form>
-        <Button asChild variant="link" className="mt-5 w-full font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0">
-          <Link to="/planos">COMPRAR ACESSO</Link>
-        </Button>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#070b16] px-4 py-8 text-white sm:px-6 lg:py-12">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-40 -top-40 h-96 w-96 rounded-full bg-red-600/20 blur-[110px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-48 -right-32 h-[28rem] w-[28rem] rounded-full bg-blue-600/15 blur-[120px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.08]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px)", backgroundSize: "44px 44px" }} />
+
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-16">
+        <section className="mx-auto w-full max-w-xl lg:mx-0">
+          <button
+            type="button"
+            onClick={() => setShowLogin(false)}
+            className="mb-10 inline-flex items-center gap-2 rounded-lg text-sm font-medium text-slate-300 transition hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" /> Voltar
+          </button>
+
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-red-400/30 bg-red-500/10 px-4 py-2 text-xs font-semibold tracking-[0.18em] text-red-300">
+            <Sparkles className="h-4 w-4" /> PLATAFORMA INTELIGENTE
+          </div>
+          <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-6xl">
+            Trakify<span className="text-red-500">.</span>
+          </h1>
+          <h2 className="mt-5 max-w-lg text-3xl font-bold leading-tight sm:text-4xl">
+            As tuas ideias. <span className="text-red-400">O próximo nível.</span>
+          </h2>
+          <p className="mt-5 max-w-lg text-base leading-relaxed text-slate-300 sm:text-lg">
+            Entra na tua área de trabalho e continua a criar, organizar e acompanhar o crescimento dos teus projectos digitais.
+          </p>
+
+          <div className="mt-9 grid gap-4 sm:grid-cols-2">
+            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+              <span className="rounded-xl border border-red-400/25 bg-red-500/10 p-2 text-red-300"><Zap className="h-5 w-5" /></span>
+              <div><p className="font-semibold text-white">Mais produtividade</p><p className="mt-1 text-sm leading-relaxed text-slate-400">Ferramentas para acelerar as tuas ideias.</p></div>
+            </div>
+            <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+              <span className="rounded-xl border border-red-400/25 bg-red-500/10 p-2 text-red-300"><ShieldCheck className="h-5 w-5" /></span>
+              <div><p className="font-semibold text-white">Acesso protegido</p><p className="mt-1 text-sm leading-relaxed text-slate-400">A tua conta, no teu espaço de trabalho.</p></div>
+            </div>
+          </div>
+          <p className="mt-8 hidden items-center gap-2 text-xs tracking-wide text-slate-500 sm:flex">
+            <LockKeyhole className="h-3.5 w-3.5" /> ACESSO SEGURO À TRAKIFY
+          </p>
+        </section>
+
+        <section className="mx-auto w-full max-w-md">
+          <div className="rounded-[2rem] border border-white/15 bg-white/[0.08] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.5)] backdrop-blur-2xl sm:p-9">
+            <div className="mb-8">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-400/30 bg-red-500/15 text-red-300 shadow-[0_0_30px_rgba(239,68,68,0.18)]">
+                <LockKeyhole className="h-6 w-6" />
+              </div>
+              <p className="text-xs font-bold tracking-[0.2em] text-red-300">BEM-VINDO DE VOLTA</p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-white">Entrar na conta</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">Introduz os teus dados para continuares.</p>
+            </div>
+
+            <form onSubmit={submit} className="space-y-4">
+              <label className="block space-y-2">
+                <span className="text-sm font-medium text-slate-200">Endereço de e-mail</span>
+                <input className={input} type="email" aria-label="Email" autoComplete="email" placeholder="nome@exemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              </label>
+              <label className="block space-y-2">
+                <span className="text-sm font-medium text-slate-200">Palavra-passe</span>
+                <div className="relative">
+                  <input className={`${input} pr-12`} type={ver ? "text" : "password"} aria-label="Senha" autoComplete="current-password" placeholder="A tua palavra-passe" minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} required />
+                  <button type="button" onClick={() => setVer(!ver)} aria-label={ver ? "Esconder senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 transition hover:text-white">{ver ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}</button>
+                </div>
+              </label>
+              <Button type="submit" disabled={loading} className="h-14 w-full rounded-xl border border-red-400/40 bg-red-600 text-base font-bold text-white shadow-[0_8px_28px_rgba(220,38,38,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-red-500 hover:shadow-[0_12px_34px_rgba(220,38,38,0.38)] active:translate-y-0 disabled:opacity-60">
+                {loading ? "Aguarde..." : "Entrar na Trakify"} <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </form>
+
+            <div className="my-6 flex items-center gap-3"><div className="h-px flex-1 bg-white/10" /><span className="text-xs text-slate-500">AINDA NÃO TENS ACESSO?</span><div className="h-px flex-1 bg-white/10" /></div>
+            <Button asChild variant="outline" className="h-12 w-full rounded-xl border-white/20 bg-white/[0.04] font-semibold text-white transition hover:border-red-400/50 hover:bg-red-500/10 hover:text-white">
+              <Link to="/planos">Ver planos e comprar acesso <ArrowUpRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
+          <div className="mt-5 text-center text-slate-400"><AjudaEmail /></div>
+          <p className="mt-5 text-center text-xs text-slate-600">© {new Date().getFullYear()} Trakify. Todos os direitos reservados.</p>
+        </section>
       </div>
-      <div className="mt-8"><AjudaEmail /></div>
-    </div>
+    </main>
   );
 }
