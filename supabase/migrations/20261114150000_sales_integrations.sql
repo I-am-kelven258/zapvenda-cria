@@ -21,7 +21,7 @@ alter table public.sales_integrations enable row level security;
 drop policy if exists "Users can view own sales integrations" on public.sales_integrations;
 create policy "Users can view own sales integrations"
   on public.sales_integrations for select to authenticated
-  using (auth.uid() = user_id);
+  using (auth.uid() = user_id and public.has_valid_access(auth.uid()));
 drop policy if exists "Users can create own sales integrations" on public.sales_integrations;
 create policy "Users can create own sales integrations"
   on public.sales_integrations for insert to authenticated
