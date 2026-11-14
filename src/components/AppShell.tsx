@@ -14,6 +14,7 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
   const [userName, setUserName] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
@@ -25,11 +26,16 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
     setTheme(initialTheme);
     document.documentElement.classList.toggle("dark", initialTheme === "dark");
 
-    supabase.auth.getSession().then(({ data }) => {
-      const user = data.session?.user;
+    const applyUser = (user: Awaited<ReturnType<typeof supabase.auth.getUser>>["data"]["user"]) => {
       const name = user?.user_metadata?.["full_name"] || user?.user_metadata?.["name"] || user?.email?.split("@")[0] || "";
       setUserName(String(name).split(" ")[0] ?? "");
+      setUserAvatar(String(user?.user_metadata?.["avatar_url"] || user?.user_metadata?.["picture"] || ""));
+    };
+    supabase.auth.getSession().then(({ data }) => applyUser(data.session?.user ?? null));
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      applyUser(session?.user ?? null);
     });
+    return () => authListener.subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -104,7 +110,16 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
         >
           {theme === "dark" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
         </button>
-        {userName && <span className="hidden max-w-32 truncate text-sm font-semibold text-foreground sm:block">{userName}</span>}
+        {userName && (
+          <Link to="/perfil" aria-label="Abrir perfil e histórico" className="flex min-w-0 items-center gap-2 rounded-full py-1 pl-1 pr-2 transition hover:bg-secondary">
+            {userAvatar ? (
+              <img src={userAvatar} alt="" className="h-9 w-9 shrink-0 rounded-full border-2 border-red-500/70 object-cover" />
+            ) : (
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-red-500/50 bg-red-500/10 text-sm font-bold text-red-600">{userName.charAt(0).toUpperCase()}</span>
+            )}
+            <span className="hidden max-w-32 truncate text-sm font-semibold text-foreground sm:block">{userName}</span>
+          </Link>
+        )}
       </header>
       {searchOpen && (
         <div
