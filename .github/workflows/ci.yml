@@ -18,8 +18,12 @@ jobs:
           bun-version: latest
       - name: Install dependencies
         run: bun install --frozen-lockfile
-      - name: Build
+      - name: Build for Vercel
         run: bun run build
+        env:
+          VERCEL: "1"
+      - name: Verify Vercel output
+        run: test -f .vercel/output/config.json && test -d .vercel/output/functions && test -d .vercel/output/static
       - name: Install Deno
         uses: denoland/setup-deno@v2
         with:
