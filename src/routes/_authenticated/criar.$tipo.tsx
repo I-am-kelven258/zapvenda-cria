@@ -24,7 +24,7 @@ const AI_TOOLS = [
   { name: "Microsoft Copilot", area: "Assistentes", role: "Assistente de produtividade", description: "Ajuda com perguntas, criação de conteúdo e tarefas de produtividade.", url: "https://copilot.microsoft.com", icon: MonitorPlay },
   { name: "DeepSeek", area: "Assistentes", role: "Assistente de raciocínio", description: "Ferramenta conversacional para perguntas, explicações e apoio à programação.", url: "https://www.deepseek.com", icon: Lightbulb },
   { name: "Mistral Le Chat", area: "Assistentes", role: "Assistente de IA", description: "Assistente para conversar, pesquisar ideias e executar tarefas com IA.", url: "https://chat.mistral.ai", icon: BrainCircuit },
-  { name: "Poe", area: "Assistentes", role: "Plataforma de assistentes", description: "Permite explorar diferentes bots e modelos de inteligência artificial.", url: "https://poe.com", icon: MessageCircle },
+  { name: "Lovable", area: "Programação", role: "Criação de aplicações com IA", description: "Transforma instruções em aplicações web e ajuda a construir interfaces e funcionalidades.", url: "https://lovable.dev", icon: Code2 },
   { name: "Perplexity", area: "Pesquisa", role: "Motor de pesquisa com IA", description: "Pesquisa temas e apresenta respostas acompanhadas de fontes para consulta.", url: "https://www.perplexity.ai", icon: Search },
   { name: "NotebookLM", area: "Pesquisa", role: "Assistente de pesquisa", description: "Ajuda a estudar e resumir informação a partir das fontes que forneceres.", url: "https://notebooklm.google.com", icon: BookOpen },
   { name: "You.com", area: "Pesquisa", role: "Pesquisa com IA", description: "Ajuda a pesquisar na web, explorar assuntos e organizar informação.", url: "https://you.com", icon: Globe },
