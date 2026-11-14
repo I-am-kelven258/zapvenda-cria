@@ -10,7 +10,7 @@ import { SUPORTE_EMAIL } from "@/lib/assistente.functions";
 
 type Theme = "light" | "dark";
 
-export function AppShell({ children, back }: { children: ReactNode; back?: boolean }) {
+export function AppShell({ children, back, wide = false }: { children: ReactNode; back?: boolean; wide?: boolean }) {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
   const [userName, setUserName] = useState("");
@@ -169,7 +169,7 @@ export function AppShell({ children, back }: { children: ReactNode; back?: boole
           </nav>
         </SheetContent>
       </Sheet>
-      <main className="mx-auto w-full max-w-md flex-1 px-4 pt-6">{children}</main>
+      <main className={`mx-auto w-full ${wide ? "max-w-5xl" : "max-w-md"} flex-1 px-4 pt-6`}>{children}</main>
       <footer className="mt-10 px-4"><AjudaEmail /></footer>
       <AssistenteIA />
     </div>
