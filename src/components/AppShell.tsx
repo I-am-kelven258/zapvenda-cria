@@ -71,13 +71,11 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
     navigate({ to: "/auth", replace: true });
   }
 
-  const item = "flex items-center gap-3 rounded-lg p-3 hover:bg-secondary";
-
   return (
     <div className="flex min-h-screen flex-col bg-background pb-6 text-foreground">
       <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-background/95 px-4 shadow-sm backdrop-blur md:px-6">
-        <button onClick={() => setOpen(true)} aria-label="Abrir menu" className="shrink-0 rounded-lg p-2 text-foreground transition hover:bg-secondary md:hidden">
-          <EllipsisVertical className="h-6 w-6" />
+        <button onClick={() => setOpen(true)} aria-label="Abrir menu" className="group shrink-0 rounded-xl border border-red-500/20 bg-red-500/[0.06] p-2.5 text-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-red-500/50 hover:bg-red-500/10 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50">
+          <EllipsisVertical className="h-6 w-6 transition-transform duration-200 group-hover:scale-110" />
         </button>
         {back && (
           <button onClick={() => window.history.back()} aria-label="Voltar" className="shrink-0 rounded-lg p-2 text-muted-foreground transition hover:bg-secondary">
