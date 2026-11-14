@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Activity, Clock3, Link2, Loader2, Plus, ShieldCheck, Trash2, WalletCards, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
@@ -16,6 +16,11 @@ type Integration = {
   id: string; provider: string; display_name: string; currency: string;
   amount_format: "units" | "cents"; fixed_fee_minor: number; status: string; created_at: string;
 };
+type Sale = {
+  id: string; provider_order_id: string | null; product_name: string | null;
+  gross_minor: number; fee_minor: number; net_minor: number; currency: string;
+  status: string; utm_source: string | null; utm_campaign: string | null; occurred_at: string | null;
+};
 const money = (minor: number, currency: string) => new Intl.NumberFormat("pt-PT", {
   style: "currency", currency, maximumFractionDigits: 2,
 }).format((Number(minor) || 0) / 100);
@@ -32,6 +37,11 @@ export function IntegracoesVendas() {
   const [fixedFee, setFixedFee] = useState("0");
   const [providerSecret, setProviderSecret] = useState("");
   const [createdSetup, setCreatedSetup] = useState<{ webhook_url: string | null; setup_instructions: string } | null>(null);
+  const [sales, setSales] = useState<Sale[]>([]);
+  const [salesLoading, setSalesLoading] = useState(true);
+  const [range, setRange] = useState("30");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [chartCurrency, setChartCurrency] = useState("MZN");
 
   async function loadIntegrations() {
     setLoading(true);
@@ -43,7 +53,56 @@ export function IntegracoesVendas() {
     setLoading(false);
   }
 
+  async function loadSales() {
+    setSalesLoading(true);
+    let query = (supabase.from("sales_transactions" as never) as any)
+      .select("id,provider_order_id,product_name,gross_minor,fee_minor,net_minor,currency,status,utm_source,utm_campaign,occurred_at")
+      .order("occurred_at", { ascending: false });
+    if (range !== "all") query = query.gte("occurred_at", new Date(Date.now() - Number(range) * 86400000).toISOString());
+    const { data, error } = await query.limit(500);
+    if (error) toast.error("Não foi possível carregar as vendas.");
+    else setSales((data ?? []) as Sale[]);
+    setSalesLoading(false);
+  }
+
   useEffect(() => { void loadIntegrations(); }, []);
+  useEffect(() => { void loadSales(); }, [range]);
+
+  const visibleSales = useMemo(() => sales.filter((sale) => statusFilter === "all" || sale.status === statusFilter), [sales, statusFilter]);
+  const totalsByCurrency = useMemo(() => {
+    const totals = new Map<string, { gross: number; net: number; count: number }>();
+    for (const sale of visibleSales) {
+      if (sale.status !== "approved") continue;
+      const current = totals.get(sale.currency) ?? { gross: 0, net: 0, count: 0 };
+      current.gross += Number(sale.gross_minor);
+      current.net += Number(sale.net_minor);
+      current.count += 1;
+      totals.set(sale.currency, current);
+    }
+    return Array.from(totals.entries()).map(([currency, value]) => ({ currency, ...value }));
+  }, [visibleSales]);
+  const availableCurrencies = useMemo(() => Array.from(new Set(sales.map((sale) => sale.currency))), [sales]);
+  const dailySales = useMemo(() => {
+    const days = Math.min(range === "all" ? 30 : Number(range), 30);
+    const map = new Map<string, number>();
+    for (let offset = days - 1; offset >= 0; offset--) {
+      const date = new Date();
+      date.setDate(date.getDate() - offset);
+      map.set(date.toISOString().slice(0, 10), 0);
+    }
+    for (const sale of visibleSales) {
+      if (sale.status !== "approved" || sale.currency !== chartCurrency || !sale.occurred_at) continue;
+      const key = new Date(sale.occurred_at).toISOString().slice(0, 10);
+      if (map.has(key)) map.set(key, (map.get(key) ?? 0) + Number(sale.gross_minor));
+    }
+    return Array.from(map.entries()).map(([date, value]) => ({ date, label: new Date(date + "T12:00:00").toLocaleDateString("pt-PT", { day: "2-digit", month: "2-digit" }), value }));
+  }, [visibleSales, chartCurrency, range]);
+  const maxDaily = Math.max(1, ...dailySales.map((item) => item.value));
+  const campaignTotals = useMemo(() => {
+    const grouped = new Map<string, number>();
+    for (const sale of visibleSales) if (sale.status === "approved" && sale.utm_campaign) grouped.set(sale.utm_campaign, (grouped.get(sale.utm_campaign) ?? 0) + 1);
+    return Array.from(grouped.entries()).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  }, [visibleSales]);
 
   async function createIntegration(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -114,6 +173,36 @@ export function IntegracoesVendas() {
           <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><Link2 className="h-4 w-4 text-rose-500" /> Configurações guardadas</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{items.length}</p></div>
           <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><Clock3 className="h-4 w-4 text-amber-500" /> A aguardar ligação</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{items.filter((item) => item.status !== "active").length}</p></div>
           <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><WalletCards className="h-4 w-4 text-rose-500" /> Plataformas disponíveis</div><p className="mt-3 text-3xl font-extrabold tabular-nums">5</p></div>
+        </section>
+
+        <section className="space-y-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div><h2 className="text-xl font-extrabold">Painel de vendas</h2><p className="mt-1 text-sm text-muted-foreground">Valores calculados apenas a partir de notificações autenticadas.</p></div>
+            <div className="flex flex-wrap gap-2">
+              <select aria-label="Período das vendas" value={range} onChange={(event) => setRange(event.target.value)} className="h-10 rounded-xl border border-border bg-card px-3 text-sm"><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="all">Todo o período</option></select>
+              <select aria-label="Filtrar estado das vendas" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="h-10 rounded-xl border border-border bg-card px-3 text-sm"><option value="all">Todos os estados</option><option value="approved">Aprovadas</option><option value="pending">Pendentes</option><option value="refunded">Reembolsadas</option><option value="cancelled">Canceladas</option><option value="chargeback">Chargebacks</option></select>
+            </div>
+          </div>
+          {salesLoading ? <div className="rounded-2xl border border-border bg-card py-10 text-center text-sm text-muted-foreground"><Loader2 className="mr-2 inline h-4 w-4 animate-spin" /> A carregar vendas...</div> : sales.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border bg-card/60 px-6 py-10 text-center"><Activity className="mx-auto h-8 w-8 text-muted-foreground" /><h3 className="mt-3 font-bold">Ainda não há vendas recebidas</h3><p className="mx-auto mt-1 max-w-lg text-sm text-muted-foreground">Quando uma plataforma enviar um Webhook válido, as vendas aparecerão aqui com valores, estado e informação de campanha.</p></div>
+          ) : (
+            <>
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {totalsByCurrency.length ? totalsByCurrency.map((total) => <article key={total.currency} className="rounded-2xl border border-border bg-card p-5"><p className="text-sm text-muted-foreground">Vendas aprovadas · {total.currency}</p><p className="mt-2 text-2xl font-extrabold tabular-nums">{money(total.gross, total.currency)}</p><div className="mt-2 flex flex-wrap justify-between gap-2 text-xs text-muted-foreground"><span>Líquido: {money(total.net, total.currency)}</span><span>{total.count} vendas</span></div></article>) : <article className="rounded-2xl border border-border bg-card p-5 text-sm text-muted-foreground">Não existem vendas aprovadas no filtro atual.</article>}
+              </div>
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.7fr)_minmax(260px,1fr)]">
+                <section className="rounded-2xl border border-border bg-card p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-bold">Evolução diária</h3><p className="mt-1 text-xs text-muted-foreground">Receita bruta aprovada · até 30 dias recentes</p></div><select aria-label="Moeda do gráfico" value={chartCurrency} onChange={(event) => setChartCurrency(event.target.value)} className="h-9 rounded-lg border border-border bg-background px-2 text-xs">{availableCurrencies.map((item) => <option key={item} value={item}>{item}</option>)}</select></div>
+                  <div className="mt-6 flex h-44 items-end gap-1.5 overflow-hidden">{dailySales.map((day) => <div key={day.date} title={day.label + ": " + money(day.value, chartCurrency)} className="group flex h-full min-w-0 flex-1 flex-col justify-end"><div className="w-full rounded-t-md bg-rose-500/80 transition group-hover:bg-rose-600" style={{ height: Math.max(day.value ? 5 : 1, day.value / maxDaily * 100) + "%" }} /><span className="mt-2 truncate text-center text-[9px] text-muted-foreground">{dailySales.length <= 10 || day.date.endsWith("-01") ? day.label : ""}</span></div>)}</div>
+                </section>
+                <section className="rounded-2xl border border-border bg-card p-5"><h3 className="font-bold">Campanhas UTM</h3><p className="mt-1 text-xs text-muted-foreground">Vendas aprovadas por campanha</p>{campaignTotals.length ? <div className="mt-4 space-y-3">{campaignTotals.map(([campaign, count]) => <div key={campaign} className="flex items-center justify-between gap-3 text-sm"><span className="min-w-0 truncate">{campaign}</span><strong className="tabular-nums">{count}</strong></div>)}</div> : <p className="mt-5 text-sm text-muted-foreground">Ainda não chegaram dados de campanhas.</p>}</section>
+              </div>
+              <section className="overflow-hidden rounded-2xl border border-border bg-card">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-5"><div><h3 className="font-bold">Transações recebidas</h3><p className="mt-1 text-xs text-muted-foreground">{visibleSales.length} registos no filtro atual</p></div></div>
+                <div className="overflow-x-auto"><table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-muted/40 text-xs text-muted-foreground"><tr><th className="px-4 py-3 font-semibold">Data</th><th className="px-4 py-3 font-semibold">Produto / pedido</th><th className="px-4 py-3 font-semibold">Origem</th><th className="px-4 py-3 font-semibold">Valor</th><th className="px-4 py-3 font-semibold">Estado</th></tr></thead><tbody>{visibleSales.slice(0,100).map((sale) => <tr key={sale.id} className="border-t border-border"><td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{sale.occurred_at ? new Date(sale.occurred_at).toLocaleString("pt-PT") : "—"}</td><td className="px-4 py-3"><p className="font-semibold">{sale.product_name ?? "Venda"}</p><p className="text-xs text-muted-foreground">{sale.provider_order_id ?? "—"}</p></td><td className="px-4 py-3 text-muted-foreground">{sale.utm_source ?? "—"}</td><td className="whitespace-nowrap px-4 py-3 font-semibold">{money(sale.gross_minor, sale.currency)}</td><td className="px-4 py-3"><span className="rounded-full bg-muted px-2.5 py-1 text-xs font-semibold">{sale.status === "approved" ? "Aprovada" : sale.status === "pending" ? "Pendente" : sale.status === "refunded" ? "Reembolsada" : sale.status === "cancelled" ? "Cancelada" : "Chargeback"}</span></td></tr>)}</tbody></table></div>
+              </section>
+            </>
+          )}
         </section>
 
         {showForm && (
