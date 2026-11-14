@@ -82,7 +82,7 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
           <span className="text-red-600">Trak</span>ify
         </Link>
         <div className="hidden h-7 w-px bg-border md:block" />
-        <span className="hidden text-sm text-muted-foreground md:block">Workspace</span>
+        <span className="hidden text-base font-semibold tracking-wide text-foreground md:block">Workspace</span>
         <div className="flex-1" />
         <button
           type="button"
@@ -156,26 +156,26 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
       )}
       <div className="flex min-h-0 flex-1">
         <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-64 shrink-0 flex-col border-r border-border bg-card/70 px-4 py-6 md:flex">
-          <p className="px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Workspace</p>
+          <p className="border-l-[3px] border-red-600 px-3 text-xs font-extrabold uppercase tracking-[0.16em] text-foreground">Workspace</p>
           <nav className="mt-3 flex flex-col gap-1">
-            <Link to="/" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-              <Home className="h-5 w-5" /> Visão geral
+            <Link to="/" className="flex items-center gap-3 rounded-xl px-3.5 py-3.5 text-base font-semibold text-foreground transition hover:bg-secondary hover:text-foreground">
+              <Home className="h-[22px] w-[22px] text-red-500" /> Visão geral
             </Link>
-            <p className="mb-1 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Ferramentas</p>
+            <p className="mb-1 mt-6 border-l-[3px] border-red-600 px-3 text-xs font-extrabold uppercase tracking-[0.16em] text-foreground">Ferramentas</p>
             {CARDS.map(({ tipo, label, icon: Icon }) => (
-              <Link key={tipo} to="/criar/$tipo" params={{ tipo }} className="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground transition-all hover:translate-x-0.5 hover:bg-secondary hover:text-foreground">
-                <Icon className="h-5 w-5 text-red-500" /> <span className="flex-1">{label}</span><ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
+              <Link key={tipo} to="/criar/$tipo" params={{ tipo }} className="group flex items-center gap-3 rounded-xl px-3.5 py-3.5 text-base font-medium text-foreground transition-all hover:translate-x-0.5 hover:bg-secondary hover:text-foreground">
+                <Icon className="h-[22px] w-[22px] shrink-0 text-red-500" /> <span className="flex-1">{label}</span><ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
               </Link>
             ))}
-            <p className="mb-1 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Conta</p>
-            <Link to="/perfil" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-              <User className="h-5 w-5 text-red-500" /> Perfil e histórico
+            <p className="mb-1 mt-6 border-l-[3px] border-red-600 px-3 text-xs font-extrabold uppercase tracking-[0.16em] text-foreground">Conta</p>
+            <Link to="/perfil" className="flex items-center gap-3 rounded-xl px-3.5 py-3.5 text-base font-medium text-foreground transition hover:bg-secondary hover:text-foreground">
+              <User className="h-[22px] w-[22px] text-red-500" /> Perfil e histórico
             </Link>
             <a href={`mailto:${SUPORTE_EMAIL}`} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-              <Mail className="h-5 w-5 text-red-500" /> Ajuda e suporte
+              <Mail className="h-[22px] w-[22px] text-red-500" /> Ajuda e suporte
             </a>
             <button onClick={sair} className="flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-              <LogOut className="h-5 w-5 text-red-500" /> Sair
+              <LogOut className="h-[22px] w-[22px] text-red-500" /> Sair
             </button>
           </nav>
           <div className="mt-auto rounded-2xl border border-red-500/15 bg-gradient-to-br from-red-500/10 to-transparent p-4">
