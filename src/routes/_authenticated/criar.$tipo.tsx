@@ -6,6 +6,7 @@ import {
   Clock, FileText, Languages, Lightbulb, WandSparkles, MonitorPlay,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { IntegracoesVendas } from "@/components/IntegracoesVendas";
 
 export const Route = createFileRoute("/_authenticated/criar/$tipo")({
   head: () => ({
@@ -152,5 +153,6 @@ function EmBreve() {
 function CriarTipo() {
   const { tipo } = Route.useParams();
   if (tipo === "pagina-documentos") return <BancoIA />;
+  if (tipo === "integracoes") return <IntegracoesVendas />;
   return <EmBreve />;
 }
