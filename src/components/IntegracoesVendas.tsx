@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Activity, Clock3, Link2, Loader2, Plus, ShieldCheck, Trash2, WalletCards, Copy, ExternalLink } from "lucide-react";
+import { Activity, Clock3, Link2, Loader2, Plus, ShieldCheck, Trash2, WalletCards, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -50,7 +50,6 @@ export function IntegracoesVendas() {
     const fee = Number(fixedFee.replace(",", "."));
     if (!displayName.trim()) return toast.error("Dá um nome a esta integração.");
     if (!Number.isFinite(fee) || fee < 0 || fee > 100000000) return toast.error("Indica uma taxa fixa válida.");
-    setSaving(true);
     const needsSecret = provider === "hotmart" || provider === "ratixpay";
     if (needsSecret && providerSecret.trim().length < 8) {
       toast.error(provider === "hotmart" ? "Introduz o Hottok da Hotmart." : "Introduz o Webhook Secret da RatixPay.");
