@@ -77,3 +77,81 @@ export const criarUtilizadorAdmin = createServerFn({ method: "POST" })
 
     return { ok: true as const, email: data.email, validUntil };
   });
+
+
+type ListUsersInput = { accessToken: string };
+
+function validateListUsersInput(value: unknown): ListUsersInput {
+  if (!value || typeof value !== "object") throw new Error("Dados inválidos.");
+  const accessToken = String((value as Record<string, unknown>).accessToken ?? "");
+  if (!accessToken || accessToken.length > 10000) throw new Error("Sessão inválida. Entra novamente.");
+  return { accessToken };
+}
+
+export const listarUtilizadoresAdmin = createServerFn({ method: "POST" })
+  .inputValidator(validateListUsersInput)
+  .handler(async ({ data }) => {
+    const url = env["SUPABASE_URL"];
+    const publishableKey = env["SUPABASE_PUBLISHABLE_KEY"];
+    const serviceRoleKey = env["SUPABASE_SERVICE_ROLE_KEY"];
+    if (!url || !publishableKey || !serviceRoleKey) {
+      throw new Error("A configuração segura do servidor está incompleta.");
+    }
+
+    const authClient = createClient(url, publishableKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data: verified, error: authError } = await authClient.auth.getUser(data.accessToken);
+    if (authError || !verified.user || verified.user.email?.toLowerCase() !== ADMIN_EMAIL) {
+      throw new Error("Não tens autorização para consultar os utilizadores.");
+    }
+
+    const adminClient = createClient(url, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+
+    const allUsers: Array<{
+      id: string;
+      email?: string;
+      created_at: string;
+      user_metadata: Record<string, unknown>;
+    }> = [];
+    let page = 1;
+    const perPage = 1000;
+    while (true) {
+      const { data: result, error } = await adminClient.auth.admin.listUsers({ page, perPage });
+      if (error) throw new Error("Não foi possível carregar a lista de utilizadores.");
+      allUsers.push(...result.users);
+      if (result.users.length < perPage) break;
+      page += 1;
+    }
+
+    const accessByUserId = new Map<string, { valid_until: string | null; revoked_at: string | null }>();
+    for (let offset = 0; offset < allUsers.length; offset += 200) {
+      const batch = allUsers.slice(offset, offset + 200);
+      const { data: accessRows, error } = await adminClient
+        .from("user_access")
+        .select("user_id, valid_until, revoked_at")
+        .in("user_id", batch.map((user) => user.id));
+      if (error) throw new Error("Não foi possível carregar a validade dos acessos.");
+      for (const row of accessRows ?? []) {
+        accessByUserId.set(row.user_id, { valid_until: row.valid_until, revoked_at: row.revoked_at });
+      }
+    }
+
+    return {
+      total: allUsers.length,
+      users: allUsers.map((user) => {
+        const access = accessByUserId.get(user.id);
+        const metadata = user.user_metadata ?? {};
+        return {
+          email: user.email ?? "",
+          name: String(metadata["full_name"] ?? metadata["name"] ?? user.email?.split("@")[0] ?? "Utilizador"),
+          created_at: user.created_at,
+          valid_until: access?.valid_until ?? null,
+          revoked_at: access?.revoked_at ?? null,
+          access_record_missing: !access,
+        };
+      }).sort((a, b) => b.created_at.localeCompare(a.created_at)),
+    };
+  });
