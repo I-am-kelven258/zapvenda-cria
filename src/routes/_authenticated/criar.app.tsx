@@ -110,16 +110,21 @@ function Wizard() {
 
   return (
     <AppShell>
-      <div className="flex gap-1.5">
-        {PERGUNTAS.map((_, i) => <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-secondary"}`} />)}
-      </div>
-      <p className="mt-4 text-sm text-muted-foreground">Pergunta {step + 1} de 6</p>
-      <div className="mt-3 rounded-3xl border border-primary/25 bg-card p-5 shadow-xl shadow-primary/5 sm:p-7">
-        <h2 className="font-display text-xl font-bold">{p.q}</h2>
+      <section className="relative mb-6 overflow-hidden rounded-[2rem] border border-rose-500/20 bg-gradient-to-br from-rose-500/10 via-card to-card p-5 shadow-xl shadow-rose-950/5 sm:p-8">
+        <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-rose-500/10 blur-3xl" />
+        <div className="relative flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-rose-600 dark:text-rose-400"><span className="h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.7)]" />Estúdio de criação Trakify</div>
+        <h1 className="relative mt-3 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Vamos criar o teu aplicativo?</h1>
+        <p className="relative mt-2 max-w-xl text-sm leading-6 text-muted-foreground">Responde às etapas abaixo. Vamos transformar a tua ideia num projeto organizado.</p>
+        <div className="relative mt-6 flex items-center justify-between gap-3"><span className="rounded-full border border-rose-500/20 bg-background/80 px-3 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400">ETAPA {step + 1} / 6</span><span className="text-xs font-medium text-muted-foreground">{Math.round(((step + 1) / 6) * 100)}% concluído</span></div>
+        <div className="relative mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-gradient-to-r from-rose-600 to-red-400 transition-all duration-500" style={{ width: ((step + 1) / 6 * 100) + "%" }} /></div>
+      </section>
+      <div className="relative overflow-hidden rounded-[2rem] border border-rose-500/20 bg-card p-5 shadow-2xl shadow-rose-950/5 sm:p-8">
+        <div className="mb-5 flex items-center gap-3"><div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-500/10 text-lg font-black text-rose-600 dark:text-rose-400">{String(step + 1).padStart(2, "0")}</div><div><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-rose-600 dark:text-rose-400">A tua ideia</p><p className="text-xs text-muted-foreground">Preenche os detalhes desta etapa</p></div></div>
+        <h2 className="font-display text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{p.q}</h2>
         {p.key === "estilo" ? (
           <div className="mt-5 space-y-3">
             {([["minimalista", "MINIMALISTA", "Limpo, branco, simples"], ["moderno", "MODERNO", "Dark mode, preto, verde neon, futurista"]] as const).map(([v, t, d]) => (
-              <Button variant="outline" aria-pressed={r.estilo === v} key={v} onClick={() => { setErro(null); setR({ ...r, estilo: v }); }} className={`h-auto w-full flex-col items-start whitespace-normal border-2 p-5 text-left ${r.estilo === v ? "border-primary bg-accent" : "border-border bg-background"}`}>
+              <Button variant="outline" aria-pressed={r.estilo === v} key={v} onClick={() => { setErro(null); setR({ ...r, estilo: v }); }} className={`h-auto w-full flex-col items-start whitespace-normal rounded-2xl border-2 p-5 text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-xl ${r.estilo === v ? "border-rose-500 bg-rose-500/10 shadow-lg shadow-rose-500/10 ring-2 ring-rose-500/15" : "border-border bg-background hover:border-rose-500/40"}`}>
                 <div className="font-display text-lg font-bold">{t}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{d}</div>
               </Button>
@@ -127,13 +132,13 @@ function Wizard() {
           </div>
         ) : (
           <textarea autoFocus aria-label={p.q} maxLength={4000} rows={4} value={valor} placeholder={p.ph} onChange={(e) => setR({ ...r, [p.key]: e.target.value })}
-            className="mt-5 min-h-36 w-full resize-y rounded-2xl border border-primary/25 bg-background/80 px-4 py-4 text-base leading-relaxed text-foreground shadow-sm shadow-primary/5 outline-none transition-all duration-200 placeholder:text-muted-foreground/75 hover:border-primary/50 hover:shadow-md hover:shadow-primary/10 focus:border-primary focus:ring-4 focus:ring-primary/15" />
+            className="mt-6 min-h-44 w-full resize-y rounded-2xl border border-rose-500/25 bg-background px-5 py-5 text-base leading-7 text-foreground shadow-inner shadow-rose-950/[0.03] outline-none transition-all duration-200 placeholder:text-muted-foreground/60 hover:border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" />
         )}
       </div>
       {erro && <p role="alert" className="mt-4 text-sm text-destructive">{erro}</p>}
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <Button variant="secondary" onClick={() => { setErro(null); if (step === 0) navigate({ to: "/" }); else setStep(step - 1); }} className="h-auto py-3.5 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">Voltar</Button>
-        <Button onClick={proximo} disabled={gerando} className="h-auto py-3.5 font-semibold">{step === 5 ? "Gerar Script" : "Próximo"}</Button>
+        <Button variant="secondary" onClick={() => { setErro(null); if (step === 0) navigate({ to: "/" }); else setStep(step - 1); }} className="h-12 rounded-xl font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">Voltar</Button>
+        <Button onClick={proximo} disabled={gerando} className="h-12 rounded-xl bg-rose-600 font-semibold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-rose-700 hover:shadow-xl">{step === 5 ? "Gerar Script" : "Continuar →"}</Button>
       </div>
     </AppShell>
   );
