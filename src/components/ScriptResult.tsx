@@ -40,23 +40,12 @@ export function AcaoCriarComIA({ tipo }: { tipo: string }) {
   const Icone = destino.Icone;
 
   return (
-    <section className="mt-5 overflow-hidden rounded-[1.75rem] border border-rose-500/25 bg-gradient-to-br from-rose-500/10 via-card to-card p-5 shadow-lg shadow-rose-950/5 sm:p-6">
-      <div className="flex items-start gap-3">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400">
-          <Icone className="h-6 w-6" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-rose-600 dark:text-rose-400">Próximo passo · {destino.nome}</p>
-          <h2 className="mt-1 font-display text-lg font-extrabold tracking-tight text-foreground">{destino.titulo}</h2>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">{destino.descricao}</p>
-        </div>
-      </div>
-      <a href={destino.url} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-3 text-center text-sm font-bold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-rose-700 hover:shadow-xl sm:w-auto">
-        {destino.botao}
-        <ExternalLink className="h-4 w-4" />
-      </a>
-      <p className="mt-3 text-xs leading-5 text-muted-foreground">A ferramenta abre num novo separador. Copia o conteúdo acima e cola-o lá para continuar.</p>
-    </section>
+    <a href={destino.url} target="_blank" rel="noopener noreferrer" aria-label={destino.botao} title={destino.descricao}
+      className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-gradient-to-r from-rose-600 to-red-500 px-3 py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-rose-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:from-rose-700 hover:to-red-600 hover:shadow-xl">
+      <Icone className="h-5 w-5 shrink-0" />
+      <span>Criar com IA</span>
+      <ExternalLink className="h-4 w-4 shrink-0" />
+    </a>
   );
 }
 
@@ -105,13 +94,13 @@ export function ScriptResult({ titulo, subtitulo, script, tipo }: { titulo: stri
         <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4"><span className="font-display font-bold">Conteúdo completo</span><span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-600 dark:text-rose-400">EDITÁVEL</span></div>
         <pre className="whitespace-pre-wrap break-words p-5 font-sans text-sm leading-7 sm:p-7">{script}</pre>
       </section>
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <button onClick={() => { navigator.clipboard.writeText(script); toast.success("Copiado!"); }} className="flex items-center justify-center gap-2 rounded-xl bg-secondary py-3.5 font-semibold text-secondary-foreground"><Copy className="h-5 w-5" /> Copiar</button>
-        <button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="flex items-center justify-center gap-2 rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground disabled:opacity-60">
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+        <button onClick={() => { navigator.clipboard.writeText(script); toast.success("Copiado!"); }} className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-secondary py-3.5 font-semibold text-secondary-foreground"><Copy className="h-5 w-5" /> Copiar</button>
+        <button onClick={salvo ? () => navigate({ to: "/perfil" }) : salvar} disabled={salvando} className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3.5 font-semibold text-primary-foreground disabled:opacity-60">
           {salvo ? <><Check className="h-5 w-5" /> Ver histórico</> : <><Save className="h-5 w-5" /> {salvando ? "Salvando..." : "Salvar"}</>}
         </button>
+        <AcaoCriarComIA tipo={tipo} />
       </div>
-      <AcaoCriarComIA tipo={tipo} />
     </AppShell>
   );
 }
