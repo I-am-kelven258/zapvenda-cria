@@ -31,7 +31,7 @@ jobs:
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.20.3
 
       - name: Deploy create-sales-integration
         run: supabase functions deploy create-sales-integration --project-ref "$SUPABASE_PROJECT_ID"
