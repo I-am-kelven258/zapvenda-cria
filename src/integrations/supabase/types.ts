@@ -62,12 +62,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_access: {
+        Row: {
+          created_at: string
+          revoked_at: string | null
+          user_id: string
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string
+          revoked_at?: string | null
+          user_id: string
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string
+          revoked_at?: string | null
+          user_id?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_valid_access: { Args: { check_user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

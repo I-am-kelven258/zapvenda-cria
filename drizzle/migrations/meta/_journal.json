@@ -8,6 +8,13 @@
       "when": 1793100621967,
       "tag": "0000_create_scripts",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794650242102,
+      "tag": "0001_user_access_expiration",
+      "breakpoints": true
     }
   ]
 }
