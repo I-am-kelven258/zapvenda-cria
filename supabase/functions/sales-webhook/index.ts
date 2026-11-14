@@ -17,9 +17,12 @@ async function hmacHex(secret: string, body: string) {
   const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body));
   return Array.from(new Uint8Array(signature), (value) => value.toString(16).padStart(2, "0")).join("");
 }
-function getPath(obj: any, paths: string[]) {
+function getPath(obj: unknown, paths: string[]): unknown {
   for (const path of paths) {
-    const value = path.split(".").reduce((current, key) => current?.[key], obj);
+    const value = path.split(".").reduce<unknown>((current, key) => {
+      if (typeof current !== "object" || current === null) return undefined;
+      return (current as Record<string, unknown>)[key];
+    }, obj);
     if (value !== undefined && value !== null && value !== "") return value;
   }
   return undefined;
@@ -56,7 +59,7 @@ Deno.serve(async (request) => {
 
   const rawBody = await request.text();
   if (rawBody.length > 1024 * 1024) return json({ error: "Payload too large" }, 413);
-  let payload: any;
+  let payload: unknown;
   try { payload = JSON.parse(rawBody); } catch { return json({ error: "Invalid JSON" }, 400); }
 
   let verified = false;
@@ -87,17 +90,17 @@ Deno.serve(async (request) => {
     integration_id: integration.id,
     provider_event_id: eventId,
     provider_order_id: orderId || null,
-    product_name: getPath(payload, ["product.name", "data.product.name", "data.purchase.product.name", "purchase.product.name"]) ?? null,
+    product_name: getPath(payload, ["product.name", "data.product.name", "data.purchase.product.name", "purchase.product.name"]) == null ? null : String(getPath(payload, ["product.name", "data.product.name", "data.purchase.product.name", "purchase.product.name"])),
     gross_minor: grossMinor,
     fee_minor: feeMinor,
     net_minor: Math.max(0, grossMinor - feeMinor),
     currency,
     status,
-    utm_source: getPath(payload, ["tracking.utm_source", "data.purchase.tracking.utm_source", "utm_source"]) ?? null,
-    utm_medium: getPath(payload, ["tracking.utm_medium", "data.purchase.tracking.utm_medium", "utm_medium"]) ?? null,
-    utm_campaign: getPath(payload, ["tracking.utm_campaign", "data.purchase.tracking.utm_campaign", "utm_campaign"]) ?? null,
-    utm_content: getPath(payload, ["tracking.utm_content", "data.purchase.tracking.utm_content", "utm_content"]) ?? null,
-    occurred_at: getPath(payload, ["created_at", "paid_at", "data.purchase.approved_date", "purchase.approved_date"]) ?? new Date().toISOString(),
+    utm_source: getPath(payload, ["tracking.utm_source", "data.purchase.tracking.utm_source", "utm_source"]) == null ? null : String(getPath(payload, ["tracking.utm_source", "data.purchase.tracking.utm_source", "utm_source"])),
+    utm_medium: getPath(payload, ["tracking.utm_medium", "data.purchase.tracking.utm_medium", "utm_medium"]) == null ? null : String(getPath(payload, ["tracking.utm_medium", "data.purchase.tracking.utm_medium", "utm_medium"])),
+    utm_campaign: getPath(payload, ["tracking.utm_campaign", "data.purchase.tracking.utm_campaign", "utm_campaign"]) == null ? null : String(getPath(payload, ["tracking.utm_campaign", "data.purchase.tracking.utm_campaign", "utm_campaign"])),
+    utm_content: getPath(payload, ["tracking.utm_content", "data.purchase.tracking.utm_content", "utm_content"]) == null ? null : String(getPath(payload, ["tracking.utm_content", "data.purchase.tracking.utm_content", "utm_content"])),
+    occurred_at: getPath(payload, ["created_at", "paid_at", "data.purchase.approved_date", "purchase.approved_date"]) == null ? new Date().toISOString() : String(getPath(payload, ["created_at", "paid_at", "data.purchase.approved_date", "purchase.approved_date"])),
   };
 
   const { data: existing } = await admin.from("sales_transactions")
