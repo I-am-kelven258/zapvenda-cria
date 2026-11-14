@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { SUPORTE_EMAIL } from "@/lib/assistente.functions";
 import {
   ArrowRight, BookOpen, CheckCircle2, CircleHelp, FileText, Lightbulb,
   MessageCircle, ShieldCheck, ShoppingCart, Sparkles, Video, WalletCards,
@@ -173,7 +174,7 @@ function SobreTrakify() {
           </div>
           <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Pesquisar uma dúvida..." aria-label="Pesquisar perguntas frequentes" className="h-12 w-full rounded-xl border border-border bg-card px-4 text-sm outline-none transition focus:border-red-500 focus:ring-4 focus:ring-red-500/10" />
           <div className="space-y-2">
-            {filtered.map((item, index) => (
+            {filtered.map((item) => (
               <details key={item.q} open={openAll || Boolean(normalized)} className="group rounded-2xl border border-border bg-card px-4 py-4 open:border-red-500/30 sm:px-5">
                 <summary className="flex cursor-pointer list-none items-center gap-3 font-semibold text-foreground [&::-webkit-details-marker]:hidden">
                   <CircleHelp className="h-5 w-5 shrink-0 text-red-500" />
@@ -191,7 +192,7 @@ function SobreTrakify() {
         <section className="rounded-2xl border border-red-500/20 bg-card p-5 md:p-7">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div><h2 className="text-lg font-bold">Ainda tens dúvidas?</h2><p className="mt-1 text-sm text-muted-foreground">Contacta o suporte através da opção Ajuda e suporte no menu da Trakify.</p></div>
-            <a href="mailto:suporte@trakify.com" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-bold text-white transition hover:bg-red-700">Contactar suporte <ArrowRight className="h-4 w-4" /></a>
+            <a href={`mailto:${SUPORTE_EMAIL}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-bold text-white transition hover:bg-red-700">Contactar suporte <ArrowRight className="h-4 w-4" /></a>
           </div>
         </section>
       </div>
