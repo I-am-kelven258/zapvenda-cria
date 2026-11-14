@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { EllipsisVertical, Home, User, LogOut, ArrowLeft, Mail, Sun, Moon, Search, X, ArrowUpRight, ChevronRight, Sparkles } from "lucide-react";
+import { EllipsisVertical, Home, User, LogOut, ArrowLeft, Mail, Sun, Moon, Search, X, ArrowUpRight, ChevronRight, Sparkles, BookOpen } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
 import { CARDS } from "@/lib/cards";
@@ -55,6 +55,7 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
   const quickPages = [
     { label: "Início", description: "Voltar ao painel principal", to: "/" as const, icon: Home },
     { label: "Perfil e histórico", description: "Consultar a tua conta e atividade", to: "/perfil" as const, icon: User },
+    { label: "Sobre a Trakify", description: "Guia, funcionamento e perguntas frequentes", to: "/sobre" as const, icon: BookOpen },
   ].filter(({ label, description }) => `${label} ${description}`.toLocaleLowerCase("pt").includes(normalizedSearch));
 
   function toggleTheme() {
