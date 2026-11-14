@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Copy, Smartphone, ChevronDown, UserRound, Mail, CalendarDays, ShieldCheck, FileCode2, Sparkles, Clock3 } from "lucide-react";
+import { Copy, Smartphone, ChevronDown, UserRound, Mail, CalendarDays, ShieldCheck, FileCode2, Sparkles, Clock3, Camera } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -23,6 +23,8 @@ export const Route = createFileRoute("/_authenticated/perfil")({
 function Perfil() {
   const { user } = Route.useRouteContext();
   const [aberto, setAberto] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(String(user.user_metadata?.["avatar_url"] || user.user_metadata?.["picture"] || "") || null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ["scripts", user.id],
     queryFn: async () => {
@@ -32,8 +34,44 @@ function Perfil() {
     },
   });
   const nome = user.user_metadata?.["full_name"] || user.user_metadata?.["name"] || "Utilizador";
-  const avatar = user.user_metadata?.["avatar_url"] || user.user_metadata?.["picture"];
+
   const iniciais = String(nome).trim().split(/\s+/).slice(0, 2).map((parte) => parte[0]).join("").toUpperCase();
+  async function uploadAvatar(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Escolhe uma imagem JPG, PNG ou WebP.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("A imagem deve ter no máximo 5 MB.");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+      const path = `${user.id}/avatar-${Date.now()}.${extension}`;
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(path, file, {
+        contentType: file.type,
+        cacheControl: "3600",
+        upsert: false,
+      });
+      if (uploadError) throw uploadError;
+
+      const publicUrl = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+      const { error: updateError } = await supabase.auth.updateUser({ data: { avatar_url: publicUrl } });
+      if (updateError) throw updateError;
+      setAvatarUrl(publicUrl);
+      toast.success("Foto de perfil atualizada!");
+    } catch (error) {
+      console.error("Erro ao atualizar foto de perfil:", error);
+      toast.error("Não foi possível guardar a foto. Tenta novamente.");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
   const totalScripts = data?.length ?? 0;
   const dataCriacao = user.created_at ? new Date(user.created_at).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" }) : "Conta Trakify";
 
@@ -46,7 +84,7 @@ function Perfil() {
           <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-4 sm:gap-5">
               <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 border-red-400/60 bg-gradient-to-br from-red-500 to-rose-800 text-2xl font-black text-white shadow-[0_0_30px_rgba(239,68,68,0.28)] sm:h-24 sm:w-24 sm:text-3xl">
-                {avatar ? <img src={String(avatar)} alt="Foto do perfil" className="h-full w-full object-cover" /> : iniciais || <UserRound className="h-9 w-9" />}
+                {avatarUrl ? <img src={avatarUrl} alt="Foto do perfil" className="h-full w-full object-cover" /> : iniciais || <UserRound className="h-9 w-9" />}
               </div>
               <div className="min-w-0">
                 <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-red-200"><ShieldCheck className="h-3.5 w-3.5" /> Conta Trakify</div>
@@ -55,6 +93,13 @@ function Perfil() {
               </div>
             </div>
             <div className="flex items-center gap-2 self-start rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 backdrop-blur sm:self-center"><Sparkles className="h-4 w-4 text-red-300" /> Perfil do utilizador</div>
+          </div>
+          <div className="relative mt-5">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-red-300/40 bg-red-500/10 px-4 py-2.5 text-sm font-semibold text-red-100 transition hover:-translate-y-0.5 hover:bg-red-500/20">
+              <Camera className="h-4 w-4" /> {uploadingAvatar ? "A enviar foto..." : "Alterar foto de perfil"}
+              <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" disabled={uploadingAvatar} onChange={uploadAvatar} />
+            </label>
+            <p className="mt-2 text-xs text-slate-400">JPG, PNG ou WebP · máximo 5 MB. A foto também aparece no cabeçalho.</p>
           </div>
           <div className="relative mt-7 grid grid-cols-1 gap-3 border-t border-white/10 pt-5 sm:grid-cols-2">
             <div className="flex items-center gap-3 rounded-xl bg-white/5 p-3"><span className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/15 text-red-300"><CalendarDays className="h-4 w-4" /></span><div><p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Membro desde</p><p className="mt-0.5 text-sm font-semibold text-white">{dataCriacao}</p></div></div>
