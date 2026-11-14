@@ -99,6 +99,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/planos': typeof PlanosRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/_authenticated/criar/app': typeof AuthenticatedCriarAppRoute
@@ -112,6 +113,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/planos'
     | '/perfil'
+    | '/usuarios'
     | '/criar/$tipo'
     | '/criar/app'
     | '/criar/pagina-vendas'
