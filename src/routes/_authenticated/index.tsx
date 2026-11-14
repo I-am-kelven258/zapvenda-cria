@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Users } from "lucide-react";
+import { ChevronRight, UserPlus, Users } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { CARDS } from "@/lib/cards";
 export { CARDS };
@@ -31,9 +31,14 @@ function Dashboard() {
             <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">O que vamos criar hoje?</h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground md:text-base">Acede às ferramentas da Trakify e transforma as tuas ideias em novos projetos.</p>
             {isAdmin && (
-              <Link to="/usuarios" className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600 px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(220,38,38,0.2)] transition-all duration-200 hover:-translate-y-1 hover:bg-red-500 hover:shadow-[0_14px_32px_rgba(220,38,38,0.32)] active:translate-y-0">
-                <Users className="h-4 w-4" /> Adicionar utilizadores <ChevronRight className="h-4 w-4" />
-              </Link>
+              <div className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row">
+                <Link to="/usuarios" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600 px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(220,38,38,0.2)] transition-all duration-200 hover:-translate-y-1 hover:bg-red-500 hover:shadow-[0_14px_32px_rgba(220,38,38,0.32)] active:translate-y-0">
+                  <UserPlus className="h-4 w-4" /> Adicionar utilizadores <ChevronRight className="h-4 w-4" />
+                </Link>
+                <Link to="/utilizadores" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-card px-5 text-sm font-bold text-foreground shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:text-red-600 hover:shadow-[0_14px_32px_rgba(220,38,38,0.12)] active:translate-y-0">
+                  <Users className="h-4 w-4" /> Ver utilizadores <ChevronRight className="h-4 w-4" />
+                </Link>
+              </div>
             )}
           </div>
           <div className="pointer-events-none absolute bottom-0 right-8 hidden h-36 w-36 items-center justify-center rounded-full border border-red-500/10 md:flex">
