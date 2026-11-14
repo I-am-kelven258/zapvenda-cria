@@ -61,8 +61,7 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-    }
+      },
       user_access: {
         Row: { created_at: string; revoked_at: string | null; user_id: string; valid_until: string | null }
         Insert: { created_at?: string; revoked_at?: string | null; user_id: string; valid_until?: string | null }
