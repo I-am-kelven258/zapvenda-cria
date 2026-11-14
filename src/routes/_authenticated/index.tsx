@@ -31,7 +31,7 @@ function Dashboard() {
             <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">O que vamos criar hoje?</h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground md:text-base">Acede às ferramentas da Trakify e transforma as tuas ideias em novos projetos.</p>
             {isAdmin && (
-              <div className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row">
+              <div className="mt-6 flex w-full max-w-sm flex-col gap-3">
                 <Link to="/usuarios" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600 px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(220,38,38,0.2)] transition-all duration-200 hover:-translate-y-1 hover:bg-red-500 hover:shadow-[0_14px_32px_rgba(220,38,38,0.32)] active:translate-y-0">
                   <UserPlus className="h-4 w-4" /> Adicionar utilizadores <ChevronRight className="h-4 w-4" />
                 </Link>
