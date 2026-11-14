@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, CalendarClock, CheckCircle2, Eye, EyeOff, ShieldCheck, UserPlus } from "lucide-react";
 import { toast } from "sonner";
@@ -25,13 +25,16 @@ function AdminUsersPage() {
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
-  useState(() => {
+  useEffect(() => {
+    let active = true;
     supabase.auth.getUser().then(({ data }) => {
       const allowed = data.user?.email?.toLowerCase() === ADMIN_EMAIL;
+      if (!active) return;
       setIsAdmin(allowed);
       if (!allowed) navigate({ to: "/", replace: true });
     });
-  });
+    return () => { active = false; };
+  }, [navigate]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
