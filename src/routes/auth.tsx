@@ -72,10 +72,32 @@ function AuthPage() {
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-      if (error) { toast.error("Email ou senha inválidos"); return; }
+      if (error) {
+        const code = (error as { code?: string }).code ?? "";
+        const message = error.message.toLowerCase();
+        let userMessage = "Não foi possível iniciar sessão. Tenta novamente mais tarde.";
+        if (code === "invalid_credentials") {
+          userMessage = "E-mail ou palavra-passe incorretos. Confirma os dados e tenta novamente.";
+        } else if (code === "email_not_confirmed" || message.includes("email not confirmed")) {
+          userMessage = "Este e-mail ainda não foi confirmado. Verifica a tua caixa de entrada.";
+        } else if (code === "user_banned" || message.includes("user is banned")) {
+          userMessage = "Esta conta está temporariamente bloqueada. Contacta o suporte.";
+        } else if (error.status === 429 || code.includes("rate_limit") || code === "too_many_requests") {
+          userMessage = "Foram feitas demasiadas tentativas. Aguarda alguns minutos antes de tentar novamente.";
+        } else if (/fetch|network|failed to connect|load failed/i.test(message)) {
+          userMessage = "Não foi possível contactar o serviço de autenticação. Verifica a ligação e tenta novamente.";
+        } else if (code) {
+          userMessage = `O serviço de autenticação devolveu um erro (${code}). Contacta o suporte.`;
+        }
+        console.warn("[Trakify auth] Sign-in rejected", { code: code || undefined, status: error.status });
+        toast.error(userMessage);
+        return;
+      }
       navigate({ to: "/" });
-    } catch {
-      toast.error("Não foi possível entrar. Tente novamente.");
+    } catch (cause) {
+      const name = cause instanceof Error ? cause.name : "UnknownError";
+      console.error("[Trakify auth] Sign-in request failed", { name });
+      toast.error("Não foi possível contactar o serviço de autenticação. Tenta novamente.");
     } finally {
       setLoading(false);
     }
