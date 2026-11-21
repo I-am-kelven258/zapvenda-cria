@@ -71,8 +71,18 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await signInWithEmail(supabase, email, senha);
+      const user = await signInWithEmail(supabase, email, senha);
       setSenha("");
+      const metadata = user.user_metadata ?? {};
+      const displayName = [metadata.full_name, metadata.name, metadata.display_name]
+        .find((value) => typeof value === "string" && value.trim().length > 0);
+      const firstName = typeof displayName === "string"
+        ? displayName.trim().split(/\\s+/)[0]
+        : user.email?.split("@")[0];
+      toast.success(firstName ? `Bem-vindo(a), ${firstName}!` : "Bem-vindo(a) de volta!", {
+        description: "É ótimo ter-te de volta à Trakify.",
+        duration: 4000,
+      });
       await navigate({ to: "/", replace: true });
     } catch (error) {
       toast.error(loginErrorMessage(error));
