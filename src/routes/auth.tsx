@@ -77,7 +77,7 @@ function AuthPage() {
       const displayName = [metadata.full_name, metadata.name, metadata.display_name]
         .find((value) => typeof value === "string" && value.trim().length > 0);
       const firstName = typeof displayName === "string"
-        ? displayName.trim().split(/\\s+/)[0]
+        ? displayName.trim().split(/\s+/)[0]
         : user.email?.split("@")[0];
       toast.success(firstName ? `Bem-vindo(a), ${firstName}!` : "Bem-vindo(a) de volta!", {
         description: "É ótimo ter-te de volta à Trakify.",
