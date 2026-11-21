@@ -14,6 +14,145 @@ export type Database = {
   }
   public: {
     Tables: {
+      sales_integration_secrets: {
+        Row: {
+          created_at: string
+          integration_id: string
+          provider_secret: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          integration_id: string
+          provider_secret?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          integration_id?: string
+          provider_secret?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_integration_secrets_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: true
+            referencedRelation: "sales_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_integrations: {
+        Row: {
+          amount_format: string
+          created_at: string
+          currency: string
+          display_name: string
+          endpoint_token_hash: string | null
+          fixed_fee_minor: number
+          id: string
+          provider: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_format?: string
+          created_at?: string
+          currency: string
+          display_name: string
+          endpoint_token_hash?: string | null
+          fixed_fee_minor?: number
+          id?: string
+          provider: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_format?: string
+          created_at?: string
+          currency?: string
+          display_name?: string
+          endpoint_token_hash?: string | null
+          fixed_fee_minor?: number
+          id?: string
+          provider?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sales_transactions: {
+        Row: {
+          created_at: string
+          currency: string
+          fee_minor: number
+          gross_minor: number
+          id: string
+          integration_id: string
+          net_minor: number
+          occurred_at: string | null
+          product_name: string | null
+          provider_event_id: string
+          provider_order_id: string | null
+          status: string
+          user_id: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string
+          currency: string
+          fee_minor?: number
+          gross_minor: number
+          id?: string
+          integration_id: string
+          net_minor: number
+          occurred_at?: string | null
+          product_name?: string | null
+          provider_event_id: string
+          provider_order_id?: string | null
+          status: string
+          user_id: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          fee_minor?: number
+          gross_minor?: number
+          id?: string
+          integration_id?: string
+          net_minor?: number
+          occurred_at?: string | null
+          product_name?: string | null
+          provider_event_id?: string
+          provider_order_id?: string | null
+          status?: string
+          user_id?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_transactions_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "sales_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scripts: {
         Row: {
           conteudo: string
