@@ -71,8 +71,24 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-      if (error) { toast.error("Email ou senha inválidos"); return; }
+      const normalizedEmail = email.trim().toLowerCase();
+      const { error } = await supabase.auth.signInWithPassword({ email: normalizedEmail, password: senha });
+      if (error) {
+        console.error("[Login] Supabase sign-in failed:", { name: error.name, code: error.code, status: error.status, message: error.message });
+        const message = error.message.toLowerCase();
+        if (message.includes("invalid login credentials")) {
+          toast.error("Não foi possível confirmar este e-mail e palavra-passe. Verifica os dados ou confirma se esta conta existe neste projeto.");
+        } else if (message.includes("email not confirmed")) {
+          toast.error("Este e-mail ainda não foi confirmado no Supabase. Confirma a conta antes de entrar.");
+        } else if (message.includes("too many requests")) {
+          toast.error("Foram feitas demasiadas tentativas. Aguarda um pouco e tenta novamente.");
+        } else if (message.includes("fetch") || message.includes("network")) {
+          toast.error("Não foi possível ligar ao servidor de autenticação. Verifica a ligação e a configuração do Supabase.");
+        } else {
+          toast.error(`Falha no login: ${error.message}`);
+        }
+        return;
+      }
       navigate({ to: "/" });
     } catch {
       toast.error("Não foi possível entrar. Tente novamente.");
