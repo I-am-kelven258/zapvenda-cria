@@ -58,6 +58,42 @@ function createSupabaseFetch(supabaseUrl: string, supabaseKey: string): typeof f
 }
 
 
+// Safari/iOS can reject Web Storage writes in privacy-restricted contexts.
+// Keep an in-tab fallback so a storage exception does not abort authentication.
+function createResilientAuthStorage() {
+  const primary = brokeredPreviewStorage();
+  if (!primary) return undefined;
+
+  const memory = new Map<string, string>();
+  return {
+    getItem: async (key: string) => {
+      try {
+        const value = await primary.getItem(key);
+        if (value !== null) return value;
+      } catch {
+        // Fall back to the in-memory copy for this tab.
+      }
+      return memory.get(key) ?? null;
+    },
+    setItem: async (key: string, value: string) => {
+      memory.set(key, value);
+      try {
+        await primary.setItem(key, value);
+      } catch {
+        // Authentication can continue for this tab even if Safari blocks storage.
+      }
+    },
+    removeItem: async (key: string) => {
+      memory.delete(key);
+      try {
+        await primary.removeItem(key);
+      } catch {
+        // The in-memory session has still been cleared.
+      }
+    },
+  };
+}
+
 function createSupabaseClient() {
   // Use import.meta.env for client-side (Vite build-time replacement)
   // Fall back to process.env for SSR (server-side rendering)
@@ -79,7 +115,7 @@ function createSupabaseClient() {
       fetch: createSupabaseFetch(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY),
     },
     auth: {
-      storage: brokeredPreviewStorage(),
+      storage: createResilientAuthStorage(),
       persistSession: true,
       autoRefreshToken: true,
     },
