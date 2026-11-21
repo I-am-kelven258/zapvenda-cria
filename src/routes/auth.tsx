@@ -82,8 +82,8 @@ function AuthPage() {
           toast.error("Este e-mail ainda não foi confirmado no Supabase. Confirma a conta antes de entrar.");
         } else if (message.includes("too many requests")) {
           toast.error("Foram feitas demasiadas tentativas. Aguarda um pouco e tenta novamente.");
-        } else if (message.includes("fetch") || message.includes("network")) {
-          toast.error("Não foi possível ligar ao servidor de autenticação. Verifica a ligação e a configuração do Supabase.");
+        } else if (message.includes("fetch") || message.includes("network") || message.includes("load failed") || message.includes("networkerror")) {
+          toast.error("A ligação ao servidor de autenticação falhou. A Trakify tentou novamente; verifica a ligação à internet e tenta mais uma vez.");
         } else {
           toast.error(`Falha no login: ${error.message}`);
         }

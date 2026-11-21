@@ -18,7 +18,7 @@ function serverSupabaseUrl(publicUrl: string, supabaseKey: string): string | und
 function createSupabaseFetch(supabaseUrl: string, supabaseKey: string): typeof fetch {
   const publicUrl = supabaseUrl.replace(/\/+$/, '');
   const serverUrl = serverSupabaseUrl(publicUrl, supabaseKey);
-  return (input, init) => {
+  return async (input, init) => {
     const headers = new Headers(
       typeof Request !== 'undefined' && input instanceof Request ? input.headers : undefined,
     );
@@ -33,15 +33,27 @@ function createSupabaseFetch(supabaseUrl: string, supabaseKey: string): typeof f
     }
 
     headers.set('apikey', supabaseKey);
-    if (serverUrl) {
-      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
-      if (url.startsWith(`${publicUrl}/`)) {
-        const target = serverUrl + url.slice(publicUrl.length);
-        const request = typeof input === 'string' || input instanceof URL ? target : new Request(target, input);
-        return fetch(request, { ...init, headers });
-      }
+    const requestUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+    const target = serverUrl && requestUrl.startsWith(`${publicUrl}/`)
+      ? serverUrl + requestUrl.slice(publicUrl.length)
+      : requestUrl;
+    const requestInput = target === requestUrl || typeof input === 'string' || input instanceof URL
+      ? target === requestUrl ? input : target
+      : new Request(target, input);
+    const execute = () => fetch(requestInput, { ...init, headers });
+
+    try {
+      return await execute();
+    } catch (error) {
+      // Safari/WebKit can occasionally drop an otherwise valid Supabase Auth request.
+      // Retry only password-token requests once; never retry arbitrary database writes.
+      const isPasswordLogin = requestUrl.includes('/auth/v1/token') && requestUrl.includes('grant_type=password');
+      const isNetworkFailure = error instanceof TypeError
+        || (error instanceof Error && /load failed|failed to fetch|networkerror|network request failed/i.test(error.message));
+      if (!isPasswordLogin || !isNetworkFailure) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 350));
+      return execute();
     }
-    return fetch(input, { ...init, headers });
   };
 }
 
