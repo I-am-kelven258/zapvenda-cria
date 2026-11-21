@@ -6,14 +6,23 @@ import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { criarUtilizadorAdmin } from "@/lib/admin-users.functions";
-
-const ADMIN_EMAIL = "ednercioazariasbonhane2@gmail.com";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
+  head: () => ({ meta: [
+    { title: "Adicionar utilizador — Trakify" },
+    { name: "description", content: "Administração segura de contas e validade de acesso à Trakify." },
+    { property: "og:title", content: "Adicionar utilizador — Trakify" },
+    { property: "og:description", content: "Administração segura de contas e validade de acesso à Trakify." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: AdminUsersPage,
 });
 
 function AdminUsersPage() {
+  const createUser = useServerFn(criarUtilizadorAdmin);
+  const { user } = Route.useRouteContext();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,27 +36,22 @@ function AdminUsersPage() {
 
   useEffect(() => {
     let active = true;
-    supabase.auth.getUser().then(({ data }) => {
-      const allowed = data.user?.email?.toLowerCase() === ADMIN_EMAIL;
+    supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle().then(({ data, error }) => {
+      const allowed = !error && data?.role === "admin";
       if (!active) return;
       setIsAdmin(allowed);
       if (!allowed) navigate({ to: "/", replace: true });
     });
     return () => { active = false; };
-  }, [navigate]);
+  }, [navigate, user.id]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setCreatedEmail("");
     try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      const accessToken = sessionData.session?.access_token;
-      if (sessionError || !accessToken) throw new Error("A tua sessão terminou. Entra novamente.");
-
-      const result = await criarUtilizadorAdmin({
+      const result = await createUser({
         data: {
-          accessToken,
           name,
           email,
           password,

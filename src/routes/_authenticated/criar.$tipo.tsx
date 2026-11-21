@@ -13,6 +13,10 @@ export const Route = createFileRoute("/_authenticated/criar/$tipo")({
     meta: [
       { title: "Banco de IA — Trakify" },
       { name: "description", content: "Descobre 28 ferramentas externas de inteligência artificial, organizadas por área." },
+      { property: "og:title", content: "Ferramentas e Banco de IA — Trakify" },
+      { property: "og:description", content: "Ferramentas para os teus projetos e recursos de inteligência artificial." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: CriarTipo,

@@ -12,6 +12,10 @@ export const Route = createFileRoute("/_authenticated/sobre")({
     meta: [
       { title: "Sobre a Trakify — Guia e perguntas frequentes" },
       { name: "description", content: "Descobre o que é a Trakify, como utilizar as ferramentas, acompanhar vendas e configurar integrações." },
+      { property: "og:title", content: "Sobre a Trakify — Guia e perguntas frequentes" },
+      { property: "og:description", content: "Informação sobre ferramentas, vendas e acesso à Trakify." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: SobreTrakify,

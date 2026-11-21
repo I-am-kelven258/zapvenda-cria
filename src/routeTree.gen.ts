@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
+import { Route as AuthenticatedSobreRouteImport } from './routes/_authenticated/sobre'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedUtilizadoresRouteImport } from './routes/_authenticated/utilizadores'
 import { Route as AuthenticatedCriarTipoRouteImport } from './routes/_authenticated/criar.$tipo'
 import { Route as AuthenticatedCriarAppRouteImport } from './routes/_authenticated/criar.app'
 import { Route as AuthenticatedCriarPaginaVendasRouteImport } from './routes/_authenticated/criar.pagina-vendas'
@@ -34,6 +37,11 @@ const PlanosRoute = PlanosRouteImport.update({
   path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -44,11 +52,22 @@ const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
   path: '/perfil',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSobreRoute = AuthenticatedSobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   id: '/usuarios',
   path: '/usuarios',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUtilizadoresRoute =
+  AuthenticatedUtilizadoresRouteImport.update({
+    id: '/utilizadores',
+    path: '/utilizadores',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCriarTipoRoute = AuthenticatedCriarTipoRouteImport.update({
   id: '/criar/$tipo',
   path: '/criar/$tipo',
@@ -75,8 +94,11 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/planos': typeof PlanosRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/sobre': typeof AuthenticatedSobreRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/utilizadores': typeof AuthenticatedUtilizadoresRoute
   '/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/criar/app': typeof AuthenticatedCriarAppRoute
   '/criar/pagina-vendas': typeof AuthenticatedCriarPaginaVendasRoute
@@ -85,8 +107,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/planos': typeof PlanosRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/sobre': typeof AuthenticatedSobreRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/utilizadores': typeof AuthenticatedUtilizadoresRoute
   '/': typeof AuthenticatedIndexRoute
   '/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/criar/app': typeof AuthenticatedCriarAppRoute
@@ -98,8 +123,11 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/planos': typeof PlanosRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/sobre': typeof AuthenticatedSobreRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
+  '/_authenticated/utilizadores': typeof AuthenticatedUtilizadoresRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/criar/$tipo': typeof AuthenticatedCriarTipoRoute
   '/_authenticated/criar/app': typeof AuthenticatedCriarAppRoute
@@ -112,8 +140,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/planos'
+    | '/sitemap.xml'
     | '/perfil'
+    | '/sobre'
     | '/usuarios'
+    | '/utilizadores'
     | '/criar/$tipo'
     | '/criar/app'
     | '/criar/pagina-vendas'
@@ -122,8 +153,11 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/planos'
+    | '/sitemap.xml'
     | '/perfil'
+    | '/sobre'
     | '/usuarios'
+    | '/utilizadores'
     | '/'
     | '/criar/$tipo'
     | '/criar/app'
@@ -134,8 +168,11 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/planos'
+    | '/sitemap.xml'
     | '/_authenticated/perfil'
+    | '/_authenticated/sobre'
     | '/_authenticated/usuarios'
+    | '/_authenticated/utilizadores'
     | '/_authenticated/'
     | '/_authenticated/criar/$tipo'
     | '/_authenticated/criar/app'
@@ -147,6 +184,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   PlanosRoute: typeof PlanosRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
@@ -186,11 +231,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPerfilRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/sobre': {
+      id: '/_authenticated/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof AuthenticatedSobreRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/usuarios': {
       id: '/_authenticated/usuarios'
       path: '/usuarios'
       fullPath: '/usuarios'
       preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/utilizadores': {
+      id: '/_authenticated/utilizadores'
+      path: '/utilizadores'
+      fullPath: '/utilizadores'
+      preLoaderRoute: typeof AuthenticatedUtilizadoresRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/criar/$tipo': {
@@ -226,7 +285,9 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
+  AuthenticatedSobreRoute: typeof AuthenticatedSobreRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
+  AuthenticatedUtilizadoresRoute: typeof AuthenticatedUtilizadoresRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCriarTipoRoute: typeof AuthenticatedCriarTipoRoute
   AuthenticatedCriarAppRoute: typeof AuthenticatedCriarAppRoute
@@ -236,7 +297,9 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
+  AuthenticatedSobreRoute: AuthenticatedSobreRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
+  AuthenticatedUtilizadoresRoute: AuthenticatedUtilizadoresRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCriarTipoRoute: AuthenticatedCriarTipoRoute,
   AuthenticatedCriarAppRoute: AuthenticatedCriarAppRoute,
@@ -251,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   PlanosRoute: PlanosRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

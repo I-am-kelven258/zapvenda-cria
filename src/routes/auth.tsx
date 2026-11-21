@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn, LockKeyhole, MessageCircle, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { PLANOS, WHATSAPP_SUPPORT_DISPLAY, WHATSAPP_SUPPORT_URL } from "@/lib/planos";
 import { getValidatedUser } from "@/lib/auth-session";
+import { loginErrorMessage, signInWithEmail } from "@/lib/auth-login";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -57,8 +58,7 @@ function AuthPage() {
       if (user) {
         navigate({ to: "/" });
       } else {
-        toast.error("Nenhuma conta encontrada neste Dispositivo, por favor escolhe um plano a assinar e comece hoje.", { duration: 9000, style: { background: "#dc2626", color: "#ffffff", border: "2px solid #991b1b", fontSize: "16px", fontWeight: 700, padding: "18px 20px", minWidth: "min(420px, calc(100vw - 32px))", boxShadow: "0 12px 32px rgba(127, 29, 29, 0.35)" } });
-        document.getElementById("planos-acesso")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        setShowLogin(true);
       }
     } catch {
       toast.error("Não foi possível verificar a tua sessão. Tenta novamente.");
@@ -71,27 +71,11 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const normalizedEmail = email.trim().toLowerCase();
-      const { error } = await supabase.auth.signInWithPassword({ email: normalizedEmail, password: senha });
-      if (error) {
-        console.error("[Login] Supabase sign-in failed:", { name: error.name, code: error.code, status: error.status, message: error.message });
-        const message = error.message.toLowerCase();
-        if (message.includes("invalid login credentials")) {
-          toast.error("Não foi possível confirmar este e-mail e palavra-passe. Verifica os dados ou confirma se esta conta existe neste projeto.");
-        } else if (message.includes("email not confirmed")) {
-          toast.error("Este e-mail ainda não foi confirmado no Supabase. Confirma a conta antes de entrar.");
-        } else if (message.includes("too many requests")) {
-          toast.error("Foram feitas demasiadas tentativas. Aguarda um pouco e tenta novamente.");
-        } else if (message.includes("fetch") || message.includes("network") || message.includes("load failed") || message.includes("networkerror")) {
-          toast.error("A ligação ao servidor de autenticação falhou. A Trakify tentou novamente; verifica a ligação à internet e tenta mais uma vez.");
-        } else {
-          toast.error(`Falha no login: ${error.message}`);
-        }
-        return;
-      }
-      navigate({ to: "/" });
-    } catch {
-      toast.error("Não foi possível entrar. Tente novamente.");
+      await signInWithEmail(supabase, email, senha);
+      setSenha("");
+      await navigate({ to: "/", replace: true });
+    } catch (error) {
+      toast.error(loginErrorMessage(error));
     } finally {
       setLoading(false);
     }

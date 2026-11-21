@@ -1,11 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "node:process";
-
-const ADMIN_EMAIL = "ednercioazariasbonhane2@gmail.com";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireActiveAdmin } from "./admin-access";
 
 type CreateUserInput = {
-  accessToken: string;
   name: string;
   email: string;
   password: string;
@@ -15,42 +12,25 @@ type CreateUserInput = {
 function validateInput(value: unknown): CreateUserInput {
   if (!value || typeof value !== "object") throw new Error("Dados inválidos.");
   const data = value as Record<string, unknown>;
-  const accessToken = String(data.accessToken ?? "");
-  const name = String(data.name ?? "").trim();
-  const email = String(data.email ?? "").trim().toLowerCase();
-  const password = String(data.password ?? "");
-  const validityDays = Number(data.validityDays);
+  const name = String(data["name"] ?? "").trim();
+  const email = String(data["email"] ?? "").trim().toLowerCase();
+  const password = String(data["password"] ?? "");
+  const validityDays = Number(data["validityDays"]);
 
-  if (!accessToken || accessToken.length > 10000) throw new Error("Sessão inválida. Entra novamente.");
   if (name.length < 2 || name.length > 100) throw new Error("Introduz um nome válido.");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) throw new Error("Introduz um email válido.");
   if (password.length < 8 || password.length > 128) throw new Error("A senha deve ter entre 8 e 128 caracteres.");
   if (!Number.isInteger(validityDays) || validityDays < 1 || validityDays > 3650) throw new Error("A validade deve ser entre 1 e 3650 dias.");
 
-  return { accessToken, name, email, password, validityDays };
+  return { name, email, password, validityDays };
 }
 
 export const criarUtilizadorAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(validateInput)
-  .handler(async ({ data }) => {
-    const url = env["SUPABASE_URL"];
-    const publishableKey = env["SUPABASE_PUBLISHABLE_KEY"];
-    const serviceRoleKey = env["SUPABASE_SERVICE_ROLE_KEY"];
-    if (!url || !publishableKey || !serviceRoleKey) {
-      throw new Error("A configuração segura do servidor está incompleta.");
-    }
-
-    const authClient = createClient(url, publishableKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    const { data: verified, error: authError } = await authClient.auth.getUser(data.accessToken);
-    if (authError || !verified.user || verified.user.email?.toLowerCase() !== ADMIN_EMAIL) {
-      throw new Error("Não tens autorização para criar utilizadores.");
-    }
-
-    const adminClient = createClient(url, serviceRoleKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+  .handler(async ({ data, context }) => {
+    await requireActiveAdmin(context.supabase, context.userId);
+    const { supabaseAdmin: adminClient } = await import("@/integrations/supabase/client.server");
     const { data: created, error: createError } = await adminClient.auth.admin.createUser({
       email: data.email,
       password: data.password,
@@ -71,44 +51,18 @@ export const criarUtilizadorAdmin = createServerFn({ method: "POST" })
       .insert({ user_id: created.user.id, valid_until: validUntil });
 
     if (accessError) {
-      await adminClient.auth.admin.deleteUser(created.user.id);
-      throw new Error("A conta não foi ativada porque não foi possível guardar a validade. Tenta novamente.");
+      throw new Error("A conta foi criada, mas não foi ativada. O acesso continua bloqueado; contacta o suporte para guardar a validade.");
     }
 
     return { ok: true as const, email: data.email, validUntil };
   });
 
 
-type ListUsersInput = { accessToken: string };
-
-function validateListUsersInput(value: unknown): ListUsersInput {
-  if (!value || typeof value !== "object") throw new Error("Dados inválidos.");
-  const accessToken = String((value as Record<string, unknown>).accessToken ?? "");
-  if (!accessToken || accessToken.length > 10000) throw new Error("Sessão inválida. Entra novamente.");
-  return { accessToken };
-}
-
 export const listarUtilizadoresAdmin = createServerFn({ method: "POST" })
-  .inputValidator(validateListUsersInput)
-  .handler(async ({ data }) => {
-    const url = env["SUPABASE_URL"];
-    const publishableKey = env["SUPABASE_PUBLISHABLE_KEY"];
-    const serviceRoleKey = env["SUPABASE_SERVICE_ROLE_KEY"];
-    if (!url || !publishableKey || !serviceRoleKey) {
-      throw new Error("A configuração segura do servidor está incompleta.");
-    }
-
-    const authClient = createClient(url, publishableKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    const { data: verified, error: authError } = await authClient.auth.getUser(data.accessToken);
-    if (authError || !verified.user || verified.user.email?.toLowerCase() !== ADMIN_EMAIL) {
-      throw new Error("Não tens autorização para consultar os utilizadores.");
-    }
-
-    const adminClient = createClient(url, serviceRoleKey, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await requireActiveAdmin(context.supabase, context.userId);
+    const { supabaseAdmin: adminClient } = await import("@/integrations/supabase/client.server");
 
     const allUsers: Array<{
       id: string;

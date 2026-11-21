@@ -4,8 +4,7 @@ import { ArrowLeft, CalendarDays, Clock3, Search, ShieldCheck, Users, UserRound 
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { listarUtilizadoresAdmin } from "@/lib/admin-users.functions";
-
-const ADMIN_EMAIL = "ednercioazariasbonhane2@gmail.com";
+import { useServerFn } from "@tanstack/react-start";
 
 type ListedUser = {
   email: string;
@@ -17,6 +16,14 @@ type ListedUser = {
 };
 
 export const Route = createFileRoute("/_authenticated/utilizadores")({
+  head: () => ({ meta: [
+    { title: "Utilizadores e acessos — Trakify" },
+    { name: "description", content: "Consulta administrativa das contas e dos prazos de acesso à Trakify." },
+    { property: "og:title", content: "Utilizadores e acessos — Trakify" },
+    { property: "og:description", content: "Consulta administrativa das contas e dos prazos de acesso à Trakify." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: UtilizadoresPage,
 });
 
@@ -28,6 +35,8 @@ function formatDate(value: string) {
 }
 
 function UtilizadoresPage() {
+  const listUsers = useServerFn(listarUtilizadoresAdmin);
+  const { user } = Route.useRouteContext();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [users, setUsers] = useState<ListedUser[]>([]);
@@ -40,17 +49,16 @@ function UtilizadoresPage() {
     let active = true;
     async function load() {
       try {
-        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        const session = sessionData.session;
-        if (sessionError || !session) throw new Error("A tua sessão terminou. Entra novamente.");
-        const allowed = session.user.email?.toLowerCase() === ADMIN_EMAIL;
+        const { data: role, error: roleError } = await supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle();
+        if (roleError) throw new Error("Não foi possível verificar a autorização.");
+        const allowed = role?.role === "admin";
         if (!active) return;
         setIsAdmin(allowed);
         if (!allowed) {
           navigate({ to: "/", replace: true });
           return;
         }
-        const result = await listarUtilizadoresAdmin({ data: { accessToken: session.access_token } });
+        const result = await listUsers();
         if (!active) return;
         setUsers(result.users);
         setTotal(result.total);
@@ -62,7 +70,7 @@ function UtilizadoresPage() {
     }
     void load();
     return () => { active = false; };
-  }, [navigate]);
+  }, [navigate, listUsers, user.id]);
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("pt");

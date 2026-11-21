@@ -15,6 +15,13 @@
       "when": 1794650242102,
       "tag": "0001_user_access_expiration",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795296117075,
+      "tag": "0002_harden_access_and_admin_roles",
+      "breakpoints": true
     }
   ]
 }
