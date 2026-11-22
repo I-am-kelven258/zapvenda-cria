@@ -97,7 +97,7 @@ Deno.serve(async (request) => {
     integration_id: integration.id,
     provider_event_id: eventId,
     provider_order_id: orderId || null,
-    product_name: getPath(payload, ["product.name", "data.product.name", "data.purchase.product.name", "purchase.product.name"]) == null ? null : String(getPath(payload, ["product.name", "data.product.name", "data.purchase.product.name", "purchase.product.name"])),
+    product_name: getPath(payload, ["product.name", "data.product.name", "data.items.0.product_name", "items.0.product_name", "data.purchase.product.name", "purchase.product.name"]) == null ? null : String(getPath(payload, ["product.name", "data.product.name", "data.items.0.product_name", "items.0.product_name", "data.purchase.product.name", "purchase.product.name"])),
     gross_minor: grossMinor,
     fee_minor: feeMinor,
     net_minor: Math.max(0, grossMinor - feeMinor),
