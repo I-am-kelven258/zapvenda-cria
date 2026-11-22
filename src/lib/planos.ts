@@ -2,7 +2,7 @@ export const PLANOS = [
   {
     id: "mensal",
     nome: "Plano mensal",
-    preco: 247,
+    preco: 199,
     periodo: "mês",
     premium: false,
     checkout: "https://pay.tutora.co.mz/993a1110a026416da9eb9815d1569fee",
