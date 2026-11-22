@@ -109,3 +109,92 @@ export const listarUtilizadoresAdmin = createServerFn({ method: "POST" })
       }).sort((a, b) => b.created_at.localeCompare(a.created_at)),
     };
   });
+
+
+type ToggleUserAccessInput = {
+  userId: string;
+  active: boolean;
+};
+
+function validateToggleUserAccess(value: unknown): ToggleUserAccessInput {
+  if (!value || typeof value !== "object") throw new Error("Dados inválidos.");
+  const data = value as Record<string, unknown>;
+  const userId = String(data["userId"] ?? "");
+  const active = data["active"];
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)) {
+    throw new Error("Utilizador inválido.");
+  }
+  if (typeof active !== "boolean") throw new Error("Estado de acesso inválido.");
+  return { userId, active };
+}
+
+export const alterarEstadoUtilizadorAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(validateToggleUserAccess)
+  .handler(async ({ data, context }) => {
+    await requireActiveAdmin(context.supabase, context.userId);
+    if (data.userId === context.userId) {
+      throw new Error("Não podes desativar a tua própria conta.");
+    }
+
+    const { supabaseAdmin: adminClient } = await import("@/integrations/supabase/client.server");
+    const { data: targetRole, error: roleError } = await adminClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", data.userId)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    if (roleError) throw new Error("Não foi possível verificar a conta selecionada.");
+    if (targetRole) throw new Error("Por segurança, não é permitido alterar o acesso de outra conta administrativa.");
+
+    const { data: access, error: accessError } = await adminClient
+      .from("user_access")
+      .select("user_id, valid_until, revoked_at")
+      .eq("user_id", data.userId)
+      .maybeSingle();
+
+    if (accessError) throw new Error("Não foi possível consultar o acesso deste utilizador.");
+
+    if (data.active) {
+      if (!access) throw new Error("Esta conta não tem um registo de validade. Não é possível ativá-la automaticamente.");
+      if (access.valid_until && new Date(access.valid_until).getTime() <= Date.now()) {
+        throw new Error("A validade desta conta terminou. É necessário renovar o acesso antes de ativá-la.");
+      }
+
+      const { error: unbanError } = await adminClient.auth.admin.updateUserById(data.userId, {
+        ban_duration: "none",
+      });
+      if (unbanError) throw new Error("Não foi possível reativar a conta no sistema de autenticação.");
+
+      const { error: restoreError } = await adminClient
+        .from("user_access")
+        .update({ revoked_at: null })
+        .eq("user_id", data.userId);
+
+      if (restoreError) {
+        await adminClient.auth.admin.updateUserById(data.userId, { ban_duration: "876000h" });
+        throw new Error("Não foi possível restaurar o registo de acesso. A conta permaneceu bloqueada.");
+      }
+    } else {
+      if (access?.revoked_at) return { ok: true as const, active: false };
+
+      const now = new Date().toISOString();
+      const { error: revokeError } = access
+        ? await adminClient.from("user_access").update({ revoked_at: now }).eq("user_id", data.userId)
+        : await adminClient.from("user_access").insert({ user_id: data.userId, valid_until: null, revoked_at: now });
+
+      if (revokeError) throw new Error("Não foi possível desativar o acesso deste utilizador.");
+
+      const { error: banError } = await adminClient.auth.admin.updateUserById(data.userId, {
+        ban_duration: "876000h",
+      });
+
+      if (banError) {
+        await adminClient.from("user_access").update({ revoked_at: access?.revoked_at ?? null }).eq("user_id", data.userId);
+        throw new Error("Não foi possível bloquear a conta no sistema de autenticação.");
+      }
+    }
+
+    return { ok: true as const, active: data.active };
+  });
