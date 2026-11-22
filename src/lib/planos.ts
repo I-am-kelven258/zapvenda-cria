@@ -10,7 +10,7 @@ export const PLANOS = [
   {
     id: "trimestral",
     nome: "Plano trimestral",
-    preco: 597,
+    preco: 447,
     periodo: "trimestre",
     premium: true,
     checkout: "https://pay.tutora.co.mz/0628eb9010c748faa655c9cda528bc9d",
