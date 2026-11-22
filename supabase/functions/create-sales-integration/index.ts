@@ -51,9 +51,9 @@ Deno.serve(async (request) => {
   if (!["units", "cents"].includes(amountFormat)) return json({ error: "Invalid amount format" }, 400);
   if (!Number.isSafeInteger(fee) || fee < 0) return json({ error: "Invalid fixed fee" }, 400);
 
-  const providerSupported = provider === "hotmart" || provider === "ratixpay";
+  const providerSupported = provider === "hotmart" || provider === "ratixpay" || provider === "tutora";
   if (providerSupported && (providerSecret.length < 8 || providerSecret.length > 512)) {
-    return json({ error: provider === "hotmart" ? "Enter the Hottok from Hotmart" : "Enter the Webhook Secret from RatixPay" }, 400);
+    return json({ error: provider === "hotmart" ? "Enter the Hottok from Hotmart" : provider === "tutora" ? "Enter the Webhook Secret from Tutora" : "Enter the Webhook Secret from RatixPay" }, 400);
   }
 
   const admin = createClient(url, serviceKey);
@@ -96,6 +96,8 @@ Deno.serve(async (request) => {
     webhook_url: webhookUrl,
     setup_instructions: provider === "hotmart"
       ? "Na Hotmart, cria um Webhook e cola esta URL. O Hottok fica guardado no servidor e será validado no cabeçalho X-HOTMART-HOTTOK."
+      : provider === "tutora"
+      ? "Na Tutora, cria um Webhook para esta URL e copia o segredo de assinatura para o campo de segredo. A Trakify valida a assinatura HMAC-SHA256 antes de registar qualquer venda."
       : provider === "ratixpay"
       ? "Na RatixPay, configura esta URL nas credenciais de Webhook. Usa o mesmo Webhook Secret que introduziste aqui; a assinatura HMAC-SHA256 será validada."
       : "A configuração foi guardada. A ativação do recebimento aguarda confirmação da documentação de autenticação e do formato dos eventos desta plataforma.",
