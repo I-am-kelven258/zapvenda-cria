@@ -81,6 +81,7 @@ export const listarUtilizadoresAdmin = createServerFn({ method: "POST" })
     }
 
     const accessByUserId = new Map<string, { valid_until: string | null; revoked_at: string | null }>();
+    const adminUserIds = new Set<string>();
     for (let offset = 0; offset < allUsers.length; offset += 200) {
       const batch = allUsers.slice(offset, offset + 200);
       const { data: accessRows, error } = await adminClient
@@ -91,6 +92,14 @@ export const listarUtilizadoresAdmin = createServerFn({ method: "POST" })
       for (const row of accessRows ?? []) {
         accessByUserId.set(row.user_id, { valid_until: row.valid_until, revoked_at: row.revoked_at });
       }
+      const { data: roleRows, error: rolesError } = await adminClient
+        .from("user_roles")
+        .select("user_id, role")
+        .in("user_id", batch.map((user) => user.id));
+      if (rolesError) throw new Error("Não foi possível carregar os perfis dos utilizadores.");
+      for (const row of roleRows ?? []) {
+        if (row.role === "admin") adminUserIds.add(row.user_id);
+      }
     }
 
     return {
@@ -99,6 +108,8 @@ export const listarUtilizadoresAdmin = createServerFn({ method: "POST" })
         const access = accessByUserId.get(user.id);
         const metadata = user.user_metadata ?? {};
         return {
+          id: user.id,
+          is_admin: adminUserIds.has(user.id),
           email: user.email ?? "",
           name: String(metadata["full_name"] ?? metadata["name"] ?? user.email?.split("@")[0] ?? "Utilizador"),
           created_at: user.created_at,
