@@ -188,8 +188,6 @@ export const alterarEstadoUtilizadorAdmin = createServerFn({ method: "POST" })
         throw new Error("Não foi possível restaurar o registo de acesso. A conta permaneceu bloqueada.");
       }
     } else {
-      if (access?.revoked_at) return { ok: true as const, active: false };
-
       const now = new Date().toISOString();
       const { error: revokeError } = access
         ? await adminClient.from("user_access").update({ revoked_at: now }).eq("user_id", data.userId)
