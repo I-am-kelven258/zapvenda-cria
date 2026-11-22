@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, CalendarDays, Clock3, Search, ShieldCheck, Users, UserRound } from "lucide-react";
+import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
-import { listarUtilizadoresAdmin } from "@/lib/admin-users.functions";
+import { alterarEstadoUtilizadorAdmin, listarUtilizadoresAdmin } from "@/lib/admin-users.functions";
 import { useServerFn } from "@tanstack/react-start";
 
 type ListedUser = {
+  id: string;
+  is_admin: boolean;
   email: string;
   name: string;
   created_at: string;
@@ -36,7 +40,9 @@ function formatDate(value: string) {
 
 function UtilizadoresPage() {
   const listUsers = useServerFn(listarUtilizadoresAdmin);
+  const changeUserAccess = useServerFn(alterarEstadoUtilizadorAdmin);
   const { user } = Route.useRouteContext();
+  const userId = user.id;
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [users, setUsers] = useState<ListedUser[]>([]);
@@ -44,6 +50,7 @@ function UtilizadoresPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [togglingUserId, setTogglingUserId] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -71,6 +78,21 @@ function UtilizadoresPage() {
     void load();
     return () => { active = false; };
   }, [navigate, listUsers, user.id]);
+
+  async function handleAccessToggle(target: ListedUser, active: boolean) {
+    setTogglingUserId(target.id);
+    try {
+      const result = await changeUserAccess({ data: { userId: target.id, active } });
+      if (!result.ok) throw new Error("Não foi possível alterar o acesso.");
+      const revokedAt = active ? null : new Date().toISOString();
+      setUsers((current) => current.map((item) => item.id === target.id ? { ...item, revoked_at: revokedAt } : item));
+      toast.success(active ? "Conta ativada com sucesso." : "Conta desativada com sucesso.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível alterar o acesso.");
+    } finally {
+      setTogglingUserId(null);
+    }
+  }
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("pt");
@@ -124,20 +146,38 @@ function UtilizadoresPage() {
               <div className="rounded-2xl border border-border p-10 text-center text-sm text-muted-foreground">{users.length === 0 ? "Ainda não existem utilizadores para mostrar." : "Nenhum utilizador corresponde à pesquisa."}</div>
             ) : (
               <div className="overflow-hidden rounded-2xl border border-border">
-                <div className="hidden grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] gap-4 bg-muted/50 px-5 py-3 text-xs font-bold uppercase tracking-wide text-muted-foreground md:grid">
-                  <span>Utilizador</span><span>Email</span><span>Registado em</span><span>Validade</span>
+                <div className="hidden grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)_minmax(0,.9fr)_minmax(0,1fr)_auto] gap-4 bg-muted/50 px-5 py-3 text-xs font-bold uppercase tracking-wide text-muted-foreground md:grid">
+                  <span>Utilizador</span><span>Email</span><span>Registado em</span><span>Validade</span><span>Acesso</span>
                 </div>
                 <div className="divide-y divide-border">
                   {filteredUsers.map((user) => {
-                    const expired = user.revoked_at !== null || (user.valid_until !== null && new Date(user.valid_until).getTime() <= Date.now());
-                    const status = user.access_record_missing ? "Sem registo de acesso" : user.revoked_at ? "Acesso revogado" : user.valid_until === null ? "Sem expiração" : expired ? "Expirado" : "Ativo";
-                    const statusClass = user.access_record_missing || user.revoked_at || expired ? "border-red-500/25 bg-red-500/10 text-red-600 dark:text-red-300" : "border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300";
+                    const validityExpired = user.valid_until !== null && new Date(user.valid_until).getTime() <= Date.now();
+                    const blocked = user.access_record_missing || user.revoked_at !== null || validityExpired;
+                    const status = user.is_admin ? "Administrador" : user.access_record_missing ? "Sem registo de acesso" : user.revoked_at ? "Desativado" : validityExpired ? "Expirado" : user.valid_until === null ? "Sem expiração" : "Ativo";
+                    const statusClass = user.is_admin ? "border-primary/25 bg-primary/10 text-primary" : blocked ? "border-red-500/25 bg-red-500/10 text-red-600 dark:text-red-300" : "border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300";
+                    const canToggle = !user.is_admin && user.id !== userId && !user.access_record_missing && !validityExpired;
+                    const enabled = !blocked && !user.is_admin;
                     return (
-                      <div key={user.email} className="grid gap-3 px-5 py-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:items-center md:gap-4">
+                      <div key={user.id} className="grid gap-3 px-5 py-4 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)_minmax(0,.9fr)_minmax(0,1fr)_auto] md:items-center md:gap-4">
                         <div className="min-w-0"><p className="truncate text-sm font-semibold text-foreground">{user.name}</p><p className="mt-1 text-xs text-muted-foreground md:hidden">{user.email}</p></div>
                         <p className="hidden truncate text-sm text-muted-foreground md:block">{user.email}</p>
                         <p className="flex items-center gap-2 text-xs text-muted-foreground"><CalendarDays className="h-4 w-4 shrink-0 text-red-500" /> {formatDate(user.created_at)}</p>
                         <div className="flex flex-wrap items-center gap-2"><span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${statusClass}`}>{status}</span>{user.valid_until && <span className="flex items-center gap-1 text-xs text-muted-foreground"><Clock3 className="h-3.5 w-3.5" /> Até {formatDate(user.valid_until)}</span>}</div>
+                        <div className="flex items-center gap-2 md:justify-end">
+                          {user.is_admin ? <span className="text-xs text-muted-foreground">Protegido</span> : (
+                            <>
+                              <Switch
+                                checked={enabled}
+                                disabled={!canToggle || togglingUserId === user.id}
+                                onCheckedChange={(checked) => void handleAccessToggle(user, checked)}
+                                aria-label={`${enabled ? "Desativar" : "Ativar"} conta de ${user.name}`}
+                              />
+                              <span className={`text-xs font-semibold ${enabled ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>
+                                {togglingUserId === user.id ? "A guardar..." : enabled ? "ON" : "OFF"}
+                              </span>
+                            </>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
