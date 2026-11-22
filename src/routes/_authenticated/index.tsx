@@ -35,7 +35,7 @@ function Dashboard() {
                 <Link to="/usuarios" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600 px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(220,38,38,0.2)] transition-all duration-200 hover:-translate-y-1 hover:bg-red-500 hover:shadow-[0_14px_32px_rgba(220,38,38,0.32)] active:translate-y-0">
                   <UserPlus className="h-4 w-4" /> Adicionar utilizadores <ChevronRight className="h-4 w-4" />
                 </Link>
-                <Link to="/usuarios" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-card px-5 text-sm font-bold text-foreground shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:text-red-600 hover:shadow-[0_14px_32px_rgba(220,38,38,0.12)] active:translate-y-0">
+                <Link to="/utilizadores" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-card px-5 text-sm font-bold text-foreground shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:text-red-600 hover:shadow-[0_14px_32px_rgba(220,38,38,0.12)] active:translate-y-0">
                   <Users className="h-4 w-4" /> Ver utilizadores <ChevronRight className="h-4 w-4" />
                 </Link>
               </div>
