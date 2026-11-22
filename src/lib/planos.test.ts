@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { PLANOS } from "./planos";
 
 describe("Planos de acesso", () => {
-  it("define o plano mensal em 247 Meticais", () => {
-    expect(PLANOS.find((p) => p.id === "mensal")?.preco).toBe(247);
+  it("define o plano mensal em 199 Meticais", () => {
+    expect(PLANOS.find((p) => p.id === "mensal")?.preco).toBe(199);
   });
   it("destina o plano mensal ao checkout indicado", () => {
     expect(PLANOS.find((p) => p.id === "mensal")?.checkout).toBe("https://pay.tutora.co.mz/993a1110a026416da9eb9815d1569fee");
