@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AjudaEmail } from "@/components/AssistenteIA";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, LogIn, LockKeyhole, MessageCircle, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, Eye, EyeOff, Instagram, LogIn, LockKeyhole, MessageCircle, Music2, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { PLANOS, WHATSAPP_SUPPORT_DISPLAY, WHATSAPP_SUPPORT_URL } from "@/lib/planos";
 import { getValidatedUser } from "@/lib/auth-session";
 import { loginErrorMessage, signInWithEmail } from "@/lib/auth-login";
@@ -133,6 +133,32 @@ function AuthPage() {
               Começar agora <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
+          <section aria-label="Redes sociais" className="mt-12 w-full max-w-4xl rounded-2xl border border-neutral-200 bg-neutral-50 p-6 text-center sm:p-8">
+            <h2 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">Segue-me nas redes sociais</h2>
+            <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-neutral-600 sm:text-base">
+              Acompanha novidades, dicas e conteúdos sobre negócios digitais.
+            </p>
+            <div className="mx-auto mt-6 grid w-full max-w-xl gap-3 sm:grid-cols-2">
+              <a
+                href="https://www.tiktok.com/@iamkelven258"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Seguir @iamkelven258 no TikTok"
+                className="inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-black px-5 py-4 font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:bg-neutral-800 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+              >
+                <Music2 className="h-5 w-5" /> Seguir no TikTok
+              </a>
+              <a
+                href="https://www.instagram.com/ednercioescalepay/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Seguir @ednercioescalepay no Instagram"
+                className="inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 px-5 py-4 font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:brightness-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2"
+              >
+                <Instagram className="h-5 w-5" /> Seguir no Instagram
+              </a>
+            </div>
+          </section>
           <section className="mt-12 w-full max-w-4xl text-center">
             <h2 className="mb-5 text-center text-2xl font-bold tracking-tight text-black sm:text-3xl">O que oferece</h2>
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
