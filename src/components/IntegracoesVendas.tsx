@@ -121,9 +121,9 @@ export function IntegracoesVendas() {
       toast.error("Indica uma taxa fixa válida.");
       return;
     }
-    const needsSecret = provider === "hotmart" || provider === "ratixpay";
+    const needsSecret = provider === "tutora" || provider === "hotmart" || provider === "ratixpay";
     if (needsSecret && providerSecret.trim().length < 8) {
-      toast.error(provider === "hotmart" ? "Introduz o Hottok da Hotmart." : "Introduz o Webhook Secret da RatixPay.");
+      toast.error(provider === "hotmart" ? "Introduz o Hottok da Hotmart." : provider === "tutora" ? "Introduz o segredo de Webhook da Tutora." : "Introduz o Webhook Secret da RatixPay.");
       return;
     }
     setSaving(true);
@@ -194,7 +194,7 @@ export function IntegracoesVendas() {
         <section className="grid gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><Link2 className="h-4 w-4 text-rose-500" /> Configurações guardadas</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{items.length}</p></div>
           <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><Clock3 className="h-4 w-4 text-amber-500" /> A aguardar ligação</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{items.filter((item) => item.status !== "active").length}</p></div>
-          <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><WalletCards className="h-4 w-4 text-rose-500" /> Plataformas disponíveis</div><p className="mt-3 text-3xl font-extrabold tabular-nums">5</p></div>
+          <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><WalletCards className="h-4 w-4 text-rose-500" /> Plataformas disponíveis</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{PROVIDERS.length}</p></div>
         </section>
 
         <section className="space-y-4">
@@ -243,9 +243,9 @@ export function IntegracoesVendas() {
               <label className="space-y-2 text-sm font-semibold">Valores enviados pela plataforma
                 <select value={amountFormat} onChange={(event) => setAmountFormat(event.target.value as "units" | "cents")} className="h-12 w-full rounded-xl border border-border bg-background px-3 font-normal outline-none focus:border-rose-500"><option value="units">Unidades normais (1 = 1)</option><option value="cents">Em centavos (100 = 1)</option></select>
               </label>
-              {(provider === "hotmart" || provider === "ratixpay") && (
+              {(provider === "tutora" || provider === "hotmart" || provider === "ratixpay") && (
                 <label className="space-y-2 text-sm font-semibold md:col-span-2">
-                  {provider === "hotmart" ? "Hottok da Hotmart" : "Webhook Secret da RatixPay"}
+                  {provider === "hotmart" ? "Hottok da Hotmart" : provider === "tutora" ? "Segredo de Webhook da Tutora" : "Webhook Secret da RatixPay"}
                   <input type="password" autoComplete="off" value={providerSecret} onChange={(event) => setProviderSecret(event.target.value)} required minLength={8} placeholder="Cola aqui o segredo de Webhook da plataforma" className="h-12 w-full rounded-xl border border-border bg-background px-3 font-normal outline-none focus:border-rose-500 md:max-w-xl" />
                   <span className="block text-xs font-normal text-muted-foreground">Este segredo é enviado diretamente ao servidor e não fica disponível na área pública da aplicação.</span>
                 </label>
@@ -287,7 +287,7 @@ export function IntegracoesVendas() {
         </section>
 
         <section className="rounded-2xl border border-amber-500/25 bg-amber-500/[0.06] p-5">
-          <div className="flex items-start gap-3"><Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" /><div><h3 className="font-bold">Estado das ligações</h3><p className="mt-1 text-sm leading-6 text-muted-foreground">A receção automática está preparada para Hotmart (Hottok) e RatixPay (HMAC-SHA256). Tutora, EscalePay e Kiwify ficam guardadas, mas aguardam confirmação do método oficial de autenticação e do formato dos eventos. Nenhuma venda será registada sem validação.</p></div></div>
+          <div className="flex items-start gap-3"><Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" /><div><h3 className="font-bold">Estado das ligações</h3><p className="mt-1 text-sm leading-6 text-muted-foreground">A receção automática está preparada para Hotmart (Hottok), RatixPay (HMAC-SHA256) e Tutora (HMAC-SHA256). EscalePay e Kiwify ainda aguardam validação completa dos respetivos métodos de autenticação e formatos de eventos. Nenhuma venda será registada sem validação.</p></div></div>
         </section>
       </main>
     </AppShell>
