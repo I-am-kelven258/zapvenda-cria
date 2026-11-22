@@ -68,16 +68,23 @@ Deno.serve(async (request) => {
     verified = safeEqual(received, providerSecret);
   } else if (integration.provider === "ratixpay") {
     const received = (request.headers.get("X-RatixPay-Signature") ?? request.headers.get("X-Ratix-Signature") ?? "").replace(/^sha256=/i, "").toLowerCase();
-    verified = safeEqual(received, await hmacHex(providerSecret, rawBody));
+    const rawSignature = await hmacHex(providerSecret, rawBody);
+    const normalizedSignature = await hmacHex(providerSecret, JSON.stringify(payload));
+    verified = safeEqual(received, rawSignature) || safeEqual(received, normalizedSignature);
+  } else if (integration.provider === "tutora") {
+    const received = (request.headers.get("X-Tutora-Signature") ?? "").replace(/^sha256=/i, "").toLowerCase();
+    const rawSignature = await hmacHex(providerSecret, rawBody);
+    const normalizedSignature = await hmacHex(providerSecret, JSON.stringify(payload));
+    verified = safeEqual(received, rawSignature) || safeEqual(received, normalizedSignature);
   } else {
     return json({ error: "Provider webhook authentication is not yet enabled" }, 501);
   }
   if (!verified) return json({ error: "Webhook authentication failed" }, 401);
 
-  const eventId = String(getPath(payload, ["payment_id", "transaction_id", "data.purchase.transaction", "data.purchase.id", "id", "event_id", "reference"]) ?? "");
-  const orderId = String(getPath(payload, ["order_id", "purchase.order_id", "data.purchase.order_id", "data.purchase.transaction", "payment_id", "transaction_id", "dados.venda_id", "reference"]) ?? eventId);
-  const rawAmount = Number(getPath(payload, ["amount", "valor", "data.purchase.price.value", "data.purchase.price", "purchase.price.value", "dados.valor"]));
-  const currency = String(getPath(payload, ["currency", "data.purchase.price.currency_code", "purchase.price.currency_code", "dados.currency"]) ?? integration.currency);
+  const eventId = String(getPath(payload, ["payment_id", "transaction_id", "data.purchase.transaction", "data.purchase.id", "data.order.reference", "id", "event_id", "reference"]) ?? "");
+  const orderId = String(getPath(payload, ["order_id", "purchase.order_id", "data.purchase.order_id", "data.purchase.transaction", "data.order.reference", "payment_id", "transaction_id", "dados.venda_id", "reference"]) ?? eventId);
+  const rawAmount = Number(getPath(payload, ["amount", "valor", "data.order.total", "data.purchase.price.value", "data.purchase.price", "purchase.price.value", "dados.valor"]));
+  const currency = String(getPath(payload, ["currency", "data.order.currency", "data.purchase.price.currency_code", "purchase.price.currency_code", "dados.currency"]) ?? integration.currency);
   const rawStatus = getPath(payload, ["status", "event", "data.purchase.status", "purchase.status", "event_name", "evento", "dados.status"]);
   if (!eventId || !Number.isFinite(rawAmount) || rawAmount < 0 || currency !== integration.currency) {
     return json({ error: "Missing transaction identifier, invalid amount, or currency mismatch" }, 400);
