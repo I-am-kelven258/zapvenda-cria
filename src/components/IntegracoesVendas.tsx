@@ -83,8 +83,9 @@ export function IntegracoesVendas() {
   }, [visibleSales]);
   const availableCurrencies = useMemo(() => Array.from(new Set(sales.map((sale) => sale.currency))), [sales]);
   useEffect(() => {
-    if (availableCurrencies.length > 0 && !availableCurrencies.includes(chartCurrency)) {
-      setChartCurrency(availableCurrencies[0]);
+    const firstCurrency = availableCurrencies[0];
+    if (firstCurrency && !availableCurrencies.includes(chartCurrency)) {
+      setChartCurrency(firstCurrency);
     }
   }, [availableCurrencies, chartCurrency]);
   const dailySales = useMemo(() => {
@@ -112,8 +113,14 @@ export function IntegracoesVendas() {
   async function createIntegration(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const fee = Number(fixedFee.replace(",", "."));
-    if (!displayName.trim()) return toast.error("Dá um nome a esta integração.");
-    if (!Number.isFinite(fee) || fee < 0 || fee > 100000000) return toast.error("Indica uma taxa fixa válida.");
+    if (!displayName.trim()) {
+      toast.error("Dá um nome a esta integração.");
+      return;
+    }
+    if (!Number.isFinite(fee) || fee < 0 || fee > 100000000) {
+      toast.error("Indica uma taxa fixa válida.");
+      return;
+    }
     const needsSecret = provider === "hotmart" || provider === "ratixpay";
     if (needsSecret && providerSecret.trim().length < 8) {
       toast.error(provider === "hotmart" ? "Introduz o Hottok da Hotmart." : "Introduz o Webhook Secret da RatixPay.");

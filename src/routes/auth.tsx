@@ -74,7 +74,7 @@ function AuthPage() {
       const user = await signInWithEmail(supabase, email, senha);
       setSenha("");
       const metadata = user.user_metadata ?? {};
-      const displayName = [metadata.full_name, metadata.name, metadata.display_name]
+      const displayName = [metadata["full_name"], metadata["name"], metadata["display_name"]]
         .find((value) => typeof value === "string" && value.trim().length > 0);
       const firstName = typeof displayName === "string"
         ? displayName.trim().split(/\s+/)[0]

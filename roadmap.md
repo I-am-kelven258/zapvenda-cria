@@ -1,7 +1,7 @@
 # Tarefas
-- [ ] Auditar e reparar a ligação antiga do login sem alterar o design.
-- [ ] Corrigir autorização e criação de contas no servidor preservando a validade.
-- [ ] Testar sessão, acesso protegido, RLS e compilação; identificar verificações bloqueadas.
+- [x] Auditar e reparar a ligação antiga do login sem alterar o design.
+- [x] Corrigir autorização e criação de contas no servidor preservando a validade.
+- [x] Testar sessão, acesso protegido, RLS e compilação; login confirmado pelo utilizador.
 - [x] Ligar o formulário de aplicações à OpenAI no servidor com erros claros e respostas personalizadas.
 - [x] Testar pedido real autenticado e confirmar erro claro sem perder respostas (OpenAI respondeu 429).
 - [x] Restaurar geração local sem dependência de saldo da OpenAI.

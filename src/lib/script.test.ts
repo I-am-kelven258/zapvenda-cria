@@ -11,7 +11,7 @@ describe("gerarScript", () => {
       objetivo: "economizar",
       estilo: "moderno",
     });
-    expect(s).toContain("📱 NOME DO APLICATIVO\nFinApp");
-    expect(s).toContain("verde neon");
+    expect(s).toContain("📱 PLANO COMPLETO DO APLICATIVO — FinApp");
+    expect(s).toContain("verde-neon");
   });
 });
