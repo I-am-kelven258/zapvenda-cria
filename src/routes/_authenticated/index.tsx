@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, UserPlus, Users } from "lucide-react";
+import { ChevronRight, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { CARDS } from "@/lib/cards";
 export { CARDS };
@@ -31,12 +31,9 @@ function Dashboard() {
             <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">O que vamos criar hoje?</h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground md:text-base">Acede às ferramentas da Trakify e transforma as tuas ideias em novos projetos.</p>
             {isAdmin && (
-              <div className="mt-6 flex w-full max-w-sm flex-col gap-3">
-                <Link to="/usuarios" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600 px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(220,38,38,0.2)] transition-all duration-200 hover:-translate-y-1 hover:bg-red-500 hover:shadow-[0_14px_32px_rgba(220,38,38,0.32)] active:translate-y-0">
-                  <UserPlus className="h-4 w-4" /> Adicionar utilizadores <ChevronRight className="h-4 w-4" />
-                </Link>
-                <Link to="/utilizadores" className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-card px-5 text-sm font-bold text-foreground shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-500 hover:text-red-600 hover:shadow-[0_14px_32px_rgba(220,38,38,0.12)] active:translate-y-0">
-                  <Users className="h-4 w-4" /> Ver utilizadores <ChevronRight className="h-4 w-4" />
+              <div className="mt-6">
+                <Link to="/painel-adm" className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600 to-rose-600 px-6 text-sm font-bold text-white shadow-[0_8px_24px_rgba(220,38,38,0.22)] transition-all duration-200 hover:-translate-y-1 hover:from-red-500 hover:to-rose-500 hover:shadow-[0_14px_32px_rgba(220,38,38,0.32)] active:translate-y-0">
+                  <ShieldCheck className="h-4 w-4" /> Painel Adm <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             )}
