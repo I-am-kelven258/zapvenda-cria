@@ -1,7 +1,8 @@
-import { Smartphone, Video, ShoppingCart, BrainCircuit, Sparkles, ChartNoAxesCombined } from "lucide-react";
+import { Smartphone, Video, ShoppingCart, BrainCircuit, Sparkles, ChartNoAxesCombined, BookOpen } from "lucide-react";
 
 export const CARDS = [
   { tipo: "app", label: "Criar Aplicativo", icon: Smartphone },
+  { tipo: "ebook", label: "Criar E-book", icon: BookOpen },
   { tipo: "video", label: "Criar Vídeo", icon: Video },
   { tipo: "pagina-vendas", label: "Criar Página de Vendas", icon: ShoppingCart },
   { tipo: "pagina-documentos", label: "Banco de IA", icon: BrainCircuit },
