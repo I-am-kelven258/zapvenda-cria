@@ -2,30 +2,34 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Activity, Clock3, Link2, Loader2, Plus, ShieldCheck, Trash2, WalletCards, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { PROVIDERS, connectionState, providerInfo, type ConnectionState } from "@/lib/sales-providers";
+import { criarIntegracaoVendas } from "@/lib/sales.functions";
 
-const PROVIDERS = [
-  { value: "tutora", label: "Tutora" },
-  { value: "escalepay", label: "EscalePay" },
-  { value: "hotmart", label: "Hotmart" },
-  { value: "kiwify", label: "Kiwify" },
-  { value: "ratixpay", label: "RatixPay" },
-] as const;
+const STATE_LABEL: Record<ConnectionState, { label: string; cls: string }> = {
+  functional: { label: "FUNCIONAL", cls: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" },
+  needs_config: { label: "PRECISA DE CONFIGURAÇÃO", cls: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300" },
+  error: { label: "COM ERROS", cls: "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300" },
+};
 const CURRENCIES = ["MZN", "BRL", "USD", "EUR", "AOA"] as const;
 type Integration = {
   id: string; provider: string; display_name: string; currency: string;
   amount_format: "units" | "cents"; fixed_fee_minor: number; status: string; created_at: string;
+  last_event_at: string | null; last_error: string | null; endpoint_token_hash: string | null;
 };
 type Sale = {
   id: string; provider_order_id: string | null; product_name: string | null;
   gross_minor: number; fee_minor: number; net_minor: number; currency: string;
   status: string; utm_source: string | null; utm_campaign: string | null; occurred_at: string | null;
 };
+const stateOf = (i: Integration) => connectionState({ ...i, has_endpoint: !!i.endpoint_token_hash });
 const money = (minor: number, currency: string) => new Intl.NumberFormat("pt-PT", {
   style: "currency", currency, maximumFractionDigits: 2,
 }).format((Number(minor) || 0) / 100);
 
 export function IntegracoesVendas() {
+  const criar = useServerFn(criarIntegracaoVendas);
   const [items, setItems] = useState<Integration[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -46,7 +50,7 @@ export function IntegracoesVendas() {
   async function loadIntegrations() {
     setLoading(true);
     const { data, error } = await (supabase.from("sales_integrations" as never) as any)
-      .select("id,provider,display_name,currency,amount_format,fixed_fee_minor,status,created_at")
+      .select("id,provider,display_name,currency,amount_format,fixed_fee_minor,status,created_at,last_event_at,last_error,endpoint_token_hash")
       .order("created_at", { ascending: false });
     if (error) toast.error("Não foi possível carregar as integrações.");
     else setItems((data ?? []) as Integration[]);
@@ -121,39 +125,23 @@ export function IntegracoesVendas() {
       toast.error("Indica uma taxa fixa válida.");
       return;
     }
-    const needsSecret = provider === "tutora" || provider === "hotmart" || provider === "ratixpay";
-    if (needsSecret && providerSecret.trim().length < 8) {
-      toast.error(provider === "hotmart" ? "Introduz o Hottok da Hotmart." : provider === "tutora" ? "Introduz o segredo de Webhook da Tutora." : "Introduz o Webhook Secret da RatixPay.");
+    const info = providerInfo(provider);
+    if (info?.supported && providerSecret.trim().length < 8) {
+      toast.error(`Introduz: ${info.secretLabel}.`);
       return;
     }
     setSaving(true);
-    const { data, error } = await supabase.functions.invoke("create-sales-integration", {
-      body: {
-        provider,
-        display_name: displayName.trim(),
-        currency,
-        amount_format: amountFormat,
-        fixed_fee_minor: Math.round(fee * 100),
-        provider_secret: providerSecret.trim(),
-      },
-    });
-    setSaving(false);
-    if (error || data?.error) {
-      let diagnostic = error?.message ?? "Falha ao comunicar com o servidor.";
-      const errorContext = (error as { context?: Response } | null)?.context;
-      if (errorContext) {
-        try {
-          const responseBody = await errorContext.clone().json();
-          if (typeof responseBody?.error === "string") diagnostic = responseBody.error;
-        } catch {
-          if (errorContext.status) diagnostic = `Erro HTTP ${errorContext.status}: ${diagnostic}`;
-        }
-      }
-      toast.error(typeof data?.error === "string" ? data.error : diagnostic);
+    let data: { webhook_url: string | null };
+    try {
+      data = await criar({ data: { provider, display_name: displayName.trim(), currency, amount_format: amountFormat, fixed_fee_minor: Math.round(fee * 100), provider_secret: providerSecret.trim(), origin: window.location.origin } });
+    } catch (err) {
+      setSaving(false);
+      toast.error(err instanceof Error ? err.message : "Falha ao comunicar com o servidor.");
       return;
     }
+    setSaving(false);
     toast.success("Integração configurada.");
-    setCreatedSetup({ webhook_url: data.webhook_url ?? null, setup_instructions: data.setup_instructions });
+    setCreatedSetup({ webhook_url: data.webhook_url, setup_instructions: data.webhook_url ? `Cola esta URL nas configurações de Webhook da ${info?.label}. O estado passa a FUNCIONAL só depois de chegar o primeiro evento autenticado (podes usar o envio de teste da plataforma).` : `Configuração guardada. ${info?.missing ?? ""}` });
     setDisplayName("");
     setFixedFee("0");
     setProviderSecret("");
@@ -192,9 +180,12 @@ export function IntegracoesVendas() {
         </section>
 
         <section className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><Link2 className="h-4 w-4 text-rose-500" /> Configurações guardadas</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{items.length}</p></div>
-          <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><Clock3 className="h-4 w-4 text-amber-500" /> A aguardar ligação</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{items.filter((item) => item.status !== "active").length}</p></div>
-          <div className="rounded-2xl border border-border bg-card p-5"><div className="flex items-center gap-2 text-sm text-muted-foreground"><WalletCards className="h-4 w-4 text-rose-500" /> Plataformas disponíveis</div><p className="mt-3 text-3xl font-extrabold tabular-nums">{PROVIDERS.length}</p></div>
+          {(["functional", "needs_config", "error"] as ConnectionState[]).map((st) => <div key={st} className="rounded-2xl border border-border bg-card p-5"><span className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold ${STATE_LABEL[st].cls}`}>{STATE_LABEL[st].label}</span><p className="mt-3 text-3xl font-extrabold tabular-nums">{items.filter((i) => stateOf(i) === st).length}</p></div>)}
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card p-5">
+          <h2 className="font-bold">Estado de cada plataforma</h2>
+          <div className="mt-3 divide-y divide-border">{PROVIDERS.map((p) => { const mine = items.filter((i) => i.provider === p.value); const st: ConnectionState = !p.supported ? "needs_config" : mine.some((i) => stateOf(i) === "functional") ? "functional" : mine.some((i) => stateOf(i) === "error") ? "error" : "needs_config"; return <div key={p.value} className="flex flex-wrap items-start justify-between gap-2 py-3 text-sm"><div className="min-w-0 flex-1"><p className="font-semibold">{p.label}</p><p className="text-xs text-muted-foreground">{!p.supported ? p.missing : mine.length === 0 ? `Falta configurar: ${p.secretLabel} e colar a URL do Webhook na plataforma.` : st === "functional" ? "Eventos autenticados recebidos." : st === "error" ? mine.find((i) => i.last_error)?.last_error : "Configurada; a aguardar o primeiro evento autenticado."}</p></div><span className={`rounded-full border px-2.5 py-1 text-[11px] font-bold ${STATE_LABEL[st].cls}`}>{STATE_LABEL[st].label}</span></div>; })}</div>
         </section>
 
         <section className="space-y-4">
@@ -249,6 +240,8 @@ export function IntegracoesVendas() {
                   <input type="password" autoComplete="off" value={providerSecret} onChange={(event) => setProviderSecret(event.target.value)} required minLength={8} placeholder="Cola aqui o segredo de Webhook da plataforma" className="h-12 w-full rounded-xl border border-border bg-background px-3 font-normal outline-none focus:border-rose-500 md:max-w-xl" />
                   <span className="block text-xs font-normal text-muted-foreground">Este segredo é enviado diretamente ao servidor e não fica disponível na área pública da aplicação.</span>
                 </label>
+              ) : (
+                <p className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-3 text-sm font-normal text-muted-foreground md:col-span-2">{providerInfo(provider)?.missing}</p>
               )}
               <label className="space-y-2 text-sm font-semibold md:col-span-2">Taxa fixa por venda ({currency})
                 <input inputMode="decimal" value={fixedFee} onChange={(event) => setFixedFee(event.target.value)} placeholder="0,00" className="h-12 w-full rounded-xl border border-border bg-background px-3 font-normal outline-none focus:border-rose-500 md:max-w-sm" />
@@ -283,12 +276,9 @@ export function IntegracoesVendas() {
           <div><h2 className="text-xl font-extrabold">As tuas plataformas</h2><p className="mt-1 text-sm text-muted-foreground">Cada ligação mantém a sua moeda e configuração de taxa.</p></div>
           {loading ? <div className="flex items-center justify-center rounded-2xl border border-border bg-card py-12 text-muted-foreground"><Loader2 className="mr-2 h-5 w-5 animate-spin" /> A carregar configurações...</div> :
             items.length === 0 ? <div className="rounded-2xl border border-dashed border-border bg-card/60 px-6 py-12 text-center"><WalletCards className="mx-auto h-9 w-9 text-muted-foreground" /><h3 className="mt-3 font-bold">Ainda não tens integrações</h3><p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">Adiciona a primeira plataforma para guardar as preferências de moeda, formato dos valores e taxa fixa.</p><button type="button" onClick={() => setShowForm(true)} className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-rose-600 px-5 text-sm font-bold text-white"><Plus className="h-4 w-4" /> Criar primeira integração</button></div> :
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{items.map((item) => <article key={item.id} className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-rose-500/40 hover:shadow-md"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">{PROVIDERS.find((p) => p.value === item.provider)?.label ?? item.provider}</p><h3 className="mt-1 text-lg font-bold">{item.display_name}</h3></div><span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${item.status === "active" ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300"}`}>{item.status === "active" ? <ShieldCheck className="h-3 w-3" /> : <Clock3 className="h-3 w-3" />}{item.status === "active" ? "Ligação ativa" : item.status === "provider_docs_pending" ? "A aguardar suporte técnico" : "A aguardar primeiro evento"}</span></div><div className="mt-5 space-y-2 border-t border-border pt-4 text-sm"><div className="flex justify-between gap-3"><span className="text-muted-foreground">Moeda</span><strong>{item.currency}</strong></div><div className="flex justify-between gap-3"><span className="text-muted-foreground">Formato recebido</span><strong>{item.amount_format === "cents" ? "Centavos (100 = 1)" : "Unidades (1 = 1)"}</strong></div><div className="flex justify-between gap-3"><span className="text-muted-foreground">Taxa fixa</span><strong>{money(item.fixed_fee_minor, item.currency)}</strong></div></div><div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-4"><span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 text-emerald-600" /> Configuração guardada</span><button type="button" onClick={() => void deleteIntegration(item.id)} aria-label={`Remover ${item.display_name}`} className="rounded-lg p-2 text-muted-foreground transition hover:bg-red-500/10 hover:text-red-600"><Trash2 className="h-4 w-4" /></button></div></article>)}</div>}
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{items.map((item) => <article key={item.id} className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-rose-500/40 hover:shadow-md"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">{PROVIDERS.find((p) => p.value === item.provider)?.label ?? item.provider}</p><h3 className="mt-1 text-lg font-bold">{item.display_name}</h3></div><span className={`rounded-full border px-2.5 py-1 text-[11px] font-bold ${STATE_LABEL[stateOf(item)].cls}`}>{STATE_LABEL[stateOf(item)].label}</span></div>{item.last_error && <p className="mt-3 text-xs text-red-600 dark:text-red-300">{item.last_error}</p>}<div className="mt-5 space-y-2 border-t border-border pt-4 text-sm"><div className="flex justify-between gap-3"><span className="text-muted-foreground">Moeda</span><strong>{item.currency}</strong></div><div className="flex justify-between gap-3"><span className="text-muted-foreground">Formato recebido</span><strong>{item.amount_format === "cents" ? "Centavos (100 = 1)" : "Unidades (1 = 1)"}</strong></div><div className="flex justify-between gap-3"><span className="text-muted-foreground">Taxa fixa</span><strong>{money(item.fixed_fee_minor, item.currency)}</strong></div></div><div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-4"><span className="text-xs text-muted-foreground">{item.last_event_at ? `Último evento: ${new Date(item.last_event_at).toLocaleString("pt-PT")}` : "Sem eventos recebidos"}</span><button type="button" onClick={() => void deleteIntegration(item.id)} aria-label={`Remover ${item.display_name}`} className="rounded-lg p-2 text-muted-foreground transition hover:bg-red-500/10 hover:text-red-600"><Trash2 className="h-4 w-4" /></button></div></article>)}</div>}
         </section>
 
-        <section className="rounded-2xl border border-amber-500/25 bg-amber-500/[0.06] p-5">
-          <div className="flex items-start gap-3"><Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" /><div><h3 className="font-bold">Estado das ligações</h3><p className="mt-1 text-sm leading-6 text-muted-foreground">A receção automática está preparada para Hotmart (Hottok), RatixPay (HMAC-SHA256) e Tutora (HMAC-SHA256). EscalePay e Kiwify ainda aguardam validação completa dos respetivos métodos de autenticação e formatos de eventos. Nenhuma venda será registada sem validação.</p></div></div>
-        </section>
       </main>
     </AppShell>
   );

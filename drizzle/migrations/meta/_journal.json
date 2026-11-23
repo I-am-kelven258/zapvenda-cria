@@ -22,6 +22,13 @@
       "when": 1795296117075,
       "tag": "0002_harden_access_and_admin_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795425312165,
+      "tag": "0003_sales_integrations_diagnostics",
+      "breakpoints": true
     }
   ]
 }

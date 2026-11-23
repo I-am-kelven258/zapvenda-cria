@@ -22,6 +22,7 @@ import { Route as AuthenticatedCriarTipoRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCriarAppRouteImport } from './routes/_authenticated/criar.app'
 import { Route as AuthenticatedCriarPaginaVendasRouteImport } from './routes/_authenticated/criar.pagina-vendas'
 import { Route as AuthenticatedCriarVideoRouteImport } from './routes/_authenticated/criar.video'
+import { Route as ApiPublicVendasTokenRouteImport } from './routes/api/public/vendas/$token'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -89,6 +90,11 @@ const AuthenticatedCriarVideoRoute = AuthenticatedCriarVideoRouteImport.update({
   path: '/criar/video',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicVendasTokenRoute = ApiPublicVendasTokenRouteImport.update({
+  id: '/api/public/vendas/$token',
+  path: '/api/public/vendas/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/criar/app': typeof AuthenticatedCriarAppRoute
   '/criar/pagina-vendas': typeof AuthenticatedCriarPaginaVendasRoute
   '/criar/video': typeof AuthenticatedCriarVideoRoute
+  '/api/public/vendas/$token': typeof ApiPublicVendasTokenRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/criar/app': typeof AuthenticatedCriarAppRoute
   '/criar/pagina-vendas': typeof AuthenticatedCriarPaginaVendasRoute
   '/criar/video': typeof AuthenticatedCriarVideoRoute
+  '/api/public/vendas/$token': typeof ApiPublicVendasTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/_authenticated/criar/app': typeof AuthenticatedCriarAppRoute
   '/_authenticated/criar/pagina-vendas': typeof AuthenticatedCriarPaginaVendasRoute
   '/_authenticated/criar/video': typeof AuthenticatedCriarVideoRoute
+  '/api/public/vendas/$token': typeof ApiPublicVendasTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/criar/app'
     | '/criar/pagina-vendas'
     | '/criar/video'
+    | '/api/public/vendas/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/criar/app'
     | '/criar/pagina-vendas'
     | '/criar/video'
+    | '/api/public/vendas/$token'
   id:
     | '__root__'
     | '/_authenticated'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/_authenticated/criar/app'
     | '/_authenticated/criar/pagina-vendas'
     | '/_authenticated/criar/video'
+    | '/api/public/vendas/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -185,6 +197,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   PlanosRoute: typeof PlanosRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicVendasTokenRoute: typeof ApiPublicVendasTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCriarVideoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/vendas/$token': {
+      id: '/api/public/vendas/$token'
+      path: '/api/public/vendas/$token'
+      fullPath: '/api/public/vendas/$token'
+      preLoaderRoute: typeof ApiPublicVendasTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -315,6 +335,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   PlanosRoute: PlanosRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicVendasTokenRoute: ApiPublicVendasTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

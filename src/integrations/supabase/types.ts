@@ -52,6 +52,8 @@ export type Database = {
           endpoint_token_hash: string | null
           fixed_fee_minor: number
           id: string
+          last_error: string | null
+          last_event_at: string | null
           provider: string
           status: string
           updated_at: string
@@ -65,6 +67,8 @@ export type Database = {
           endpoint_token_hash?: string | null
           fixed_fee_minor?: number
           id?: string
+          last_error?: string | null
+          last_event_at?: string | null
           provider: string
           status?: string
           updated_at?: string
@@ -78,6 +82,8 @@ export type Database = {
           endpoint_token_hash?: string | null
           fixed_fee_minor?: number
           id?: string
+          last_error?: string | null
+          last_event_at?: string | null
           provider?: string
           status?: string
           updated_at?: string
