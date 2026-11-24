@@ -14,3 +14,4 @@
 - Use the shared browser session validator for route access, login redirects and script saves; missing/invalid credentials resolve to signed-out, expired tokens get one refresh, and transient network failures remain errors.
 - Administrative server functions require the managed bearer middleware, an own protected admin-role row and valid access before dynamically loading the generated privileged client; this prevents expired or ordinary accounts bypassing route guards.
 - Email login uses the shared validated-session helper and safe error mapping; managed connection files are repaired through Cloud tools rather than edited or replaced.
+- Sales platforms post to the /api/public/vendas/$token server route, verified per provider with its documented signature in src/lib/sales-webhook.server.ts; FUNCIONAL is shown only after an authenticated event, so status never claims an untested connection.

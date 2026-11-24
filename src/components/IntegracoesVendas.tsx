@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { Activity, Clock3, Link2, Loader2, Plus, ShieldCheck, Trash2, WalletCards, Copy } from "lucide-react";
+import { Activity, Loader2, Plus, ShieldCheck, Trash2, WalletCards, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { useServerFn } from "@tanstack/react-start";
@@ -234,9 +234,9 @@ export function IntegracoesVendas() {
               <label className="space-y-2 text-sm font-semibold">Valores enviados pela plataforma
                 <select value={amountFormat} onChange={(event) => setAmountFormat(event.target.value as "units" | "cents")} className="h-12 w-full rounded-xl border border-border bg-background px-3 font-normal outline-none focus:border-rose-500"><option value="units">Unidades normais (1 = 1)</option><option value="cents">Em centavos (100 = 1)</option></select>
               </label>
-              {(provider === "tutora" || provider === "hotmart" || provider === "ratixpay") && (
+              {providerInfo(provider)?.supported ? (
                 <label className="space-y-2 text-sm font-semibold md:col-span-2">
-                  {provider === "hotmart" ? "Hottok da Hotmart" : provider === "tutora" ? "Segredo de Webhook da Tutora" : "Webhook Secret da RatixPay"}
+                  {providerInfo(provider)?.secretLabel}
                   <input type="password" autoComplete="off" value={providerSecret} onChange={(event) => setProviderSecret(event.target.value)} required minLength={8} placeholder="Cola aqui o segredo de Webhook da plataforma" className="h-12 w-full rounded-xl border border-border bg-background px-3 font-normal outline-none focus:border-rose-500 md:max-w-xl" />
                   <span className="block text-xs font-normal text-muted-foreground">Este segredo é enviado diretamente ao servidor e não fica disponível na área pública da aplicação.</span>
                 </label>

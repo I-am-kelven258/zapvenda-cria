@@ -1,5 +1,5 @@
 // Browser-safe provider catalogue and pure webhook parsing (no secrets here).
-export type ProviderId = "hotmart" | "kiwify" | "ratixpay" | "tutora" | "escalepay" | "calipay";
+export type ProviderId = "hotmart" | "kiwify" | "ratixpay" | "tutora" | "escalepay";
 export type SaleStatus = "pending" | "approved" | "refunded" | "cancelled" | "chargeback";
 
 export const PROVIDERS: Array<{ value: ProviderId; label: string; supported: boolean; secretLabel?: string; docs?: string; missing?: string }> = [
@@ -7,8 +7,7 @@ export const PROVIDERS: Array<{ value: ProviderId; label: string; supported: boo
   { value: "kiwify", label: "Kiwify", supported: true, secretLabel: "Token do Webhook (Kiwify → Apps → Webhooks)", docs: "https://docs.kiwify.com.br/api-reference/webhooks/receiving" },
   { value: "ratixpay", label: "RatixPay", supported: true, secretLabel: "Segredo de Webhook (RatixPay → Credenciais da API)", docs: "https://ratixpay.co.mz/docs/" },
   { value: "tutora", label: "Tutora", supported: false, missing: "Não existe documentação pública de Webhook com método de assinatura. É preciso a documentação oficial (formato do evento e validação) fornecida pela Tutora." },
-  { value: "escalepay", label: "EscalePay", supported: false, missing: "Não existe documentação pública de API/Webhook. É preciso a documentação oficial fornecida pela EscalePay." },
-  { value: "calipay", label: "Calipay", supported: false, missing: "Não foi encontrada documentação oficial. É preciso o endereço oficial e a documentação de Webhook." },
+  { value: "escalepay", label: "EscalePay (Calipay)", supported: false, missing: "Não existe documentação pública de API/Webhook. É preciso a documentação oficial fornecida pela EscalePay." },
 ];
 
 export const providerInfo = (id: string) => PROVIDERS.find((p) => p.value === id);

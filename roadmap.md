@@ -1,8 +1,8 @@
 # Tarefas
-- [ ] Auditar documentação, configurações e comunicação real das plataformas de vendas.
-- [ ] Corrigir receção segura, estados e duplicação sem apagar dados existentes.
-- [ ] Organizar painel com FUNCIONAL, PRECISA DE CONFIGURAÇÃO e COM ERROS.
-- [ ] Testar fluxos disponíveis e identificar bloqueios externos por plataforma.
+- [x] Auditar documentação, configurações e comunicação real das plataformas de vendas.
+- [x] Corrigir receção segura, estados e duplicação sem apagar dados existentes.
+- [x] Organizar painel com FUNCIONAL, PRECISA DE CONFIGURAÇÃO e COM ERROS.
+- [x] Testar fluxos disponíveis e identificar bloqueios externos por plataforma.
 - [x] Auditar e reparar a ligação antiga do login sem alterar o design.
 - [x] Corrigir autorização e criação de contas no servidor preservando a validade.
 - [x] Testar sessão, acesso protegido, RLS e compilação; login confirmado pelo utilizador.
