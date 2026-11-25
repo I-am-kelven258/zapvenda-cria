@@ -202,7 +202,41 @@ export function AppShell({ children, back, wide = false }: { children: ReactNode
         </aside>
         <div className="flex min-w-0 flex-1 flex-col">
           <main className={`w-full flex-1 ${wide ? "max-w-none" : "mx-auto max-w-md"} px-4 py-6 md:px-8 md:py-8`}>{children}</main>
-          <footer className="px-4 pb-4 md:px-8"><AjudaEmail /></footer>
+          <footer className="mt-8 border-t border-border bg-card/40 px-4 pb-6 pt-6 md:px-8 md:pt-8">
+            <div className="mx-auto w-full max-w-6xl">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="space-y-3">
+                  <Link to="/" className="inline-flex items-center font-display text-2xl font-extrabold tracking-tight"><span className="text-red-600">Trak</span>ify</Link>
+                  <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">O teu espaço para criar, organizar ideias e transformar projetos em realidade.</p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">Navegação</h3>
+                  <div className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
+                    <Link to="/" className="transition hover:text-red-600">Início</Link>
+                    <Link to="/sobre" className="transition hover:text-red-600">Sobre a Trakify</Link>
+                    <Link to="/perfil" className="transition hover:text-red-600">Perfil e histórico</Link>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">Suporte</h3>
+                  <div className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
+                    <a href={`mailto:${SUPORTE_EMAIL}`} className="transition hover:text-red-600">Contactar suporte</a>
+                    <span>Estamos aqui para ajudar.</span>
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-red-500/15 bg-gradient-to-br from-red-500/[0.08] to-transparent p-4">
+                  <p className="text-sm font-semibold">Cria com a Trakify</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Todas as tuas ferramentas num só workspace.</p>
+                  <Link to="/" className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-red-600 transition hover:gap-2 dark:text-red-300">Explorar ferramentas <ChevronRight className="h-3.5 w-3.5" /></Link>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col gap-2 border-t border-border pt-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+                <p className="text-xs text-muted-foreground">© 2026 Trakify. Todos os direitos reservados.</p>
+                <p className="text-xs text-muted-foreground">Feito para organizar e criar melhor.</p>
+              </div>
+              <div className="mt-4"><AjudaEmail /></div>
+            </div>
+          </footer>
         </div>
       </div>
       <Sheet open={open} onOpenChange={setOpen}>
